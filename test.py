@@ -1,7 +1,7 @@
-# list of movies (title, length, year)
-movies = [
-    ["The Holy Grail", 91, 1975],
-    ["The Life of Brian", 91, 1979],
-    ["The Meaning of Life", 107, 1983],
-]
-print([movies[i][0] for i in range(len(movies)) if movies[i][2] == 1975])
+def palindrome(word):
+    if len(word) < 2:
+        return True
+    return word[0] == word[-1] and palindrome(word[1 : len(word) - 1])
+
+
+print(palindrome("kayak"))
