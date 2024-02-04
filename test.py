@@ -1,23 +1,16 @@
-def copy3(data):
-    """
-    Copies the given list of data.
-    Preconditions:
-        :param data: a list
-        :param copy: a list with the same contents as data
-    Postconditions:
-        data becomes empty
-    :return: A copy of the list
-    """
-    copied = []
-    for i in range(len(data)):
-        d = data[i]
-        data.remove(d)
-        copied.append(d)
-    return copied
+x = [1, 2, 3, 3]
 
+new_list = []
 
-x = [1, 2, 3]
+# for value in x:
+#     if value not in new_list:
+#         new_list.append(value)
 
-y = copy3(x)
+while len(x) != 0:
+    value = x.pop()
+    if value not in new_list:
+        new_list.append(value)
+for i in range(len(new_list) - 1, -1, -1):
+    x.append(new_list[i])
 
-print(x, y)
+print(x, new_list)

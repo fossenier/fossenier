@@ -1,6 +1,7 @@
 """
 A program to calculate my average in the class.
 """
+
 import csv as csv
 
 DESIRED_GRADE = 80
