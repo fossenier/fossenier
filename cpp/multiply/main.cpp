@@ -1,5 +1,8 @@
 #include <iostream>
 
+int getValueFromUser();
+void printDouble();
+
 int main()
 {
     // let user choose base
@@ -10,4 +13,12 @@ int main()
 
     std::cout << num * 2 << '\n'; // print the double
     return 0;
+}
+
+int getValueFromUser()
+{
+    // 
+    int num{};
+    std::cin >> num;
+    return num
 }
