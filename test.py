@@ -1,6 +1,3 @@
-try:
-    while True:
-        data_in = input("")
-        # handle data
-except EOFError:
-    pass
+x = True
+y = 3
+print(y + x)
