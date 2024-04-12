@@ -36,6 +36,9 @@ def pick_murderer(
     Returns:
         List[str]: A random suspect, weapon, and room card.
     """
+    if len(suspects) == 0 or len(weapons) == 0 or len(rooms) == 0:
+        raise ValueError("Error: must provide non-empty lists")
+
     # pick the murderer, weapon, and location
     murderer = []
     for stack in (suspects, weapons, rooms):
@@ -46,24 +49,23 @@ def pick_murderer(
 def read_board(provided_path: str = BOARD_FILE) -> List[List[str]]:
     """
     Purpose:
-         Reads a clue game configuration file to extract the card stacks of suspects, weapons, and rooms.
+        Reads a clue game configuration file to extract the card stacks of suspects, weapons, and rooms.
      Pre-conditions:
         provided_path str:
         The path to the file containing the clue game configuration. If None, a default path is used.
         The file should contain 6 lines, with the first 3 lines being comments and the last 3 lines
         containing comma-separated values representing suspects, weapons, and rooms.
      Post-conditions:
-         The function will terminate the program if the specified file does not exist.
+        Raises a value error if the path does not exist or if the file format is incorrect.
      Returns:
-         List[str]: The suspect cards.
-         List[str]: The weapon cards.
-         List[str]: The room cards.
+        List[str]: The suspect cards.
+        List[str]: The weapon cards.
+        List[str]: The room cards.
     """
     path = provided_path if provided_path else BOARD_FILE
 
     if not os.path.exists(path):
-        print(f"Error: {path} not found")
-        sys.exit(1)
+        raise ValueError(f"Error: {path} not found")
 
     suspects = []
     weapons = []
@@ -80,7 +82,10 @@ def read_board(provided_path: str = BOARD_FILE) -> List[List[str]]:
             for item in line.split(","):
                 input.append(item)
 
-    return suspects, weapons, rooms
+    if suspects == [""] or weapons == [""] or rooms == [""]:
+        raise ValueError(f"Error: {path} does not follow the expected format")
+
+    return [suspects, weapons, rooms]
 
 
 if __name__ == "__main__":
