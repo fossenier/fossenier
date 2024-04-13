@@ -7,18 +7,59 @@ from typing import List
 BOARD_FILE = "board.csv"
 
 
+class CardStack(object):
+    """
+    Treats a list of strings as a stack of cards.
+    """
+
+    def __init__(self, cards: List[str]):
+        self.__cards = cards
+
+    def __len__(self):
+        """
+        Returns the number of cards in the stack.
+        """
+        return len(self.__cards)
+
+    def draw_card(self):
+        """
+        Removes a card from the stack and returns it as a new stack.
+        """
+        drawn_card = self.__cards.pop(randint(0, len(self.__cards) - 1))
+        return CardStack([drawn_card])
+
+    def __add__(self, other):
+        """
+        Shuffles together two stacks of cards.
+        """
+        return CardStack(self.__cards + other.__cards)
+
+    def __str__(self):
+        """
+        Returns a string representation of the stack of cards.
+        """
+        return str(self.__cards)
+
+
 def main():
-    # set out the suspect, weapon, and room cards into stacks
+    # gets lists of suspects, weapons, and rooms from the board file
     suspects, weapons, rooms = read_board()
+
+    suspects = CardStack(suspects)
+    weapons = CardStack(weapons)
+    rooms = CardStack(rooms)
+
+    murderer = suspects.draw_card() + weapons.draw_card() + rooms.draw_card()
 
     # TODO remove after testing
     print("Suspects:", suspects)
     print("Weapons:", weapons)
     print("Rooms:", rooms)
+    print("Murderer:", murderer)
 
     # select a random card from each stack to be the murderer
-    murderer = pick_murderer(suspects, weapons, rooms)
-    print(murderer)
+    # murderer = pick_murderer(suspects, weapons, rooms)
+    # print(murderer)
 
 
 def pick_murderer(
