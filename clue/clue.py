@@ -5,6 +5,7 @@ from random import randint
 from typing import List
 
 BOARD_FILE = "board.csv"
+PLAYERS = 6
 
 
 class CardStack(object):
@@ -12,7 +13,7 @@ class CardStack(object):
     Treats a list of strings as a stack of cards.
     """
 
-    def __init__(self, cards: List[str]):
+    def __init__(self, cards: List[str] = []):
         self.__cards = cards
 
     def __len__(self):
@@ -50,6 +51,7 @@ def main():
     rooms = CardStack(rooms)
 
     murderer = suspects.draw_card() + weapons.draw_card() + rooms.draw_card()
+    clue_deck = suspects + weapons + rooms
 
     # TODO remove after testing
     print("Suspects:", suspects)
@@ -57,9 +59,19 @@ def main():
     print("Rooms:", rooms)
     print("Murderer:", murderer)
 
-    # select a random card from each stack to be the murderer
-    # murderer = pick_murderer(suspects, weapons, rooms)
-    # print(murderer)
+    player_hands = []
+    player_hand_size = len(clue_deck) // PLAYERS
+
+    for _ in range(PLAYERS):
+        player_hand = CardStack()
+        for _ in range(player_hand_size):
+            player_hand = player_hand + clue_deck.draw_card()
+        # TODO remove
+        print(player_hand)
+        player_hands.append(player_hand)
+
+    # TODO remove
+    print(clue_deck)
 
 
 def pick_murderer(
