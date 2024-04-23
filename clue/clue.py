@@ -8,6 +8,86 @@ BOARD_FILE = "board.csv"
 PLAYERS = 6
 
 
+class MurderInfo(object):
+    """
+    What a player knows about the murderer.
+    """
+
+    def __init__(self, suspects: "CardStack", weapons: "CardStack", rooms: "CardStack"):
+        """
+        Every player in the game keeps track of whether or not another given player
+        has"""
+        self.__info = {}
+        # for each player
+        for player in range(PLAYERS):
+            info_about_player = {}
+            # mark that each suspect, weapon, and room is unknown
+            for info_type in (suspects, weapons, rooms):
+                for info in info_type:
+                    info_about_player[info] = False
+
+
+class Guess(object):
+    """
+    Represents a guess made by a player.
+    """
+
+    def __init__(
+        self,
+        suspect: "CardStack",
+        weapon: "CardStack",
+        room: "CardStack",
+        respondant: "Player",
+        response: "CardStack",
+    ):
+        self.__suspect = suspect
+        self.__weapon = weapon
+        self.__room = room
+        self.__respondant = respondant
+        self.__response = response
+
+    def __str__(self):
+        """
+        Returns a string representation of the guess.
+        """
+        return f"Guess: {self.__suspect}, {self.__weapon}, {self.__room}"
+
+
+class Player(object):
+    """
+    Represents a player in the game of Clue.
+    """
+
+    def __init__(
+        self,
+        hand: List[str],
+        suspects: "CardStack",
+        weapons: "CardStack",
+        rooms: "CardStack",
+    ):
+        self.__hand = CardStack(hand)
+        self.__info = MurderInfo(suspects, weapons, rooms)
+        self.__guessses = []
+
+    def pickup(self, stack: "CardStack"):
+        """
+        Adds a card to the player's hand.
+        """
+        self.__hand = self.__hand + stack
+
+    def ask(self, question: "Guess"):
+        """
+        Track a guess made by the player.
+        """
+        self.__guessses.append(question)
+
+    def __str__(self):
+        """
+        Returns a string representation of the player's hand.
+        """
+        return f"Hand: {str(self.__hand)}"
+
+
 class CardStack(object):
     """
     Treats a list of strings as a stack of cards.
@@ -41,6 +121,12 @@ class CardStack(object):
         """
         return str(self.__cards)
 
+    def __iter__(self):
+        """
+        Returns an iterator for the stack of cards.
+        """
+        return iter(self.__cards)
+
 
 def main():
     # gets lists of suspects, weapons, and rooms from the board file
@@ -50,53 +136,18 @@ def main():
     weapons = CardStack(weapons)
     rooms = CardStack(rooms)
 
+    # randomly picks the murderer for the round
     murderer = suspects.draw_card() + weapons.draw_card() + rooms.draw_card()
+    # shuffles together the deck players draw hands from
     clue_deck = suspects + weapons + rooms
 
-    # TODO remove after testing
-    print("Suspects:", suspects)
-    print("Weapons:", weapons)
-    print("Rooms:", rooms)
-    print("Murderer:", murderer)
-
-    player_hands = []
+    # draw all player hands
+    players = [Player() for _ in range(PLAYERS)]
     player_hand_size = len(clue_deck) // PLAYERS
 
-    for _ in range(PLAYERS):
-        player_hand = CardStack()
+    for player in players:
         for _ in range(player_hand_size):
-            player_hand = player_hand + clue_deck.draw_card()
-        # TODO remove
-        print(player_hand)
-        player_hands.append(player_hand)
-
-    # TODO remove
-    print(clue_deck)
-
-
-def pick_murderer(
-    suspects: List[str], weapons: List[str], rooms: List[str]
-) -> List[str]:
-    """
-    Purpose:
-        Picks a random murderer (suspect, weapon, and room) from the provided card stacks.
-    Pre-conditions:
-        suspects List[str]: The suspect cards.
-        weapons List[str]: The weapon cards.
-        rooms List[str]: The room cards.
-    Post-conditions:
-        Modifies the initial lists by removing a card from each
-    Returns:
-        List[str]: A random suspect, weapon, and room card.
-    """
-    if len(suspects) == 0 or len(weapons) == 0 or len(rooms) == 0:
-        raise ValueError("Error: must provide non-empty lists")
-
-    # pick the murderer, weapon, and location
-    murderer = []
-    for stack in (suspects, weapons, rooms):
-        murderer.append(stack.pop(randint(0, len(stack) - 1)))
-    return murderer
+            player.pickup(clue_deck.draw_card())
 
 
 def read_board(provided_path: str = BOARD_FILE) -> List[List[str]]:
