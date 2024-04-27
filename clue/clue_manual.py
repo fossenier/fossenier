@@ -49,44 +49,58 @@ def read_board(filename):
     with open(filename, "r") as f:
         board = []
         for line in f:
-            row = line.strip().split(",")
+            row = line.rstrip("\n").split(",")
             board.append(row)
     return board
 
 
 def draw_board(filename, board):
-    from PIL import Image, ImageDraw
+    """Creates an image of the board and saves it to a file with tile colors and optional text annotations."""
+    from PIL import Image, ImageDraw, ImageFont
+
+    def get_tile_color(tile):
+        """Returns the color corresponding to the tile type."""
+        tile_colors = {
+            "x": (40, 39, 41),  # walls are dark gray
+            " ": (226, 200, 60),  # floors are classic yellow
+        }
+        return tile_colors.get(tile, (255, 0, 0))  # use red for all other tiles
 
     cell_size = 50
     cell_border = 2
+    font_size = 12
 
-    width, height = len(board[0]), len(board)
+    width, height = len(board[0]) * cell_size, len(board) * cell_size
 
-    # Create a blank canvas
-    img = Image.new("RGBA", (width * cell_size, height * cell_size), "black")
+    img = Image.new("RGBA", (width, height), "black")
     draw = ImageDraw.Draw(img)
+    try:
+        # attempt to load a truetype or opentype font file
+        font = ImageFont.truetype("arial.ttf", font_size)
+    except IOError:
+        # fall back to a default font if unable to load
+        font = ImageFont.load_default()
 
     for i, row in enumerate(board):
         for j, tile in enumerate(row):
-            if tile == " ":
-                fill = (226, 200, 60)
-            elif tile == "x":
-                fill = (40, 39, 41)
-
-            draw.rectangle(
-                (
-                    [
-                        (j * cell_size + cell_border, i * cell_size + cell_border),
-                        (
-                            (j + 1) * cell_size - cell_border,
-                            (i + 1) * cell_size - cell_border,
-                        ),
-                    ]
-                ),
-                fill=fill,
+            fill = get_tile_color(tile)
+            top_left = (j * cell_size + cell_border, i * cell_size + cell_border)
+            bottom_right = (
+                (j + 1) * cell_size - cell_border,
+                (i + 1) * cell_size - cell_border,
             )
+            draw.rectangle([top_left, bottom_right], fill=fill)
+
+            # check if tile needs text
+            if tile not in ["x", " "]:  # floors and walls don't need text
+                text_position = (
+                    j * cell_size + cell_size // 2,
+                    i * cell_size + cell_size // 2,
+                )
+                draw.text(text_position, tile, font=font, anchor="mm", fill="black")
 
     img.save(filename)
+    print(f"Board drawn and saved as {filename}")
 
 
 if __name__ == "__main__":
