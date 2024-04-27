@@ -2,6 +2,8 @@
 This is a first slice of Clue that is hard-coded and manual.
 """
 
+import keyboard
+
 ROOMS = [
     "Ballroom",
     "Billiard Room",
@@ -36,7 +38,16 @@ IMAGE = [
 def main():
     board = read_board("clue_board_1.csv")
     draw_board("clue_board_1.png", board)
-    # proto_print_board()
+    last_replaced = "x"
+    last_coords = (0, 0)
+    keyboard.add_hotkey("e", lambda: print("You pressed q"))
+    while True:
+        new_coords = [int(num) for num in input("Enter x, y: ").split(",")]
+        board[last_coords[1]][last_coords[0]] = last_replaced
+        last_replaced = board[new_coords[1]][new_coords[0]]
+        last_coords = new_coords
+        board[new_coords[1]][new_coords[0]] = "X"
+        draw_board("clue_board_1.png", board)
 
 
 def proto_print_board():
@@ -55,7 +66,10 @@ def read_board(filename):
 
 
 def draw_board(filename, board):
-    """Creates an image of the board and saves it to a file with tile colors and optional text annotations."""
+    """
+    Creates an image of the board and saves it to a file with coloured tiles and
+    text annotations.
+    """
     from PIL import Image, ImageDraw, ImageFont
 
     def get_tile_color(tile):
