@@ -2,8 +2,6 @@
 This is a first slice of Clue that is hard-coded and manual.
 """
 
-import keyboard
-
 ROOMS = [
     "Ballroom",
     "Billiard Room",
@@ -40,7 +38,6 @@ def main():
     draw_board("clue_board_1.png", board)
     last_replaced = "x"
     last_coords = (0, 0)
-    keyboard.add_hotkey("e", lambda: print("You pressed q"))
     while True:
         new_coords = [int(num) for num in input("Enter x, y: ").split(",")]
         board[last_coords[1]][last_coords[0]] = last_replaced
