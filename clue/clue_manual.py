@@ -23,28 +23,104 @@ SUSPECTS = [
 ]
 WEAPONS = ["Candlestick", "Knife", "Lead Pipe", "Revolver", "Rope", "Wrench"]
 
-IMAGE = [
-    [False, True, False, False, True, False],
-    [False, False, True, False, False, True],
-    [False, True, False, True, False, False],
-    [False, False, True, False, True, False],
-    [True, False, False, True, False, True],
-    [False, True, False, False, True, False],
-]
-
 
 def main():
+    # read in the game board
     board = read_board("clue_board_1.csv")
+
+    # display the board
     draw_board("clue_board_1.png", board)
-    last_replaced = "x"
-    last_coords = (0, 0)
+
+    # take in all initial players
+    player_positions = get_player_positions(board)
+    (print(player_positions))
+    input("Press enter to continue")
+    draw_board("clue_board_1.png", board)
+
+    # move a player
     while True:
-        new_coords = [int(num) for num in input("Enter x, y: ").split(",")]
-        board[last_coords[1]][last_coords[0]] = last_replaced
-        last_replaced = board[new_coords[1]][new_coords[0]]
-        last_coords = new_coords
-        board[new_coords[1]][new_coords[0]] = "X"
-        draw_board("clue_board_1.png", board)
+        player = input("Enter player name: ")
+        direction = input("Enter direction: ")
+        player_positions[player] = move_player(
+            board, player_positions[player], direction
+        )
+        print(player_positions)
+
+    #
+    # last_replaced = "x"
+    # last_coords = (0, 0)
+    # while True:
+    #     new_coords = [int(num) for num in input("Enter x, y: ").split(",")]
+    #     board[last_coords[1]][last_coords[0]] = last_replaced
+    #     last_replaced = board[new_coords[1]][new_coords[0]]
+    #     last_coords = new_coords
+    #     board[new_coords[1]][new_coords[0]] = "X"
+    #     draw_board("clue_board_1.png", board)
+
+
+def move_player(board, player_position, direction):
+    """
+    Moves a player in a given direction on the board.
+    """
+    # get the player's current position
+    x, y = player_position
+
+    # determine the new position based on the direction
+    if direction == "up":
+        y -= 1
+    elif direction == "down":
+        y += 1
+    elif direction == "left":
+        x -= 1
+    elif direction == "right":
+        x += 1
+
+    board_height = len(board)
+    board_width = len(board[0])
+
+    # check if the new position is within bounds and then check if it is valid
+    if 0 <= x < board_width and 0 <= y < board_height:
+        if board[y][x] == "x":
+            print("You can't move there!")
+        else:
+            player_position = (x, y)
+    else:
+        print("That move is outside the board!")
+
+    return player_position
+
+
+def get_player_positions(board):
+    """
+    Returns a dictionary of player names and their positions on the board.
+    """
+    player_positions = {}
+    for suspect in SUSPECTS:
+        suspect = suspect.split(" ")[1]
+        position = get_position(board, suspect)
+        player_positions[suspect] = position
+        print(suspect)
+        print(position)
+        set_position(board, " ", position)
+    return player_positions
+
+
+def set_position(board, tile, position):
+    """
+    Sets a given position to a new name.
+    """
+    board[position[1]][position[0]] = tile
+
+
+def get_position(board, tile):
+    """
+    Finds in the board where a named tile is.
+    """
+    for i, row in enumerate(board):
+        for j, cell in enumerate(row):
+            if cell.startswith(tile):
+                return (j, i)
+    return None
 
 
 def proto_print_board():
