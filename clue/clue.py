@@ -5,15 +5,30 @@ This is a second slice of Clue that is focused on simply giving instructions.
 
 class Clue:
     def __init__(self, game_path):
+        self.board = []
         self.rooms = []
         self.suspects = []
         self.weapons = []
         self.suspect_order = []
+        self.cpu_location = (None, None)
         self.cpu_suspect = None
+        self.last_handled_suspect = None
 
+        self.__read_board_data(game_path)
         self.__read_board(game_path)
 
     def __read_board(self, game_path):
+        with open(game_path, "r") as f:
+            for line in f:
+                # read row
+                row = line.rstrip().split(",")
+                # remove suspects from the board
+                for i, tile in enumerate(row):
+                    if tile in self.suspects:
+                        row[i] = " "
+                self.board.append(row)
+
+    def __read_board_data(self, game_path):
         with open(game_path, "r") as f:
 
             # first line is weapons
@@ -64,24 +79,38 @@ class Clue:
 
             # the suspects left in the checklist are unused
             self.suspect_order = valid_suspects
+            self.last_handled_suspect = self.suspect_order[-1]  # last player
             valid_order = True
+
+    def __get_cpu_location(self):
+        self.cpu_location
 
     def __get_cpu_suspect(self):
         cpu_suspect = None
         while cpu_suspect not in self.suspect_order:
             cpu_suspect = input(f"Enter the CPU suspect({self.suspect_order}): ")
-
         self.cpu_suspect = cpu_suspect
+
+    def __get_active_suspect(self):
+        last_index = self.suspect_order.index(self.last_handled_suspect)
+        current_index = (last_index + 1) % len(self.suspect_order)
+        return self.suspect_order[current_index]
 
     def initialize_game(self):
         print("Welcome to Clue!")
         self.__get_game_order()
         self.__get_cpu_suspect()
+        self.__get_cpu_location()
+
+    def run_game(self):
+        active_suspect = self.__get_active_suspect()
+        if 
 
 
 def main():
     game = Clue("board.csv")
     game.initialize_game()
+    game.run_game()
 
 
 if __name__ == "__main__":
