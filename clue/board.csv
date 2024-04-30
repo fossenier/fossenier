@@ -1,6 +1,24 @@
-suspects
-weapons
-rooms
-plum, white, scarlet, green, mustard, peacock
-rope, dagger, wrench, pistol, candlestick, lead pipe
-courtyard, game room, study, dining room, garage, living room, kitchen, bedroom, bathroom
+x,x,x,x,x,x,x,Mustard,x,x,x,x,x,x,x,x,x, ,x,x,x,x,x,x,x
+x,x,x,x,x,x, , , ,x,x,x,x,x,x,x, , ,x,x,x,x,x,x,x
+x,x,x,x,x,x, , , ,x,x,x,x,x,x,x, , ,x,x,x,x,x,x,x
+x,x,x,x,x,x, , , ,x,x,x,x,x,x,x, , ,x,x,x,x,x,x,x
+x,x,x,x,x,x, , , ,x,x,x,x,x,x,x, ,Door,Kitchen,x,x,x,x,x,x
+x,x,x,x,x,x, , , ,x,x,x,x,x,x, , , ,x,x,x,x,x,x,x
+x,x,x,x,x,Lounge,Door, ,Door,Dining,x,x,x,x,x, , , , , , , , ,x,x
+Scarlett, , , , , , , , ,x,x,x,Dining,x,x, , , , ,Door, , , , ,x
+x, , , , , , , , , , , ,Door, , , , ,x,x,Ballroom,x,x,x, ,x
+x,x,x,x,x,x,x, , , , , , , , , ,Door,Ballroom,x,x,x,x,x, ,White
+x,x,x,x,x,x,x, ,x,x,x,x,x,x,x, , ,x,x,x,x,x,x,x,x
+x,x,x,x,x,x,Hall,Door,x,x,x,x,x,x,x, , ,x,x,x,x,x,x,x,x
+x,x,x,x,x,x,Hall,Door,x,x,x,x,x,x,x, , ,x,x,x,x,x,x,x,x
+x,x,x,x,x,x,x, ,x,x,x,x,x,x,x, , ,x,x,x,x,x,x,x,x
+x,x,x,x,Hall,x,x, ,x,x,x,x,x,x,x, ,Door,Ballroom,x,x,x,x,x, ,Green
+x, , , ,Door, , , , , , , , , , , , ,x,x,Ballroom,x,x,x, ,x
+ , , , , , , , ,Door, , , , , , , , , , ,Door, , , , ,x
+x,x,x,Study,Door, , ,x,Library,x, , , , , ,Door, , , , , , , ,x,x
+x,x,x,x, , ,x,x,x,x,x, ,x,x,x,Billiard,x, , ,Door,x,x,x,x,x
+x,x,x,x, , ,x,x,x,x,x, ,x,x,x,x,x, , ,Conserve,x,x,x,x,x
+x,x,x,x, , ,x,x,x,x,Library,Door,x,x,x,x,x, , ,x,x,x,x,x,x
+x,x,x,x, , ,x,x,x,x,x, ,x,x,x,x,x, , ,x,x,x,x,x,x
+x,x,x,x, , ,x,x,x,x,x,Door,Billiard,x,x,x,x, , ,x,x,x,x,x,x
+x,x,x,x,x,Plum,x,x,x,x,x,x,x,x,x,x,x,x,Peacock,x,x,x,x,x,x
