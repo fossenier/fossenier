@@ -3,7 +3,81 @@ This is a second slice of Clue that is focused on simply giving instructions.
 """
 
 
-class Clue:
+class ClueTracker:
+    def __init__(self, players, suspects, weapons, rooms):
+        self.players = players
+        self.items = suspects + weapons + rooms
+        # Initialize the tally sheet with None (unknown)
+        self.tally_sheet = {
+            player: {item: None for item in self.items} for player in players
+        }
+        self.links = []
+
+    def mark_accusation(self, accuser, suspect, weapon, room, responder, response):
+        # Create a link if the response is positive
+        if response == "yes":
+            self.links.append((responder, {suspect, weapon, room}))
+        # Mark all as false if the response is negative
+        elif response == "no":
+            for item in [suspect, weapon, room]:
+                self.tally_sheet[responder][item] = False
+        self.process_cyclical_checks()
+
+    def reveal_card(self, player, item):
+        # Mark an item as true for a player
+        self.tally_sheet[player][item] = True
+        self.process_cyclical_checks()
+
+    def process_cyclical_checks(self):
+        changes = True
+        while changes:
+            changes = False
+            # Rule 1: All cards known for a player
+            for player, items in self.tally_sheet.items():
+                if list(items.values()).count(True) == self.player_card_count(player):
+                    for item, value in items.items():
+                        if value is None:
+                            self.tally_sheet[player][item] = False
+                            changes = True
+            # Rule 2: Item known to belong to one player
+            for item in self.items:
+                true_owners = [
+                    p for p, v in self.tally_sheet.items() if v[item] is True
+                ]
+                if len(true_owners) == 1:
+                    for player in self.players:
+                        if (
+                            player not in true_owners
+                            and self.tally_sheet[player][item] is None
+                        ):
+                            self.tally_sheet[player][item] = False
+                            changes = True
+            # Resolve links
+            for link in self.links:
+                responder, items = link
+                known_items = [
+                    i
+                    for i in items
+                    if any(self.tally_sheet[p][i] is True for p in self.players)
+                ]
+                if len(known_items) == len(items) - 1:
+                    unknown_item = list(items - set(known_items))[0]
+                    self.tally_sheet[responder][unknown_item] = True
+                    changes = True
+            self.links = [
+                link for link in self.links if not self.is_link_resolved(link)
+            ]
+
+    def is_link_resolved(self, link):
+        responder, items = link
+        return all(self.tally_sheet[responder][item] is not None for item in items)
+
+    def player_card_count(self, player):
+        # This needs to be defined or known externally
+        return 3  # Example: Every player has 3 cards
+
+
+class Clue(object):
     def __init__(self, game_path):
         self.board = []  # the game board
         self.cpu_location = (None, None)  # the CPU location
@@ -104,6 +178,11 @@ class Clue:
         is_card_revealed = "n"
         accused_player = self.__get_next_player(player)
         while is_card_revealed != "y":
+            # nobody revealed a card
+            if accused_player == player:
+                return
+
+            # note if the accused player revealed a card
             is_card_revealed = input(
                 f"Did {accused_player} reveal a card to {player} (y/n)? "
             ).lower()
