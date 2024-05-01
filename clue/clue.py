@@ -48,21 +48,8 @@ class Clue:
                 else:
                     accusation_made = self.__cpu_turn()
 
-    def __get_tile_position(self, tile):
-        """
-        Purpose:
-            Get the position of a tile on the board.
-        Pre-conditions:
-            str tile: the tile to find.
-        Post-conditions:
-            tuple: the position of the tile.
-        Returns:
-            tuple: the position of the tile.
-        """
-        for y, row in enumerate(self.board):
-            for x, board_tile in enumerate(row):
-                if board_tile == tile:
-                    return (x, y)
+    def __cpu_turn(self):
+        print("CPU turn not implemented.")
 
     def __get_attribute_name(self, provided_attribute, attributes):
         """
@@ -81,6 +68,47 @@ class Clue:
             if provided_attribute.lower() in attribute.lower():
                 return attribute
 
+    def __get_next_player(self, current_player):
+        """
+        Purpose:
+            Get the next player in the order of play.
+        Pre-conditions:
+            str current_player: the current player.
+        Post-conditions:
+            None.
+        Returns:
+            str: the next player.
+        """
+        current_index = self.suspect_order.index(current_player)
+        return self.suspect_order[(current_index + 1) % len(self.suspect_order)]
+
+    def __get_tile_position(self, tile):
+        """
+        Purpose:
+            Get the position of a tile on the board.
+        Pre-conditions:
+            str tile: the tile to find.
+        Post-conditions:
+            tuple: the position of the tile.
+        Returns:
+            tuple: the position of the tile.
+        """
+        for y, row in enumerate(self.board):
+            for x, board_tile in enumerate(row):
+                if board_tile == tile:
+                    return (x, y)
+
+    def __human_turn(self, player):
+        room, weapon, suspect = self.__prompt_human_accusation(player)
+
+        is_card_revealed = "n"
+        accused_player = self.__get_next_player(player)
+        while is_card_revealed != "y":
+            is_card_revealed = input(
+                f"Did {accused_player} reveal a card to {player} (y/n)? "
+            ).lower()
+            accused_player = self.__get_next_player(accused_player)
+
     def __prompt_cpu_suspect(self):
         """
         Purpose:
@@ -95,7 +123,8 @@ class Clue:
         # get the CPU suspect from the user
         cpu_suspect = None
         while cpu_suspect not in self.suspect_order:
-            cpu_suspect = input(f"Enter the CPU suspect({self.suspect_order}): ")
+            entered_cpu = input(f"Enter the CPU suspect({self.suspect_order}): ")
+            cpu_suspect = self.__get_attribute_name(entered_cpu, self.suspect_order)
 
         # save to the object the suspect as named in self.suspect_order
         self.cpu_suspect = self.__get_attribute_name(cpu_suspect, self.suspect_order)
@@ -138,6 +167,26 @@ class Clue:
             # use the validated order
             self.suspect_order = validated_suspects
             is_valid_order = True
+
+    def __prompt_human_accusation(self, player):
+        room, weapon, suspect = None, None, None
+        while True:
+            accusation = [
+                info.strip()
+                for info in input(f"{player} accused (room, weapon, suspect): ").split(
+                    ","
+                )
+            ]
+            room = self.__get_attribute_name(accusation[0], self.rooms)
+            weapon = self.__get_attribute_name(accusation[1], self.weapons)
+            suspect = self.__get_attribute_name(accusation[2], self.suspects.keys())
+
+            if not room or not weapon or not suspect:
+                print("Error: invalid accusation. Please try again.")
+                continue
+            break
+
+        return room, weapon, suspect
 
     def __read_board_data(self, game_path):
         """
