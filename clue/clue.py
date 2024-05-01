@@ -64,6 +64,23 @@ class Clue:
                 if board_tile == tile:
                     return (x, y)
 
+    def __get_attribute_name(self, provided_attribute, attributes):
+        """
+        Purpose:
+            Get the attribute name from a list of attributes.
+        Pre-conditions:
+            str provided_attribute: the attribute to find.
+            list attributes: the list of attributes to search.
+        Post-conditions:
+            None.
+        Returns:
+            str: the attribute name.
+        """
+        # search for the attribute in the list of attributes
+        for attribute in attributes:
+            if provided_attribute.lower() in attribute.lower():
+                return attribute
+
     def __prompt_cpu_suspect(self):
         """
         Purpose:
@@ -81,9 +98,7 @@ class Clue:
             cpu_suspect = input(f"Enter the CPU suspect({self.suspect_order}): ")
 
         # save to the object the suspect as named in self.suspect_order
-        for suspect in self.suspect_order:
-            if cpu_suspect.lower() in suspect.lower():
-                self.cpu_suspect = suspect
+        self.cpu_suspect = self.__get_attribute_name(cpu_suspect, self.suspect_order)
 
     def __prompt_game_order(self):
         """
@@ -107,12 +122,11 @@ class Clue:
             actual_suspects = [key for key in self.suspects.keys()]
             for user_suspect in user_order:
                 # check if the suspect is valid
-                for actual_suspect in actual_suspects:
-                    # accept the suspect if it is a substring of the actual suspect (Green -> Mr. Green)
-                    if user_suspect.lower() in actual_suspect.lower():
-                        validated_suspects.append(actual_suspect)
-                        actual_suspects.remove(actual_suspect)
-                        break
+                validated_suspect = self.__get_attribute_name(
+                    user_suspect, actual_suspects
+                )
+                validated_suspects.append(validated_suspect)
+                actual_suspects.remove(validated_suspect)
 
             # make sure 2 or more players are in the game
             if len(validated_suspects) < 2:
