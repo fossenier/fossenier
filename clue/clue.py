@@ -19,6 +19,63 @@ class ClueTracker:
 
         self.hand_size = len(self.cards) // len(players) if len(players) else 0
 
+    def draw_sheet(self, filename):
+        from PIL import Image, ImageDraw, ImageFont
+
+        def get_tile_color(tile):
+            tile_colors = {
+                True: (211, 174, 141),  # light brown for True
+                False: (244, 91, 96),  # soft red for False
+                None: (238, 228, 210),  # light cream for Unknown
+            }
+            return tile_colors.get(
+                tile, (255, 255, 0)
+            )  # fallback to red (shouldn't be used)
+
+        cell_size = 60
+        cell_border = 5
+        header_size = 120
+
+        # set the width and height based on the number of players and cards
+        width = len(self.players) * cell_size + header_size
+        height = len(self.cards) * cell_size + header_size
+
+        img = Image.new("RGBA", (width, height), (40, 39, 41))  # dark gray background
+        draw = ImageDraw.Draw(img)
+        font = ImageFont.load_default()
+
+        # drawing headers (players as columns, cards as rows)
+        # ChatGPT wrote this, I don't understand it
+        for i, player in enumerate(self.players):
+            player_position = (header_size + (i + 0.5) * cell_size, header_size / 2)
+            draw.text(player_position, player, font=font, anchor="mm", fill="white")
+        for j, card in enumerate(self.cards):
+            card_position = (header_size / 2, header_size + (j + 0.5) * cell_size)
+            draw.text(card_position, card, font=font, anchor="mm", fill="white")
+        
+        # draw rows one at a time (there are always more cards than players and thus rows than columns)
+        for row, card in enumerate(self.cards):
+            # look at each player's information for the row
+            for col, player in enumerate(self.players):
+                information = self.tally_sheet[player][card]
+                tile_fill = get_tile_color(information)
+                
+                # where to start filling in the coloured tile
+                tile_top_left = (
+                    header_size + col * cell_size + cell_border,
+                    header_size + row * cell_size + cell_border,
+                )
+                # where to stop filling in the coloured tile
+                tile_bottom_right = (
+                    header_size + (col + 1) * cell_size - cell_border,
+                    header_size + (row + 1) * cell_size - cell_border,
+                )
+                
+                draw.rectangle([tile_top_left, tile_bottom_right], fill=tile_fill)
+
+        img.save(filename)
+        print(f"Tally sheet drawn and saved as {filename}")
+
     def store_accusation(self, suspect, weapon, room, responder, response):
         """
         Purpose:
@@ -77,32 +134,12 @@ class ClueTracker:
         changes_made = True
         while changes_made:
             changes_made = (
-                self.check_full_hands()
-                or self.check_found_cards()
-                or self.resolve_links()
+                self.__check_full_hands()
+                or self.__check_found_cards()
+                or self.__resolve_links()
             )
 
-    def check_full_hands(self):
-        """
-        Purpose:
-            When a player's whole hand is known, mark the other cards as false.
-        Pre-conditions:
-            None.
-        Post-conditions:
-            self.tally_sheet: the tally sheet is updated with new information.
-        Returns:
-            bool: True if changes were made, False otherwise.
-        """
-        changes_made = False
-        for player, player_cards in self.tally_sheet.items():
-            if list(player_cards.values()).count(True) == self.hand_size:
-                for card, value in player_cards.items():
-                    if value is None:
-                        self.tally_sheet[player][card] = False
-                        changes_made = True
-        return changes_made
-
-    def check_found_cards(self):
+    def __check_found_cards(self):
         """
         Purpose:
             When a card is known to be in a hand, nobody else is holding it.
@@ -127,7 +164,27 @@ class ClueTracker:
                         changes_made = True
         return changes_made
 
-    def resolve_links(self):
+    def __check_full_hands(self):
+        """
+        Purpose:
+            When a player's whole hand is known, mark the other cards as false.
+        Pre-conditions:
+            None.
+        Post-conditions:
+            self.tally_sheet: the tally sheet is updated with new information.
+        Returns:
+            bool: True if changes were made, False otherwise.
+        """
+        changes_made = False
+        for player, player_cards in self.tally_sheet.items():
+            if list(player_cards.values()).count(True) == self.hand_size:
+                for card, value in player_cards.items():
+                    if value is None:
+                        self.tally_sheet[player][card] = False
+                        changes_made = True
+        return changes_made
+
+    def __resolve_links(self):
         """
         Purpose:
             Resolve links using deduction. If a player does NOT have two cards, they have the third.
@@ -172,6 +229,7 @@ class Clue(object):
         self.rooms = []  # list of room names
         self.suspects = {}  # key: suspect name, value: (x, y) starting position
         self.suspect_order = []  # the order of the players
+        self.tallysheet = None  # the clue tracker
         self.weapons = []  # list of weapon names
 
         self.__read_board_data(game_path)
@@ -191,6 +249,12 @@ class Clue(object):
         self.__prompt_game_order()
         self.__prompt_cpu_suspect()
         self.cpu_location = self.suspects[self.cpu_suspect]
+        self.tallysheet = ClueTracker(
+            self.suspect_order.copy(),
+            list(self.suspects.keys()).copy(),
+            self.weapons.copy(),
+            self.rooms.copy(),
+        )
 
     def run_game(self):
         """
@@ -208,6 +272,9 @@ class Clue(object):
                 # handle CPU turn
                 else:
                     accusation_made = self.__cpu_turn()
+            print(self.tallysheet.tally_sheet)
+            print(self.tallysheet.links)
+            self.tallysheet.draw_sheet("tallysheet.png")
 
     def __cpu_turn(self):
         print("CPU turn not implemented.")
@@ -263,17 +330,20 @@ class Clue(object):
         room, weapon, suspect = self.__prompt_human_accusation(player)
 
         is_card_revealed = "n"
-        accused_player = self.__get_next_player(player)
+        questioned_player = self.__get_next_player(player)
         while is_card_revealed != "y":
-            # nobody revealed a card
-            if accused_player == player:
+            # no players could reveal a card and the accusation looped back to the accuser
+            if questioned_player == player:
                 return
 
             # note if the accused player revealed a card
             is_card_revealed = input(
-                f"Did {accused_player} reveal a card to {player} (y/n)? "
+                f"Did {questioned_player} reveal a card to {player} (y/n)? "
             ).lower()
-            accused_player = self.__get_next_player(accused_player)
+            self.tallysheet.store_accusation(
+                suspect, weapon, room, questioned_player, is_card_revealed
+            )
+            questioned_player = self.__get_next_player(questioned_player)
 
     def __prompt_cpu_suspect(self):
         """
