@@ -9,7 +9,7 @@ class ClueTracker:
     throughout the game, and make deductions about the unknown cards.
     """
 
-    def __init__(self, players, suspects, weapons, rooms):
+    def __init__(self, players, suspects, weapons, rooms, hand, cpu_suspect):
         self.cards = suspects + weapons + rooms
         self.links = []
         self.players = players
@@ -18,6 +18,8 @@ class ClueTracker:
         }
 
         self.hand_size = len(self.cards) // len(players) if len(players) else 0
+        for card in hand:
+            self.store_revealed_card(cpu_suspect, card)
 
     def draw_sheet(self, filename):
         from PIL import Image, ImageDraw, ImageFont
@@ -248,12 +250,15 @@ class Clue(object):
         print("Welcome to Clue!")
         self.__prompt_game_order()
         self.__prompt_cpu_suspect()
+        cpu_cards = self.__prompt_cpu_cards()
         self.cpu_location = self.suspects[self.cpu_suspect]
         self.tallysheet = ClueTracker(
             self.suspect_order.copy(),
             list(self.suspects.keys()).copy(),
             self.weapons.copy(),
             self.rooms.copy(),
+            cpu_cards,
+            self.cpu_suspect,
         )
 
     def run_game(self):
@@ -326,6 +331,20 @@ class Clue(object):
                 if board_tile == tile:
                     return (x, y)
 
+    def __hand_size(self):
+        """
+        Purpose:
+            Get the size of each player's hand.
+        Pre-conditions:
+            None.
+        Post-conditions:
+            None.
+        Returns:
+            int: the size of each player's hand.
+        """
+        return (len(self.suspects) + len(self.weapons) + len(self.rooms)) // len(self.suspect_order)
+
+
     def __human_turn(self, player):
         room, weapon, suspect = self.__prompt_human_accusation(player)
 
@@ -344,6 +363,29 @@ class Clue(object):
                 suspect, weapon, room, questioned_player, is_card_revealed
             )
             questioned_player = self.__get_next_player(questioned_player)
+
+
+    def __prompt_cpu_cards(self):
+        """
+        Purpose:
+            Prompts the user to enter the cards the CPU has.
+        Pre-conditions:
+            None.
+        Post-conditions:
+            None.
+        Returns:
+            List[str]: the cards the CPU has.
+        """
+        # get the cards from user
+        cpu_cards = []
+        while len(cpu_cards) < self.__hand_size():
+            card = input(f"Enter the card the CPU has ({len(cpu_cards) + 1}): ")
+            card = self.__get_attribute_name(card, list(self.suspects.keys()) + self.weapons + self.rooms)
+            if card and card not in cpu_cards:
+                cpu_cards.append(card)
+            else:
+                print("Error: card already entered. Please enter a new card.")
+        return cpu_cards
 
     def __prompt_cpu_suspect(self):
         """
