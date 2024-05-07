@@ -100,7 +100,7 @@ class Clue(object):
                 return
 
         # get roll
-        movement = self.__prompt_dice_roll()
+        movement = self.__prompt_dice_roll(self.cpu_suspect)
 
         # get possible moves
         possible_moves = self.__possible_moves(movement)
@@ -127,6 +127,8 @@ class Clue(object):
 
         # move
         self.cpu_location = self.__get_tile_position(chosen_room)
+
+        # end turn if the CPU is in a hall
 
         # make accusation
         print(f"CPU accuses {suspect}, {weapon}, {chosen_room}.")
@@ -214,9 +216,13 @@ class Clue(object):
         Returns:
             int: the size of each player's hand.
         """
-        return (len(self.suspects) + len(self.weapons) + len(self.rooms)) // len(
-            self.suspect_order
-        )
+        cards_set_aside_for_murderer = 3
+        return (
+            len(self.suspects)
+            + len(self.weapons)
+            + len(self.rooms)
+            - cards_set_aside_for_murderer
+        ) // len(self.suspect_order)
 
     def __human_turn(self, player):
         room, weapon, suspect = self.__prompt_human_accusation(player)
@@ -271,9 +277,20 @@ class Clue(object):
                     room = self.board[neighbor[1]][neighbor[0]]
             return room
 
+        # the cpu starts in a room, so needs to first step out into the nearest "Door" which is the hall
+        starting_location = self.cpu_location
+        if self.board[self.cpu_location[1]][self.cpu_location[0]] in self.rooms:
+            for direction in directions:
+                neighbor = (
+                    self.cpu_location[0] + direction[0],
+                    self.cpu_location[1] + direction[1],
+                )
+                if self.board[neighbor[1]][neighbor[0]] == "Door":
+                    starting_location = neighbor
+
         # initialize the queue for breadth-first search
         exploration_queue = [
-            (self.cpu_location, 0)
+            (starting_location, 0)
         ]  # Each entry is (position, distance)
         board_width = len(self.board[0])
         board_height = len(self.board)
@@ -323,7 +340,8 @@ class Clue(object):
         """
         # get the cards from user
         cpu_cards = []
-        while len(cpu_cards) < self.__hand_size():
+        hand_size = self.__hand_size()
+        while len(cpu_cards) < hand_size:
             card = input(f"Enter the card the CPU has ({len(cpu_cards) + 1}): ")
             card = self.__get_attribute_name(
                 card, list(self.suspects.keys()) + self.weapons + self.rooms
@@ -354,7 +372,7 @@ class Clue(object):
         # save to the object the suspect as named in self.suspect_order
         self.cpu_suspect = self.__get_attribute_name(cpu_suspect, self.suspect_order)
 
-    def __prompt_dice_roll(self):
+    def __prompt_dice_roll(self, player):
         """
         Purpose:
             Prompts the user to input the dice roll.
@@ -367,7 +385,7 @@ class Clue(object):
         """
         dice_roll = 0
         while dice_roll < 2 or dice_roll > 12:
-            dice_roll = int(input("Enter the dice roll: "))
+            dice_roll = int(input(f"Enter the dice roll for {player}: "))
         return dice_roll
 
     def __prompt_game_order(self):
