@@ -74,6 +74,8 @@ class ClueTracker:
     def draw_sheet(self, filename):
         from PIL import Image, ImageDraw, ImageFont
 
+        self.update_tally_sheet()
+
         def get_tile_color(tile):
             tile_colors = {
                 True: (211, 174, 141),  # light brown for True

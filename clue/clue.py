@@ -80,7 +80,7 @@ class Clue(object):
                 if self.tallysheet.is_true(item):
                     continue
                 # ask about items most likely to be false
-                score = self.tallysheet.count_false_marks(item)
+                score = self.tallysheet.count_false(item)
                 if score > best_item[1]:
                     best_item = [item, score]
             return best_item[0]
@@ -153,10 +153,10 @@ class Clue(object):
                     input(f"Enter the card {questioned_player} revealed: "),
                     list(self.suspects.keys()) + self.weapons + self.rooms,
                 )
-                self.tallysheet.store_revealed_card(revealed_card)
+                self.tallysheet.store_revealed_card(questioned_player, revealed_card)
             questioned_player = self.__get_next_player(questioned_player)
 
-        print("CPU turn not implemented.")
+        
 
     def __get_attribute_name(self, provided_attribute, attributes):
         """
@@ -257,26 +257,12 @@ class Clue(object):
         # the four possible moves
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
-    def __possible_moves(self, movement):
-        """
-        Purpose:
-            Determines all possible rooms the CPU can move to and their distances.
-        Pre-conditions:
-            int movement: the number of spaces the CPU can move.
-        Post-conditions:
-            None.
-        Returns:
-            list of tuples (str, int): Each tuple contains a room and its distance from the start.
-        """
-        # the four possible moves
-        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-
-        def is_within_bounds(position):
+        def is_within_bounds(position, grid=self.board):
             """
             Check if the position is within the board boundaries to prevent indexing errors.
             """
             x, y = position
-            return 0 <= x < len(self.board[0]) and 0 <= y < len(self.board)
+            return 0 <= x < len(grid[0]) and 0 <= y < len(grid)
 
         def enter_door(position):
             """
@@ -323,7 +309,7 @@ class Clue(object):
         ]  # Each entry is (position, distance)
         board_width = len(self.board[0])
         board_height = len(self.board)
-        visited = [[False for _ in range(board_height)] for _ in range(board_width)]
+        visited = [[False for _ in range(board_width)] for _ in range(board_height)]
 
         # store eligible rooms
         rooms = []
@@ -332,10 +318,13 @@ class Clue(object):
 
             # check if the player can enter a door
             tile = self.board[current_position[1]][current_position[0]]
-            if tile == "Door" and current_distance <= movement:
+            distance_to_enter_room = current_distance + 1
+            if tile == "Door" and distance_to_enter_room <= movement:
                 room = enter_door(current_position)
                 if room:
                     rooms.append((room, current_distance))
+                else:
+                    raise ValueError("Error: door leads to no room.")
 
             # explore neighbors
             for direction in directions:
@@ -346,7 +335,7 @@ class Clue(object):
 
                 # check board boundaries and if the neighbor is walkable and not visited
                 if (
-                    is_within_bounds(neighbor)
+                    is_within_bounds(neighbor, visited)
                     and not visited[neighbor[1]][neighbor[0]]
                     and self.board[neighbor[1]][neighbor[0]] != "x"
                 ):
