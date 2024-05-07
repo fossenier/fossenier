@@ -74,13 +74,17 @@ class Clue(object):
             Returns:
                 str: the best item.
             """
-            best_item = [None, float('-inf')]
+            best_item = [None, float("-inf")]
             for item in items:
+                # don't ask about known items
+                if self.tallysheet.is_true(item):
+                    continue
+                # ask about items most likely to be false
                 score = self.tallysheet.count_false_marks(item)
                 if score > best_item[1]:
                     best_item = [item, score]
             return best_item[0]
-        
+
         # determine if final accusation should be made
         outcomes = self.tallysheet.calculate_probabilities()
         # there is a 1 in 5 chance of success on accusing
@@ -101,10 +105,54 @@ class Clue(object):
         # get possible moves
         possible_moves = self.__possible_moves(movement)
 
-        # determine best accusation
-        weapon, suspect = self.__best
+        # determine best weapon and suspect
+        weapon = best_item(self.weapons)
+        suspect = best_item(list(self.suspects.keys()))
+
+        # determine best room
+        room = best_item([move[0] for move in possible_moves])
+        chosen_room = None
+
+        # all rooms are known
+        if not room:
+            # go as far as possible (to explore more rooms next turn)
+            furthest_room = [None, 0]
+            for move in possible_moves:
+                if move[1] > furthest_room[1]:
+                    furthest_room = move
+            chosen_room = furthest_room[0]
+        # a room is not known
+        else:
+            chosen_room = room
+
         # move
+        self.cpu_location = self.__get_tile_position(chosen_room)
+
         # make accusation
+        print(f"CPU accuses {suspect}, {weapon}, {chosen_room}.")
+
+        is_card_revealed = "n"
+        questioned_player = self.__get_next_player(self.cpu_suspect)
+        while is_card_revealed != "y":
+            # no players could reveal a card and the accusation looped back to the cpu
+            if questioned_player == self.cpu_suspect:
+                return
+
+            # note if the accused player revealed a card
+            is_card_revealed = input(
+                f"Did {questioned_player} reveal a card to you (y/n)? "
+            ).lower()
+            if is_card_revealed == "n":
+                self.tallysheet.store_accusation(
+                    suspect, weapon, room, questioned_player, is_card_revealed
+                )
+            else:
+                revealed_card = self.__get_attribute_name(
+                    input(f"Enter the card {questioned_player} revealed: "),
+                    list(self.suspects.keys()) + self.weapons + self.rooms,
+                )
+                self.tallysheet.store_revealed_card(revealed_card)
+            questioned_player = self.__get_next_player(questioned_player)
 
         print("CPU turn not implemented.")
 
@@ -192,11 +240,13 @@ class Clue(object):
     def __possible_moves(self, movement):
         """
         Purpose:
-            Determines all possible rooms the CPU can move to.
+            Determines all possible rooms the CPU can move to and their distances.
         Pre-conditions:
             int movement: the number of spaces the CPU can move.
         Post-conditions:
             None.
+        Returns:
+            list of tuples (str, int): Each tuple contains a room and its distance from the start.
         """
         # the four possible moves
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
@@ -221,39 +271,43 @@ class Clue(object):
                     room = self.board[neighbor[1]][neighbor[0]]
             return room
 
-        # initialize the queue breadth first search will use
-        exploration_queue = [self.cpu_location]
-        # make sure to never visit the same spot twice
+        # initialize the queue for breadth-first search
+        exploration_queue = [
+            (self.cpu_location, 0)
+        ]  # Each entry is (position, distance)
         board_width = len(self.board[0])
         board_height = len(self.board)
         visited = [[False for _ in range(board_height)] for _ in range(board_width)]
 
         # store eligible rooms
         rooms = []
-        while not len(exploration_queue) == 0:
-            current_position = exploration_queue.pop(0)
+        while exploration_queue:
+            current_position, current_distance = exploration_queue.pop(0)
 
             # check if the player can enter a door
             tile = self.board[current_position[1]][current_position[0]]
-            if tile == "Door":
-                rooms.append(enter_door(current_position))
+            if tile == "Door" and current_distance <= movement:
+                room = enter_door(current_position)
+                if room:
+                    rooms.append((room, current_distance))
 
             # explore neighbors
             for direction in directions:
                 neighbor = (
-                    current_position.x + direction.x,
-                    current_position.y + direction.y,
+                    current_position[0] + direction[0],
+                    current_position[1] + direction[1],
                 )
 
                 # check board boundaries and if the neighbor is walkable and not visited
                 if (
-                    0 < neighbor[0] < board_width
-                    and 0 < neighbor[1] < board_height
-                    and not visited[neighbor.x][neighbor.y]
-                    and not visited[neighbor.x][neighbor.y]
+                    0 <= neighbor[0] < board_width
+                    and 0 <= neighbor[1] < board_height
+                    and not visited[neighbor[1]][neighbor[0]]
+                    and self.board[neighbor[1]][neighbor[0]] != "x"
                 ):
-                    exploration_queue.append(neighbor)
-                    visited[neighbor.x][neighbor.y] = True
+                    exploration_queue.append((neighbor, current_distance + 1))
+                    visited[neighbor[1]][neighbor[0]] = True
+
         return rooms
 
     def __prompt_cpu_cards(self):

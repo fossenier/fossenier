@@ -65,6 +65,12 @@ class ClueTracker:
     def count_false(self, item):
         return sum(self.tally_sheet[player][item] == False for player in self.players)
 
+    def is_true(self, item):
+        for player in self.players:
+            if self.tally_sheet[player][item]:
+                return True
+        return False
+
     def draw_sheet(self, filename):
         from PIL import Image, ImageDraw, ImageFont
 
