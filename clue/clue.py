@@ -257,6 +257,27 @@ class Clue(object):
         # the four possible moves
         directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
 
+    def __possible_moves(self, movement):
+        """
+        Purpose:
+            Determines all possible rooms the CPU can move to and their distances.
+        Pre-conditions:
+            int movement: the number of spaces the CPU can move.
+        Post-conditions:
+            None.
+        Returns:
+            list of tuples (str, int): Each tuple contains a room and its distance from the start.
+        """
+        # the four possible moves
+        directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+        def is_within_bounds(position):
+            """
+            Check if the position is within the board boundaries to prevent indexing errors.
+            """
+            x, y = position
+            return 0 <= x < len(self.board[0]) and 0 <= y < len(self.board)
+
         def enter_door(position):
             """
             Purpose:
@@ -273,7 +294,11 @@ class Clue(object):
             x_coord, y_coord = position
             for direction in directions:
                 neighbor = (x_coord + direction[0], y_coord + direction[1])
-                if self.board[neighbor[1]][neighbor[0]] not in not_room:
+                # Check bounds before accessing the board to avoid index errors
+                if (
+                    is_within_bounds(neighbor)
+                    and self.board[neighbor[1]][neighbor[0]] not in not_room
+                ):
                     room = self.board[neighbor[1]][neighbor[0]]
             return room
 
@@ -285,7 +310,11 @@ class Clue(object):
                     self.cpu_location[0] + direction[0],
                     self.cpu_location[1] + direction[1],
                 )
-                if self.board[neighbor[1]][neighbor[0]] == "Door":
+                # Ensure neighbor is within bounds before checking for "Door"
+                if (
+                    is_within_bounds(neighbor)
+                    and self.board[neighbor[1]][neighbor[0]] == "Door"
+                ):
                     starting_location = neighbor
 
         # initialize the queue for breadth-first search
@@ -317,8 +346,7 @@ class Clue(object):
 
                 # check board boundaries and if the neighbor is walkable and not visited
                 if (
-                    0 <= neighbor[0] < board_width
-                    and 0 <= neighbor[1] < board_height
+                    is_within_bounds(neighbor)
                     and not visited[neighbor[1]][neighbor[0]]
                     and self.board[neighbor[1]][neighbor[0]] != "x"
                 ):
@@ -385,7 +413,11 @@ class Clue(object):
         """
         dice_roll = 0
         while dice_roll < 2 or dice_roll > 12:
-            dice_roll = int(input(f"Enter the dice roll for {player}: "))
+            raw_dice_roll = input(f"Enter the dice roll for {player}: ")
+            if raw_dice_roll.isdigit():
+                dice_roll = int(raw_dice_roll)
+            else:
+                print("Error: invalid dice roll. Please try again.")
         return dice_roll
 
     def __prompt_game_order(self):
@@ -485,6 +517,9 @@ class Clue(object):
                             if tile not in self.rooms:
                                 self.rooms.append(tile)
 
+        with open(game_path, "r") as f:
+            # skip weapon config
+            f.readline()
             # save the board to the object
             for line in f:
                 # read row
