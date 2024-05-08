@@ -30,6 +30,20 @@ class Board(object):
         self.populate_suspects_rooms()
         self.populate_suspect_locations()
 
+    def populate_suspect_locations(self):
+        """
+        Accesses the board and determines the locations of the suspects.
+
+        Modifies self.board (removes suspect tiles)
+
+        Populates self.suspect_locations.
+        """
+        for y, row in enumerate(self.board):
+            for x, tile in enumerate(row):
+                if tile in self.suspects:
+                    self.suspect_locations[tile] = (x, y)
+                    self.__set_tile(x, y, HALL)
+
     def populate_suspects_rooms(self):
         """
         Accesses the board and determines the rooms and suspects.
@@ -63,7 +77,7 @@ class Board(object):
 
         Raises a ValueError if the board_path has issues.
 
-        str board_path: path to Clue board .csv file.
+        str board_path: path to Clue board .csv file
         """
         try:
             with open(board_path, "r") as f:
@@ -80,3 +94,13 @@ class Board(object):
             print(ve)
 
         raise ValueError("The board could not be read.")
+
+    def __set_tile(self, x, y, tile):
+        """
+        Sets a tile on the board.
+
+        int x: x-coordinate
+        int y: y-coordinate
+        str tile: tile to set
+        """
+        self.board[y][x] = tile
