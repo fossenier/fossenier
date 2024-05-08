@@ -15,7 +15,10 @@ class ClueTracker:
         }
         self.weapons = weapons
 
-        self.hand_size = len(self.cards) // len(players) if len(players) else 0
+        murderer_cards = 3
+        self.hand_size = (
+            (len(self.cards) - murderer_cards) // len(players) if len(players) else 0
+        )
         for card in hand:
             self.store_revealed_card(cpu_suspect, card)
 
@@ -58,7 +61,9 @@ class ClueTracker:
                 for weapon in false_weapons:
                     possible_final_accusations.append(
                         [suspect, weapon, room],
-                        count_false(room) + count_false(suspect) + count_false(weapon),
+                        self.count_false(room)
+                        + self.count_false(suspect)
+                        + count_false(weapon),
                     )
         return possible_final_accusations
 

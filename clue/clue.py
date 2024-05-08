@@ -6,6 +6,7 @@ from clueTracker import ClueTracker
 
 
 class Clue(object):
+    # TODO handle players ending in hallway
     def __init__(self, game_path):
         self.board = []  # the game board
         self.cpu_location = (None, None)  # the CPU location
