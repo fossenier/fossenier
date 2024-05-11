@@ -1,3 +1,4 @@
-x = [1, 2, 3]
-a, b, c = x
-print(a, b)
+x = {1, 2}
+y = {3, 4}
+
+print(4 in (x., y))
