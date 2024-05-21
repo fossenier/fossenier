@@ -63,7 +63,7 @@ class ClueTracker:
                         [suspect, weapon, room],
                         self.count_false(room)
                         + self.count_false(suspect)
-                        + count_false(weapon),
+                        + self.count_false(weapon),
                     )
         return possible_final_accusations
 

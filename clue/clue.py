@@ -142,9 +142,15 @@ class Clue(object):
                 return
 
             # note if the accused player revealed a card
-            is_card_revealed = input(
-                f"Did {questioned_player} reveal a card to you (y/n)? "
-            ).lower()
+            is_card_revealed = None
+            while is_card_revealed not in ["y", "n", "skip"]:
+                is_card_revealed = input(
+                    f"Did {questioned_player} reveal a card to you (y/n)? "
+                ).lower()
+
+            if is_card_revealed == "skip":
+                return
+
             if is_card_revealed == "n":
                 self.tallysheet.store_accusation(
                     suspect, weapon, room, questioned_player, is_card_revealed
@@ -156,8 +162,6 @@ class Clue(object):
                 )
                 self.tallysheet.store_revealed_card(questioned_player, revealed_card)
             questioned_player = self.__get_next_player(questioned_player)
-
-        
 
     def __get_attribute_name(self, provided_attribute, attributes):
         """
@@ -236,6 +240,15 @@ class Clue(object):
                 return
 
             # note if the accused player revealed a card
+            is_card_revealed = None
+            while is_card_revealed not in ["y", "n", "skip"]:
+                is_card_revealed = input(
+                    f"Did {questioned_player} reveal a card to you (y/n)? "
+                ).lower()
+
+            if is_card_revealed == "skip":
+                return
+
             is_card_revealed = input(
                 f"Did {questioned_player} reveal a card to {player} (y/n)? "
             ).lower()
