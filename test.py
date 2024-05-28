@@ -1,4 +1,2 @@
-x = {1, 2}
-y = {3, 4}
-
-print(4 in (x., y))
+x = [1, 2, 3, 4, 3, 5]
+print(list(set(x)))
