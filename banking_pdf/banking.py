@@ -1,5 +1,9 @@
 import pdfminer.layout
 from pdfminer.high_level import extract_pages
+from typing import Tuple
+
+UPPER_ROW_BUFFER = 5
+LOWER_ROW_BUFFER = 10
 
 class bounding_box(object):
     """
@@ -33,7 +37,10 @@ def main():
     # extract_text_by_coordinates(pdf_path, defx, fy, gx, ay)
     
     result = determine_vertical_bounds(pdf_path, "jun")
-    print(result)
+    left_x = 94.76400000000001
+    right_x = 252.48
+    for bottom_y, top_y in result:
+        extract_text_by_coordinates(pdf_path, left_x, bottom_y, right_x, top_y)
 
 # function to extract text box coordinates
 def print_text_box_coordinates(pdf_path, search_term):
@@ -56,56 +63,30 @@ def extract_text_by_coordinates(pdf_path, x0, y0, x1, y1):
                 # Check if the text box is within the specified coordinates
                 if (x0 <= element.x0 and element.x1 <= x1 and
                     y0 <= element.y0 and element.y1 <= y1):
-                    print(element.get_text())
+                    print(element.get_text().strip())
 
 
-def determine_vertical_bounds(pdf_path, month):
+def determine_vertical_bounds(pdf_path, month: str) -> Tuple[float, float]:
     """
     Given the three letter spelling of a month, reads a Scotiabank pdf and fetches
-    all the transactions of that month. For each transaction on the pdf, this function
-    will create an entry in a dictionary keyed from '-1' to 'len(transactions) + 1'
-    and will populate a bounding_box() object as each value.
+    all the transactions of that month.
     
-    The top of each bounding box will be the bottom of the previous transaction, and the
-    bottom of each bounding box will be the top of the next transaction. Thus, the first
-    and last transactions will not be recorded, and the first, second, last, and second
-    last entries in the dictionary will be removed before being returned.
+    Returns a (lower_y_coord, upper_y_coord) tuple for each transaction.
     """
-    # initialize a counter to track and entries and the dictionary for the entries
-    discovered_entries = 0
-    vertical_bounds = dict()
+    transaction_y_bounds = []
     
     for page_layout in extract_pages(pdf_path):
         for element in page_layout:
-            # checking if the element is an instance of LTTextBoxHorizontal
             if isinstance(element, pdfminer.layout.LTTextBoxHorizontal):
-                # save the coords should it be a date
+                # match the element to the "Jan 14" or "Jun 30" format
                 text = element.get_text().strip()
-                if month.lower() in text.lower() and len(text) <= 6:
-                    prev_entry = str(discovered_entries - 1)
-                    entry = str(discovered_entries)
-                    next_entry = str(discovered_entries + 1)
+                if len(text) <= 6 and month.lower() in text.lower():
+                    # use the row buffer to make sure the larger Transaction column entry
+                    # is included in the bounds given by the smaller Date column entry
+                    transaction_y_bounds.append((element.y0 - LOWER_ROW_BUFFER, element.y1 + UPPER_ROW_BUFFER))
                     
-                    discovered_entries += 1
-                    
-                    # set the top right y coord of the next entry corresponding to the
-                    # bottom of this entry
-                    try:
-                        vertical_bounds[prev_entry].top_right[1] = element.y0
-                    except KeyError:
-                        vertical_bounds[prev_entry] = bounding_box(y1=element.y0)
-                    # capture the date of this entry
-                    try:
-                        vertical_bounds[entry].date = text
-                    except KeyError:
-                        vertical_bounds[entry] = bounding_box(date=text)
-                    # set the bottom left y coord of the previous entry corresponding
-                    # to the top of this entry
-                    try:
-                        vertical_bounds[next_entry].bottom_left[1] = element.y1
-                    except KeyError:
-                        vertical_bounds[next_entry] = bounding_box(y0=element.y1)
-    return vertical_bounds
+    return transaction_y_bounds
+
 
 if __name__ == '__main__':
     main()
