@@ -17,16 +17,32 @@ class bounding_box(object):
         self.x1 = x1
         self.y1 = y1
 
+class Transaction(object):
+    """
+    Represents a transaction object.
+    """
+    def __init__(self, date: str, transaction: str, withdrawn: float, deposited: float, balance: float) -> None:
+        self.date = date
+        self.transaction = transaction
+        self.withdrawn = withdrawn
+        self.deposited = deposited
+        self.balance = balance
+
 
 # Correct the PDF file path using forward slashes or double backslashes
 def main():
     
     
     pdf_path = '2023Sep.pdf'  # Adjust this path as necessary
-    page_layouts = extract_pages(pdf_path)
+    page_layouts = list(extract_pages(pdf_path))
     
     
-    print(determine_columns(page_layouts))
+    columns = determine_columns(page_layouts)
+    rows = determine_rows(page_layouts, "sep")
+    print(columns, rows)
+    extract_transaction_data(pdf_path, page_layouts, columns, rows)
+    
+    # print(determine_columns(page_layouts))
     
     
     # search_term = None
@@ -107,8 +123,6 @@ def determine_columns(page_layouts: Iterator[LTPage]) -> Dict[str, Tuple[float, 
                         columns["transactions"] = (None, element.x1)
                 elif "deposited" in text.lower():
                     columns["deposited"] = (element.x0, element.x1)
-                elif "balance" in text.lower():
-                    columns["balance"] = (element.x0, element.x1)
     
     return columns
 
@@ -141,24 +155,52 @@ def determine_rows(page_layouts: Iterator[LTPage], month: str) -> Dict[str, Tupl
     return rows
                 
 
-def extract_transaction_data(file_path: str, columns: Dict[str, Tuple[float]], rows: Dict[str, Tuple[float, float]]) -> Dict[str, List[bounding_box]]:
+def     extract_transaction_data(file_path: str, page_layouts: Iterator[LTPage], columns: Dict[str, Tuple[float]], rows: Dict[str, Tuple[float, float]]):
     """
     Opens a Scotiabank pdf and extracts all the transaction data from the file.
-    
-    rtype:
-        Dict[str, List[bounding_box]]: a mapping of dates to a list of bounding_box objects representing the transaction details
     """
-    # map transaction dates to raw y coord data
-    transactions = dict()
+    LEFT_BUFFER = 5
+    RIGHT_BUFFER = 5
     
+    def find_date(element: pdfminer.layout.LTTextBoxHorizontal, rows: Dict[str, Tuple[float, float]]) -> str:
+        """
+        Finds the date of a transaction element.
+        
+        args:
+            element: a LTTextBoxHorizontal object
+            rows: a mapping of transaction dates to y coord data
+        
+        rtype:
+            str: the transaction date
+        """
+        for date, y_coords in rows.items():
+            if y_coords[0] - LEFT_BUFFER <= element.y0  and element.y1 <= y_coords[1] + RIGHT_BUFFER:
+                return date
+        return None
+    # first, use the basic opening of the page layouts to get the basic data
     for page_layout in page_layouts:
-        # populate y coord data for each transaction date
         for element in page_layout:
             if isinstance(element, pdfminer.layout.LTTextBoxHorizontal):
-                # look only for elments of the "Jan 30" or "Feb 1" form.
-                text = element.get_text().strip()
-                if len(text) <= 6 and month.lower() in text.lower():
-                    transactions[text] = (element.y0, element.y1)
+                # 0. date 1. transaction details 2. deposited amount 3. withdrawn amount
+                
+                transaction = None
+                withdrawn = None
+                deposited = None
+                
+                # this is a transaction description element
+                if columns["transactions"][0] <= element.x0 <= columns["transactions"][1]:
+                    # if it can be converted to a float, it is a withdraw column element
+                    text = element.get_text().strip()
+                    try:
+                        float(text.replace(",", "")) # not a transaction descritpion
+                    except ValueError:
+                        transaction = text
+                    # TODO remove this
+                    if transaction:
+                        print("---")
+                        print(transaction)
+                        print(find_date(element, rows))
+                        print("---")
                     
 
 
