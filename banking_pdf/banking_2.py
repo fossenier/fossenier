@@ -52,7 +52,7 @@ def stringent_read(pdf_path: str) -> List[LTPage]:
     Great for reading dates, and withdrawals/deposits.
     """
     line_margin = -1  # do not allow multi line textboxes
-    char_margin = 1.2  # shrink the default
+    char_margin = 1.2  # shrink the default to require words being closer
     laparams = LAParams(
         char_margin=char_margin, line_margin=line_margin, detect_vertical=False
     )
