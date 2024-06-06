@@ -14,6 +14,39 @@ def main():
     stringent_layouts = stringent_read(pdf_path)
 
     dates_rows = determine_rows(stringent_layouts)
+    print(dates_rows)
+
+    headers_columns = determine_columns(page_layouts)
+    print(headers_columns)
+
+
+def determine_columns(page_layouts: List[LTPage]) -> Dict[str, Tuple[float, float]]:
+    """
+    Determines the columns in the PDF.
+
+    args:
+        page_layouts: List[LTPage] - the pages of the PDF (allow multi line textboxes)
+
+    rtype:
+        Dict[str, Tuple[float, float]] - a dictionary with the column name as the key, and the x0 and x1 as the value.
+    """
+    columns = dict()
+    for page_layout in page_layouts:
+        for element in page_layout:
+            if isinstance(element, LTTextBoxHorizontal):
+                text = element.get_text().strip()
+                if text.lower() == "date":
+                    columns["date"] = (element.x0, element.x1)
+                elif text.lower() == "transaction":
+                    columns["transaction"] = (element.x0, element.x1)
+                elif text.lower() == "withdrawn":
+                    columns["withdrawn"] = (element.x0, element.x1)
+                elif text.lower() == "deposited":
+                    columns["deposited"] = (element.x0, element.x1)
+                elif text.lower() == "balance":
+                    columns["balance"] = (element.x0, element.x1)
+
+    return columns
 
 
 def determine_rows(page_layouts: List[LTPage]) -> Dict[str, Tuple[float, float]]:
