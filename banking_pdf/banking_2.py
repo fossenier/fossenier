@@ -10,13 +10,12 @@ Attempt 2 at reading Scotiabank PDF statements
 
 def main():
     pdf_path = "2023Sep.pdf"  # Adjust this path as necessary
-    page_layouts = list(extract_pages(pdf_path))
-    stringent_layouts = stringent_read(pdf_path)
+    layouts = read_pages(pdf_path)
 
-    dates_rows = determine_rows(stringent_layouts)
+    dates_rows = determine_rows(layouts)
     print(dates_rows)
 
-    headers_columns = determine_columns(page_layouts)
+    headers_columns = determine_columns(layouts)
     print(headers_columns)
 
 
@@ -35,16 +34,12 @@ def determine_columns(page_layouts: List[LTPage]) -> Dict[str, Tuple[float, floa
         for element in page_layout:
             if isinstance(element, LTTextBoxHorizontal):
                 text = element.get_text().strip()
-                if text.lower() == "date":
-                    columns["date"] = (element.x0, element.x1)
-                elif text.lower() == "transaction":
-                    columns["transaction"] = (element.x0, element.x1)
-                elif text.lower() == "withdrawn":
+                if "transactions" in text.lower():
+                    columns["transactions"] = (element.x0, element.x1)
+                elif "withdrawn" in text.lower():
                     columns["withdrawn"] = (element.x0, element.x1)
-                elif text.lower() == "deposited":
+                elif "deposited" in text.lower():
                     columns["deposited"] = (element.x0, element.x1)
-                elif text.lower() == "balance":
-                    columns["balance"] = (element.x0, element.x1)
 
     return columns
 
@@ -89,6 +84,33 @@ def stringent_read(pdf_path: str) -> List[LTPage]:
     laparams = LAParams(
         char_margin=char_margin, line_margin=line_margin, detect_vertical=False
     )
+
+    return list(extract_pages(pdf_path, laparams=laparams))
+
+
+def read_pages(pdf_path: str) -> List[LTPage]:
+    """
+    Reads the PDF file with LAParams tailored for Scotiabank PDFs.
+    Allows multi line and forces sentences to require text closer together.
+
+    args:
+        pdf_path: str - the path to the PDF file
+
+    rtype:
+        List[LTPage] - the pages of the PDF
+    """
+    line_margin = 0.3  # allow multi line textboxes
+    char_margin = 1.2  # shrink the default to require words being closer
+    laparams = LAParams(
+        char_margin=char_margin, line_margin=line_margin, detect_vertical=True
+    )
+
+    # TODO remove
+    # for page_layout in extract_pages(pdf_path, laparams=laparams):
+    #     for element in page_layout:
+    #         if isinstance(element, LTTextBoxHorizontal):
+    #             print("---")
+    #             print(element.get_text().strip())
 
     return list(extract_pages(pdf_path, laparams=laparams))
 
