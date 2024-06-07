@@ -18,6 +18,9 @@ def main():
     headers_columns = determine_columns(layouts)
     print(headers_columns)
 
+    transactions = populate_transactions(layouts, dates_rows, headers_columns)
+    print(transactions)
+
 
 def determine_columns(page_layouts: List[LTPage]) -> Dict[str, Tuple[float, float]]:
     """
@@ -72,20 +75,48 @@ def determine_rows(page_layouts: List[LTPage]) -> Dict[str, Tuple[float, float]]
     return rows
 
 
-def stringent_read(pdf_path: str) -> List[LTPage]:
+def populate_transactions(
+    layouts: List[LTPage],
+    dates_rows: Dict[str, Tuple[float, float]],
+    headers_columns: Dict[str, Tuple[float, float]],
+):
     """
-    Reads the PDF file with stringent LAParams.
-    Disables multi line, and makes text need to be closer together.
+    Populates the transactions from the PDF.
 
-    Great for reading dates, and withdrawals/deposits.
+    args:
+        layouts: List[LTPage] - the pages of the PDF
+        dates_rows: Dict[str, Tuple[float, float]] - the date rows
+        headers_columns: Dict[str, Tuple[float, float]] - the columns
+
+    rtype:
+        None
     """
-    line_margin = -1  # do not allow multi line textboxes
-    char_margin = 1.2  # shrink the default to require words being closer
-    laparams = LAParams(
-        char_margin=char_margin, line_margin=line_margin, detect_vertical=False
-    )
+    transactions = dict()
 
-    return list(extract_pages(pdf_path, laparams=laparams))
+    # TODO cleanup this magic number
+    SPACER = 5
+    for page_layout in layouts:
+        for element in page_layout:
+            if isinstance(element, LTTextBoxHorizontal):
+                text = element.get_text().strip()
+                # this is a correct row
+                for date, (y0, y1) in dates_rows.items():
+                    if y0 - (SPACER * 2) < element.y0 < y1 + SPACER:
+                        # create the transaction if it doesn't exist
+                        try:
+                            transactions[date]
+                        except KeyError:
+                            transactions[date] = {
+                                "transactions": None,
+                                "withdrawn": None,
+                                "deposited": None,
+                            }
+                        # this is a valid column for the row
+                        for column, (x0, x1) in headers_columns.items():
+                            if x0 - SPACER < element.x0 < x1 + SPACER:
+                                # populate the transaction
+                                transactions[date][column] = text
+    return transactions
 
 
 def read_pages(pdf_path: str) -> List[LTPage]:
@@ -111,6 +142,22 @@ def read_pages(pdf_path: str) -> List[LTPage]:
     #         if isinstance(element, LTTextBoxHorizontal):
     #             print("---")
     #             print(element.get_text().strip())
+
+    return list(extract_pages(pdf_path, laparams=laparams))
+
+
+def stringent_read(pdf_path: str) -> List[LTPage]:
+    """
+    Reads the PDF file with stringent LAParams.
+    Disables multi line, and makes text need to be closer together.
+
+    Great for reading dates, and withdrawals/deposits.
+    """
+    line_margin = -1  # do not allow multi line textboxes
+    char_margin = 1.2  # shrink the default to require words being closer
+    laparams = LAParams(
+        char_margin=char_margin, line_margin=line_margin, detect_vertical=False
+    )
 
     return list(extract_pages(pdf_path, laparams=laparams))
 
