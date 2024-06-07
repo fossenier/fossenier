@@ -7,12 +7,28 @@ from typing import Dict, Iterator, List, Tuple
 Attempt 2 at reading Scotiabank PDF statements
 """
 
+MONTHS = {
+    "jan": "01",
+    "feb": "02",
+    "mar": "03",
+    "apr": "04",
+    "may": "05",
+    "jun": "06",
+    "jul": "07",
+    "aug": "08",
+    "sep": "09",
+    "oct": "10",
+    "nov": "11",
+    "dec": "12",
+}
+
 
 def main():
     pdf_path = "2023Sep.pdf"  # Adjust this path as necessary
+    file_path = "private.csv"  # Adjust this path as necessary
     layouts = read_pages(pdf_path)
 
-    dates_rows = determine_rows(layouts)
+    dates_rows, year = determine_rows(layouts)
     print(dates_rows)
 
     headers_columns = determine_columns(layouts)
@@ -20,6 +36,8 @@ def main():
 
     transactions = populate_transactions(layouts, dates_rows, headers_columns)
     print(transactions)
+
+    store_transactions(file_path, transactions, year)
 
 
 def determine_columns(page_layouts: List[LTPage]) -> Dict[str, Tuple[float, float]]:
@@ -66,13 +84,15 @@ def determine_rows(page_layouts: List[LTPage]) -> Dict[str, Tuple[float, float]]
                 text = element.get_text().strip()
                 # grab the month as "feb", "mar", etc.
                 if "opening balance on " in text.lower():
-                    raw_month = text.split(" ")[3]
+                    raw_time = text.split(" ")
+                    raw_month = raw_time[3]
+                    year = raw_time[5]
                     month = raw_month[:3].lower()
                 # find all instances of "Jan 30" or "Feb 1" etc. as these mark transactions
                 elif month and month in text.lower() and len(text) <= 6:
                     rows[text] = (element.y0, element.y1)
 
-    return rows
+    return rows, year
 
 
 def populate_transactions(
@@ -115,7 +135,7 @@ def populate_transactions(
                         for column, (x0, x1) in headers_columns.items():
                             if x0 - SPACER < element.x0 < x1 + SPACER:
                                 # populate the transaction
-                                transactions[date][column] = text
+                                transactions[date][column] = text.strip()
     return transactions
 
 
@@ -144,6 +164,46 @@ def read_pages(pdf_path: str) -> List[LTPage]:
     #             print(element.get_text().strip())
 
     return list(extract_pages(pdf_path, laparams=laparams))
+
+
+def store_transactions(
+    file_path: str, transactions: Dict[str, Dict[str, str]], year: str
+):
+    """
+    Stores the transactions in a CSV file.
+
+    args:
+        file_path: str - the path to the CSV file
+        transactions: Dict[str, Dict[str, str]] - the transactions
+    """
+    with open(file_path, "w") as file:
+        file.write("date,merchant,category,account,original statement,notes,amount,tags\n")
+        
+        for date in sorted(transactions.keys()):
+            transaction = transactions[date]
+
+            # there may be a statement and a "merchant", or just a "merchant"
+            if "\n" in transaction["transactions"]:
+                statement, merchant = transaction["transactions"].split("\n")
+            else:
+                statement = transaction["transactions"]
+                merchant = transaction["transactions"]
+
+            # format the date as "2024-01-30"
+            month, day = date.split(" ")
+            date = f"{year}-{MONTHS[month.lower()]}-{day}"
+
+            
+            file.write(
+                f"{date},{merchant},,"
+            )
+            
+            file.write(
+                f"{date},{transaction['transactions']},{transaction['withdrawn']},{transaction['deposited']}\n"
+            )
+            if "\n" in transaction["transactions"]:
+                test = transaction["transactions"].split("\n")
+                print(f"Statement: {test[0]} Merchant: {test[1]}")
 
 
 def stringent_read(pdf_path: str) -> List[LTPage]:
