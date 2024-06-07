@@ -177,8 +177,10 @@ def store_transactions(
         transactions: Dict[str, Dict[str, str]] - the transactions
     """
     with open(file_path, "w") as file:
-        file.write("date,merchant,category,account,original statement,notes,amount,tags\n")
-        
+        file.write(
+            "date,merchant,category,account,original statement,notes,amount,tags\n"
+        )
+
         for date in sorted(transactions.keys()):
             transaction = transactions[date]
 
@@ -193,17 +195,21 @@ def store_transactions(
             month, day = date.split(" ")
             date = f"{year}-{MONTHS[month.lower()]}-{day}"
 
-            
-            file.write(
-                f"{date},{merchant},,"
-            )
-            
-            file.write(
-                f"{date},{transaction['transactions']},{transaction['withdrawn']},{transaction['deposited']}\n"
-            )
-            if "\n" in transaction["transactions"]:
-                test = transaction["transactions"].split("\n")
-                print(f"Statement: {test[0]} Merchant: {test[1]}")
+            # mark amount as negative if withdrawn
+            amount = transaction["deposited"]
+            if transaction["withdrawn"]:
+                amount = f"-{transaction['withdrawn']}"
+
+            # TODO yo, Logan, this is where you left off
+
+            file.write(f"{date},{merchant},,,{statement},,{amount},\n")
+
+            # file.write(
+            #     f"{date},{transaction['transactions']},{transaction['withdrawn']},{transaction['deposited']}\n"
+            # )
+            # if "\n" in transaction["transactions"]:
+            #     test = transaction["transactions"].split("\n")
+            #     print(f"Statement: {test[0]} Merchant: {test[1]}")
 
 
 def stringent_read(pdf_path: str) -> List[LTPage]:
