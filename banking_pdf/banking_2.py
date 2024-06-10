@@ -3,6 +3,8 @@ from pdfminer.layout import LAParams, LTPage, LTTextBoxHorizontal
 
 from typing import Dict, Iterator, List, Tuple
 
+import datetime
+
 """
 Attempt 2 at reading Scotiabank PDF statements
 """
@@ -29,13 +31,13 @@ def main():
     layouts = read_pages(pdf_path)
 
     dates_rows, year = determine_rows(layouts)
-    print(dates_rows)
+    # print(dates_rows)
 
     headers_columns = determine_columns(layouts)
-    print(headers_columns)
+    # print(headers_columns)
 
     transactions = populate_transactions(layouts, dates_rows, headers_columns)
-    print(transactions)
+    # print(transactions)
 
     store_transactions(file_path, transactions, year)
 
@@ -177,12 +179,22 @@ def store_transactions(
         transactions: Dict[str, Dict[str, str]] - the transactions
     """
     with open(file_path, "w") as file:
+        # put the right columns for the Monarch format
         file.write(
             "date,merchant,category,account,original statement,notes,amount,tags\n"
         )
 
-        for date in sorted(transactions.keys()):
-            transaction = transactions[date]
+        # sort by date and pull the transaction data
+        for date, transaction in sorted(
+            transactions.items(),
+            key=lambda x: datetime.datetime.strptime(f"{x[0]} {year}", "%b %d %Y"),
+        ):
+            # Ignore the opening balance and closing balance
+            if transaction["transactions"].lower() in [
+                "opening balance",
+                "closing balance",
+            ]:
+                continue
 
             # there may be a statement and a "merchant", or just a "merchant"
             if "\n" in transaction["transactions"]:
@@ -195,21 +207,16 @@ def store_transactions(
             month, day = date.split(" ")
             date = f"{year}-{MONTHS[month.lower()]}-{day}"
 
-            # mark amount as negative if withdrawn
-            amount = transaction["deposited"]
-            if transaction["withdrawn"]:
-                amount = f"-{transaction['withdrawn']}"
-
-            # TODO yo, Logan, this is where you left off
+            # the amount exists and is positive
+            if transaction["deposited"]:
+                amount = transaction["deposited"].replace(",", "")
+            # the amount exists and is negative
+            elif transaction["withdrawn"]:
+                amount = f"-{transaction['withdrawn'].replace(',', '')}"
+            else:
+                amount = "0.00"
 
             file.write(f"{date},{merchant},,,{statement},,{amount},\n")
-
-            # file.write(
-            #     f"{date},{transaction['transactions']},{transaction['withdrawn']},{transaction['deposited']}\n"
-            # )
-            # if "\n" in transaction["transactions"]:
-            #     test = transaction["transactions"].split("\n")
-            #     print(f"Statement: {test[0]} Merchant: {test[1]}")
 
 
 def stringent_read(pdf_path: str) -> List[LTPage]:
