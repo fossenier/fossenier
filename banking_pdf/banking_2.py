@@ -35,12 +35,12 @@ def determine_columns(page_layouts: List[LTPage]) -> Dict[str, Tuple[float, floa
     Determines the columns in a Scotiabank monthly statement PDF. Transactions, withdrawals, and deposits.
 
     args:
-        page_layouts: List[LTPage] - the pages of the PDF (require multi line textboxes)
+        page_layouts: List[LTPage] - the pages of the PDF
 
     rtype:
-        Dict[str, Tuple[float, float]] - a dictionary with the column name as the key, and the x0 and x1 as the value.
+        Dict[str, Tuple[float, float]] - a dictionary with the column constants as the key, and the x0 and x1 as the value.
     """
-    # Exactly what the columns are called in the PDF
+    # exactly what the columns are called in the PDF
     transaction = "Transactions"
     withdrawal = "Amounts\nwithdrawn ($)"
     deposit = "Amounts\ndeposited ($)"
@@ -62,31 +62,42 @@ def determine_columns(page_layouts: List[LTPage]) -> Dict[str, Tuple[float, floa
     return columns
 
 
-def determine_rows(page_layouts: List[LTPage]) -> Dict[str, Tuple[float, float]]:
+def determine_rows(page_layouts: List[LTPage]) -> Tuple[Dict[str, Tuple[float, float]], str]:
     """
-    Determines the transaction rows in the PDF.
+    Determines the rows of transactions in a Scotiabank monthly statement PDF.
 
     args:
-        page_layouts: List[LTPage] - the pages of the PDF (be stringent)
+        page_layouts: List[LTPage] - the pages of the PDF
 
     rtype:
-        Dict[str, Tuple[float, float]] - a dictionary with the date as the key, and the y0 and y1 as the value.
+        Tuple[Dict[str, Tuple[float, float]], str] - a dictionary with each transaction date as the key,
+        mapped to the y0 and y1 of the transaction row, as well as the year
     """
+    # exactly what the month containing textbox starts with
+    opening_balance = "Opening Balance on "
+    
+    # the rows to be returned
     rows = dict()
+    # the month and year of the statement
     month = None
+    year = None
 
     for page_layout in page_layouts:
         for element in page_layout:
+            # save coordinates for the desired rows
             if isinstance(element, LTTextBoxHorizontal):
                 text = element.get_text().strip()
-                # grab the month as "feb", "mar", etc.
-                if "opening balance on " in text.lower():
+                # grab the month as "feb", "mar", etc. from the one specific textbox
+                # the first clause is to save computation
+                if not month and text.startswith(opening_balance):
                     raw_time = text.split(" ")
                     raw_month = raw_time[3]
+                    # collect the year
                     year = raw_time[5]
-                    month = raw_month[:3].lower()
+                    month = raw_month[:3]
                 # find all instances of "Jan 30" or "Feb 1" etc. as these mark transactions
-                elif month and month in text.lower() and len(text) <= 6:
+                # the len() check is to avoid usage of the month in a textbox where it's not a transaction
+                elif month and text.startswith(month) and len(text) <= 6:
                     rows[text] = (element.y0, element.y1)
 
     return rows, year
