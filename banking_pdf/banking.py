@@ -100,6 +100,7 @@ def determine_rows(
     rows = dict()
     # the month and year of the statement
     month = None
+    prev_month = None
     year = None
 
     for page_layout in page_layouts:
@@ -115,9 +116,14 @@ def determine_rows(
                     # collect the year
                     year = raw_time[5]
                     month = raw_month[:3]
+                    prev_month = previous_month(month)
                 # find all instances of "Jan 30" or "Feb 1" etc. as these mark transactions
                 # the len() check is to avoid usage of the month in a textbox where it's not a transaction
-                elif month and text.startswith(month) and len(text) <= 6:
+                elif (
+                    month
+                    and (text.startswith(month) or text.startswith(prev_month))
+                    and len(text) <= 6
+                ):
                     rows[text] = (element.y0, element.y1)
 
     return rows, year
@@ -126,8 +132,9 @@ def determine_rows(
 def populate_transactions(
     page_layouts: List[LTPage],
     dates_rows: Dict[str, Tuple[float, float]],
+    # TODO read in the transactions (dates_rows) so that they aren't a dict
     headers_columns: Dict[str, Tuple[float, float]],
-) -> Dict[str, Dict[str, str]]:
+) -> Dict[str, List[Dict[str, str]]]:
     """
     Populates a Scotiabank monthly statement PDF into memory using pre-determined search areas.
 
@@ -139,7 +146,7 @@ def populate_transactions(
         constants as the key, and the x0 and x1 as the value.
 
     rtype:
-        Dict[str, Dict[str, str]] - a dictionary with each transaction date as the key, mapped to
+        Dict[str, List[Dict[str, str]]] - a dictionary with each transaction date as the key, mapped to
         the transaction, withdrawal, and deposit as the value
     """
     # define a window of space around the textboxes to allow for some error
@@ -157,19 +164,55 @@ def populate_transactions(
                     if y0 - (GRACE * 2) < element.y0 < y1 + GRACE:
                         # create the transaction if it doesn't exist
                         try:
-                            transactions[date]
+                            transactions[date].append(
+                                {
+                                    TRANSACTION: None,
+                                    WITHDRAWAL: None,
+                                    DEPOSIT: None,
+                                }
+                            )
                         except KeyError:
-                            transactions[date] = {
-                                TRANSACTION: None,
-                                WITHDRAWAL: None,
-                                DEPOSIT: None,
-                            }
+                            transactions[date] = [
+                                {
+                                    TRANSACTION: None,
+                                    WITHDRAWAL: None,
+                                    DEPOSIT: None,
+                                }
+                            ]
                         # this is a valid column for the row
                         for header, (x0, x1) in headers_columns.items():
                             if x0 - GRACE < element.x0 < x1 + GRACE:
                                 # populate the transaction
-                                transactions[date][header] = text.strip()
+                                transactions[date][-1][header] = text.strip()
     return transactions
+
+
+def previous_month(month: str) -> str:
+    """
+    Returns the previous month given the current month. Capitalized.
+
+    args:
+        month: str - the current month
+
+    rtype:
+        str - the previous month
+    """
+    months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+    ]
+
+    return months[(months.index(month) - 1) % 12]
 
 
 def read_pages(pdf_path: str) -> List[LTPage]:
@@ -194,7 +237,7 @@ def read_pages(pdf_path: str) -> List[LTPage]:
 
 
 def store_transactions(
-    file_path: str, transactions: Dict[str, Dict[str, str]], year: str
+    file_path: str, transactions: Dict[str, List[Dict[str, str]]], year: str
 ):
     """
     Stores the transactions in a CSV file by appending them in chronological order.
@@ -202,7 +245,7 @@ def store_transactions(
 
     args:
         file_path: str - the path to the CSV file
-        transactions: Dict[str, Dict[str, str]] - the transactions
+        transactions: Dict[str, List[Dict[str, str]]] - the transactions
         year: str - the year of the statement
     """
     # read existing data from CSV
@@ -211,58 +254,72 @@ def store_transactions(
         existing_data = [row for row in reader]
 
     # append new data with the correct formatting
-    for date, transaction in transactions.items():
-        if transaction[TRANSACTION].lower() in ["opening balance", "closing balance"]:
-            continue
-        if "\n" in transaction[TRANSACTION]:
-            statement, merchant = transaction[TRANSACTION].split("\n")
-        else:
-            statement = transaction[TRANSACTION]
-            merchant = transaction[TRANSACTION]
+    for date, transaction_list in transactions.items():
+        for transaction in transaction_list:
+            if not transaction[TRANSACTION]:
+                continue
 
-        formatted_date = datetime.strptime(f"{date} {year}", "%b %d %Y").strftime(
-            "%Y-%m-%d"
-        )
-        amount = (
-            transaction[DEPOSIT].replace(",", "")
-            if transaction[DEPOSIT]
-            else (
-                f"-{transaction[WITHDRAWAL].replace(',', '')}"
-                if transaction[WITHDRAWAL]
-                else "0.00"
+            # skip if the transaction is opening or closing balance
+            if transaction[TRANSACTION].lower() in [
+                "opening balance",
+                "closing balance",
+            ]:
+                continue
+            if "\n" in transaction[TRANSACTION]:
+                separated = transaction[TRANSACTION].split("\n")
+                # the cost was tucked into the merchant name
+                # TODO this is a hacky solution, but it works for now
+                if len(separated) > 2:
+                    print(f"WARNING: {separated}")
+                    separated.pop(1)
+                statement, merchant = separated
+            else:
+                statement = transaction[TRANSACTION]
+                merchant = transaction[TRANSACTION]
+
+            formatted_date = datetime.strptime(f"{date} {year}", "%b %d %Y").strftime(
+                "%Y-%m-%d"
             )
-        )
+            amount = (
+                transaction[DEPOSIT].replace(",", "")
+                if transaction[DEPOSIT]
+                else (
+                    f"-{transaction[WITHDRAWAL].replace(',', '')}"
+                    if transaction[WITHDRAWAL]
+                    else "0.00"
+                )
+            )
 
-        new_row = {
-            "date": formatted_date,
-            "merchant": merchant,
-            "category": "",
-            "account": "",
-            "original statement": statement,
-            "notes": "",
-            "amount": amount,
-            "tags": "",
-        }
-        existing_data.append(new_row)
+            new_row = {
+                "date": formatted_date,
+                "merchant": merchant,
+                "category": "",
+                "account": "",
+                "original statement": statement,
+                "notes": "",
+                "amount": amount,
+                "tags": "",
+            }
+            existing_data.append(new_row)
 
-    # sort all data by date before writing back to the file
-    existing_data.sort(key=lambda x: datetime.strptime(x["date"], "%Y-%m-%d"))
+        # sort all data by date before writing back to the file
+        existing_data.sort(key=lambda x: datetime.strptime(x["date"], "%Y-%m-%d"))
 
-    # write sorted data back to CSV
-    with open(file_path, mode="w", newline="", encoding="utf-8") as file:
-        fieldnames = [
-            "date",
-            "merchant",
-            "category",
-            "account",
-            "original statement",
-            "notes",
-            "amount",
-            "tags",
-        ]
-        writer = DictWriter(file, fieldnames=fieldnames)
-        writer.writeheader()
-        writer.writerows(existing_data)
+        # write sorted data back to CSV
+        with open(file_path, mode="w", newline="", encoding="utf-8") as file:
+            fieldnames = [
+                "date",
+                "merchant",
+                "category",
+                "account",
+                "original statement",
+                "notes",
+                "amount",
+                "tags",
+            ]
+            writer = DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+            writer.writerows(existing_data)
 
 
 if __name__ == "__main__":
