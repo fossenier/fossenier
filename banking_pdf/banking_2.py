@@ -1,28 +1,16 @@
+"""
+Reads Scotiabank PDF statements and outputs a CSV file in Monarch format.
+"""
+
+from datetime import datetime
 from pdfminer.high_level import extract_pages
 from pdfminer.layout import LAParams, LTPage, LTTextBoxHorizontal
-
 from typing import Dict, Iterator, List, Tuple
 
-import datetime
-
-"""
-Attempt 2 at reading Scotiabank PDF statements
-"""
-
-MONTHS = {
-    "jan": "01",
-    "feb": "02",
-    "mar": "03",
-    "apr": "04",
-    "may": "05",
-    "jun": "06",
-    "jul": "07",
-    "aug": "08",
-    "sep": "09",
-    "oct": "10",
-    "nov": "11",
-    "dec": "12",
-}
+# keys for the transactions dictionary
+DEPOSIT = "deposit"
+TRANSACTION = "transaction"
+WITHDRAWAL = "withdrawal"
 
 
 def main():
@@ -44,25 +32,32 @@ def main():
 
 def determine_columns(page_layouts: List[LTPage]) -> Dict[str, Tuple[float, float]]:
     """
-    Determines the columns in the PDF.
+    Determines the columns in a Scotiabank monthly statement PDF. Transactions, withdrawals, and deposits.
 
     args:
-        page_layouts: List[LTPage] - the pages of the PDF (allow multi line textboxes)
+        page_layouts: List[LTPage] - the pages of the PDF (require multi line textboxes)
 
     rtype:
         Dict[str, Tuple[float, float]] - a dictionary with the column name as the key, and the x0 and x1 as the value.
     """
+    # Exactly what the columns are called in the PDF
+    transaction = "Transactions"
+    withdrawal = "Amounts\nwithdrawn ($)"
+    deposit = "Amounts\ndeposited ($)"
+    
     columns = dict()
     for page_layout in page_layouts:
         for element in page_layout:
+            # save coordinates for the desired columns
             if isinstance(element, LTTextBoxHorizontal):
                 text = element.get_text().strip()
-                if "transactions" in text.lower():
-                    columns["transactions"] = (element.x0, element.x1)
-                elif "withdrawn" in text.lower():
-                    columns["withdrawn"] = (element.x0, element.x1)
-                elif "deposited" in text.lower():
-                    columns["deposited"] = (element.x0, element.x1)
+                # exact match for the column names
+                if transaction == text:
+                    columns[TRANSACTION] = (element.x0, element.x1)
+                elif withdrawal == text:
+                    columns[WITHDRAWAL] = (element.x0, element.x1)
+                elif deposit == text:
+                    columns[DEPOSIT] = (element.x0, element.x1)
 
     return columns
 
@@ -129,9 +124,9 @@ def populate_transactions(
                             transactions[date]
                         except KeyError:
                             transactions[date] = {
-                                "transactions": None,
-                                "withdrawn": None,
-                                "deposited": None,
+                                TRANSACTION: None,
+                                WITHDRAWAL: None,
+                                DEPOSIT: None,
                             }
                         # this is a valid column for the row
                         for column, (x0, x1) in headers_columns.items():
@@ -187,36 +182,38 @@ def store_transactions(
         # sort by date and pull the transaction data
         for date, transaction in sorted(
             transactions.items(),
-            key=lambda x: datetime.datetime.strptime(f"{x[0]} {year}", "%b %d %Y"),
+            key=lambda x: datetime.strptime(f"{x[0]} {year}", "%b %d %Y"),
         ):
             # Ignore the opening balance and closing balance
-            if transaction["transactions"].lower() in [
+            if transaction[TRANSACTION].lower() in [
                 "opening balance",
                 "closing balance",
             ]:
                 continue
 
             # there may be a statement and a "merchant", or just a "merchant"
-            if "\n" in transaction["transactions"]:
-                statement, merchant = transaction["transactions"].split("\n")
+            if "\n" in transaction[TRANSACTION]:
+                statement, merchant = transaction[TRANSACTION].split("\n")
             else:
-                statement = transaction["transactions"]
-                merchant = transaction["transactions"]
+                statement = transaction[TRANSACTION]
+                merchant = transaction[TRANSACTION]
 
             # format the date as "2024-01-30"
             month, day = date.split(" ")
-            date = f"{year}-{MONTHS[month.lower()]}-{day}"
+            formatted_date = datetime.strptime(
+                f"{month} {day} {year}", "%b %d %Y"
+            ).strftime("%Y-%m-%d")
 
             # the amount exists and is positive
-            if transaction["deposited"]:
-                amount = transaction["deposited"].replace(",", "")
+            if transaction[DEPOSIT]:
+                amount = transaction[DEPOSIT].replace(",", "")
             # the amount exists and is negative
-            elif transaction["withdrawn"]:
-                amount = f"-{transaction['withdrawn'].replace(',', '')}"
+            elif transaction[WITHDRAWAL]:
+                amount = f"-{transaction[WITHDRAWAL].replace(",", "")}"
             else:
                 amount = "0.00"
 
-            file.write(f"{date},{merchant},,,{statement},,{amount},\n")
+            file.write(f"{formatted_date},{merchant},,,{statement},,{amount},\n")
 
 
 def stringent_read(pdf_path: str) -> List[LTPage]:
