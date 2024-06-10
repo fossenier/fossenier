@@ -1,208 +1,269 @@
-import pdfminer.layout
-from pdfminer.layout import LAParams, LTPage
+"""
+Reads Scotiabank PDF statements and outputs a CSV file in Monarch format.
+"""
+
+from csv import DictReader, DictWriter
+from datetime import datetime
 from pdfminer.high_level import extract_pages
+from pdfminer.layout import LAParams, LTPage, LTTextBoxHorizontal
 from typing import Dict, Iterator, List, Tuple
 
-UPPER_ROW_BUFFER = 5
-LOWER_ROW_BUFFER = 10
+import os
 
-class bounding_box(object):
-    """
-    Used to specify the bounding box of a datum.
-    """
-    def __init__(self, x0: int=0, y0: int=0, x1: int=0, y1: int=0, datum: str="") -> None:
-        self.datum = datum
-        self.x0 = x0
-        self.y0 = y0
-        self.x1 = x1
-        self.y1 = y1
-
-class Transaction(object):
-    """
-    Represents a transaction object.
-    """
-    def __init__(self, date: str, transaction: str, withdrawn: float, deposited: float, balance: float) -> None:
-        self.date = date
-        self.transaction = transaction
-        self.withdrawn = withdrawn
-        self.deposited = deposited
-        self.balance = balance
+# keys for the transactions dictionary
+DEPOSIT = "deposit"
+TRANSACTION = "transaction"
+WITHDRAWAL = "withdrawal"
 
 
-# Correct the PDF file path using forward slashes or double backslashes
 def main():
-    
-    
-    pdf_path = '2023Sep.pdf'  # Adjust this path as necessary
-    page_layouts = list(extract_pages(pdf_path))
-    
-    
-    columns = determine_columns(page_layouts)
-    rows = determine_rows(page_layouts, "sep")
-    print(columns, rows)
-    extract_transaction_data(pdf_path, page_layouts, columns, rows)
-    
-    # print(determine_columns(page_layouts))
-    
-    
-    # search_term = None
-    # while True:
-    #     search_term = input("Enter the search term: ")
-    #     if search_term == "!stop":
-    #         break
-    #     elif search_term == "!path": 
-    #         pdf_path = input("Enter the PDF file path: ")
-    #     print_text_box_coordinates(pdf_path, search_term)
-    
-    # defx = 99.76
-    # gx = 252.48
-    # fy = 323.082
-    # ay = 358.002
-    # extract_text_by_coordinates(pdf_path, defx, fy, gx, ay)
-    
-    # result = determine_vertical_bounds(pdf_path, "jun")
-    # left_x = 94.76400000000001
-    # right_x = 252.48
-    # for bottom_y, top_y in result:
-    #     extract_text_by_coordinates(pdf_path, left_x, bottom_y, right_x, top_y)
+    # WARNING no touchy: my .gitignore is set to ignore this file
+    output_path = "private.csv"
+    target_directory = os.getcwd()
 
-# function to extract text box coordinates
-def print_text_box_coordinates(pdf_path, search_term):
-    for page_layout in extract_pages(pdf_path):
-        for element in page_layout:
-            # checking if the element is an instance of LTTextBoxHorizontal
-            if isinstance(element, pdfminer.layout.LTTextBoxHorizontal):
-                # printing the bounding box coordinates and text box
-                text = element.get_text().strip()
-                if search_term.lower() in text.lower():
-                    print("---")
-                    print(f"Text Box: {text}")
-                    print(f"Coordinates: ({element.x0}, {element.y0}, {element.x1}, {element.y1})")
-                    print("---")  # separator for readability
+    # create the output CSV
+    with open(output_path, "w") as file:
+        # put the right columns for the Monarch format
+        file.write(
+            "date,merchant,category,account,original statement,notes,amount,tags\n"
+        )
 
-# Function to extract text
-def extract_text_by_coordinates(pdf_path, x0, y0, x1, y1):
-    for page_layout in extract_pages(pdf_path):
-        for element in page_layout:
-            if isinstance(element, pdfminer.layout.LTTextBoxHorizontal):
-                # Check if the text box is within the specified coordinates
-                if (x0 <= element.x0 and element.x1 <= x1 and
-                    y0 <= element.y0 and element.y1 <= y1):
-                    print(element.get_text().strip())
+    pdf_paths = []
+    # walk through all directories and subdirectories
+    for dirpath, _, filenames in os.walk(target_directory):
+        for filename in filenames:
+            # save Scotiabank PDF paths
+            if filename.endswith(".pdf"):
+                pdf_path = os.path.join(dirpath, filename)
+                pdf_paths.append(pdf_path)
 
-def determine_columns(page_layouts: Iterator[LTPage]) -> Dict[str, Tuple[float, float]]:
+    # extract all transactions from each PDF
+    for path in pdf_paths:
+
+        page_layouts = read_pages(path)
+        dates_rows, year = determine_rows(page_layouts)
+        headers_columns = determine_columns(page_layouts)
+        transactions = populate_transactions(page_layouts, dates_rows, headers_columns)
+        store_transactions(output_path, transactions, year)
+
+
+def determine_columns(page_layouts: List[LTPage]) -> Dict[str, Tuple[float, float]]:
     """
-    Goes through a Scotiabank pdf and extracts the x coordinates for columns.
-    
-    NOTE: Is hardcoded with magic numbers to work with the Scotiabank pdf format.
-    
+    Determines the columns in a Scotiabank monthly statement PDF. Transactions, withdrawals, and deposits.
+
     args:
-        page_layouts: an iterator of LTPage objects from pdfminer
-    
+        page_layouts: List[LTPage] - the pages of the PDF
+
     rtype:
-        Dict[str, Tuple[float, float]]: a mapping of column names to a tuple of x0, x1 coordinates
+        Dict[str, Tuple[float, float]] - a dictionary with the column constants as the key, and the x0
+        and x1 as the value.
     """
+    # exactly what the columns are called in the PDF
+    transaction = "Transactions"
+    withdrawal = "Amounts\nwithdrawn ($)"
+    deposit = "Amounts\ndeposited ($)"
+
     columns = dict()
     for page_layout in page_layouts:
         for element in page_layout:
-            # look for headers
-            if isinstance(element, pdfminer.layout.LTTextBoxHorizontal):
+            # save coordinates for the desired columns
+            if isinstance(element, LTTextBoxHorizontal):
                 text = element.get_text().strip()
-                # transactions uses its own left x coord
-                if "transactions" in text.lower():
-                    try:
-                        columns["transactions"] = (element.x0, columns["transactions"][1])
-                    except KeyError:
-                        columns["transactions"] = (element.x0, None)
-                # transactions uses this right x coord
-                elif "withdrawn" in text.lower():
-                    columns["withdrawn"] = (element.x0, element.x1)
-                    try:
-                        columns["transactions"] = (columns["transactions"][0], element.x1)
-                    except KeyError:
-                        columns["transactions"] = (None, element.x1)
-                elif "deposited" in text.lower():
-                    columns["deposited"] = (element.x0, element.x1)
-    
+                # exact match for the column names
+                if transaction == text:
+                    columns[TRANSACTION] = (element.x0, element.x1)
+                elif withdrawal == text:
+                    columns[WITHDRAWAL] = (element.x0, element.x1)
+                elif deposit == text:
+                    columns[DEPOSIT] = (element.x0, element.x1)
+
     return columns
 
 
-def determine_rows(page_layouts: Iterator[LTPage], month: str) -> Dict[str, Tuple[float, float]]:
+def determine_rows(
+    page_layouts: List[LTPage],
+) -> Tuple[Dict[str, Tuple[float, float]], str]:
     """
-    Goes through a Scotiabank pdf and extracts the y coordinates for rows.
-    
-    NOTE: Is hardcoded with magic numbers to work with the Scotiabank pdf format.
-    
+    Determines the rows of transactions in a Scotiabank monthly statement PDF.
+
     args:
-        page_layouts: an iterator of LTPage objects from pdfminer
-        month: the three letter spelling of the month to search for
-        
+        page_layouts: List[LTPage] - the pages of the PDF
+
     rtype:
-        Dict[str, Tuple[float, float]]: a mapping of row names (transaction dates) to a tuple of y0, y1 coordinates
+        Tuple[Dict[str, Tuple[float, float]], str] - a dictionary with each transaction date as the key,
+        mapped to the y0 and y1 of the transaction row, as well as the year
     """
-    # map transaction dates to raw y coord data
+    # exactly what the month containing textbox starts with
+    opening_balance = "Opening Balance on "
+
+    # the rows to be returned
     rows = dict()
-    
+    # the month and year of the statement
+    month = None
+    year = None
+
     for page_layout in page_layouts:
-        # populate y coord data for each transaction date
         for element in page_layout:
-            if isinstance(element, pdfminer.layout.LTTextBoxHorizontal):
-                # look only for elments of the "Jan 30" or "Feb 1" form.
+            # save coordinates for the desired rows
+            if isinstance(element, LTTextBoxHorizontal):
                 text = element.get_text().strip()
-                if len(text) <= 6 and month.lower() in text.lower():
+                # grab the month as "feb", "mar", etc. from the one specific textbox
+                # the first clause is to save computation
+                if not month and text.startswith(opening_balance):
+                    raw_time = text.split(" ")
+                    raw_month = raw_time[3]
+                    # collect the year
+                    year = raw_time[5]
+                    month = raw_month[:3]
+                # find all instances of "Jan 30" or "Feb 1" etc. as these mark transactions
+                # the len() check is to avoid usage of the month in a textbox where it's not a transaction
+                elif month and text.startswith(month) and len(text) <= 6:
                     rows[text] = (element.y0, element.y1)
-                    
-    return rows
-                
 
-def     extract_transaction_data(file_path: str, page_layouts: Iterator[LTPage], columns: Dict[str, Tuple[float]], rows: Dict[str, Tuple[float, float]]):
+    return rows, year
+
+
+def populate_transactions(
+    page_layouts: List[LTPage],
+    dates_rows: Dict[str, Tuple[float, float]],
+    headers_columns: Dict[str, Tuple[float, float]],
+) -> Dict[str, Dict[str, str]]:
     """
-    Opens a Scotiabank pdf and extracts all the transaction data from the file.
+    Populates a Scotiabank monthly statement PDF into memory using pre-determined search areas.
+
+    args:
+        page_layouts: List[LTPage] - the pages of the PDF
+        dates_rows: Dict[str, Tuple[float, float]] - a dictionary with each transaction date
+        as the key, mapped to the y0 and y1 of the transaction row
+        headers_columns: Dict[str, Tuple[float, float]] - a dictionary with the column
+        constants as the key, and the x0 and x1 as the value.
+
+    rtype:
+        Dict[str, Dict[str, str]] - a dictionary with each transaction date as the key, mapped to
+        the transaction, withdrawal, and deposit as the value
     """
-    LEFT_BUFFER = 5
-    RIGHT_BUFFER = 5
-    
-    def find_date(element: pdfminer.layout.LTTextBoxHorizontal, rows: Dict[str, Tuple[float, float]]) -> str:
-        """
-        Finds the date of a transaction element.
-        
-        args:
-            element: a LTTextBoxHorizontal object
-            rows: a mapping of transaction dates to y coord data
-        
-        rtype:
-            str: the transaction date
-        """
-        for date, y_coords in rows.items():
-            if y_coords[0] - LEFT_BUFFER <= element.y0  and element.y1 <= y_coords[1] + RIGHT_BUFFER:
-                return date
-        return None
-    # first, use the basic opening of the page layouts to get the basic data
+    # define a window of space around the textboxes to allow for some error
+    GRACE = 5
+    # the transactions to be returned
+    transactions = dict()
+
     for page_layout in page_layouts:
         for element in page_layout:
-            if isinstance(element, pdfminer.layout.LTTextBoxHorizontal):
-                # 0. date 1. transaction details 2. deposited amount 3. withdrawn amount
-                
-                transaction = None
-                withdrawn = None
-                deposited = None
-                
-                # this is a transaction description element
-                if columns["transactions"][0] <= element.x0 <= columns["transactions"][1]:
-                    # if it can be converted to a float, it is a withdraw column element
-                    text = element.get_text().strip()
-                    try:
-                        float(text.replace(",", "")) # not a transaction descritpion
-                    except ValueError:
-                        transaction = text
-                    # TODO remove this
-                    if transaction:
-                        print("---")
-                        print(transaction)
-                        print(find_date(element, rows))
-                        print("---")
-                    
+            # save the text in the correct row and column
+            if isinstance(element, LTTextBoxHorizontal):
+                text = element.get_text().strip()
+                # this is a correct row
+                for date, (y0, y1) in dates_rows.items():
+                    if y0 - (GRACE * 2) < element.y0 < y1 + GRACE:
+                        # create the transaction if it doesn't exist
+                        try:
+                            transactions[date]
+                        except KeyError:
+                            transactions[date] = {
+                                TRANSACTION: None,
+                                WITHDRAWAL: None,
+                                DEPOSIT: None,
+                            }
+                        # this is a valid column for the row
+                        for header, (x0, x1) in headers_columns.items():
+                            if x0 - GRACE < element.x0 < x1 + GRACE:
+                                # populate the transaction
+                                transactions[date][header] = text.strip()
+    return transactions
 
 
-if __name__ == '__main__':
+def read_pages(pdf_path: str) -> List[LTPage]:
+    """
+    Reads the PDF file with LAParams tailored for Scotiabank PDFs.
+    Allows multi line and forces sentences to require text closer together.
+
+    args:
+        pdf_path: str - the path to the PDF file
+
+    rtype:
+        List[LTPage] - the pages of the PDF
+    """
+    line_margin = 0.3  # allow multi line textboxes
+    char_margin = 1.2  # shrink the default to require words being closer
+    laparams = LAParams(
+        char_margin=char_margin, line_margin=line_margin, detect_vertical=True
+    )
+
+    # make into a list to allow for repeated use, but takes up more memory
+    return list(extract_pages(pdf_path, laparams=laparams))
+
+
+def store_transactions(
+    file_path: str, transactions: Dict[str, Dict[str, str]], year: str
+):
+    """
+    Stores the transactions in a CSV file by appending them in chronological order.
+    Assume Monarch data is already present and needs to be kept in order.
+
+    args:
+        file_path: str - the path to the CSV file
+        transactions: Dict[str, Dict[str, str]] - the transactions
+        year: str - the year of the statement
+    """
+    # read existing data from CSV
+    with open(file_path, mode="r", newline="", encoding="utf-8") as file:
+        reader = DictReader(file)
+        existing_data = [row for row in reader]
+
+    # append new data with the correct formatting
+    for date, transaction in transactions.items():
+        if transaction[TRANSACTION].lower() in ["opening balance", "closing balance"]:
+            continue
+        if "\n" in transaction[TRANSACTION]:
+            statement, merchant = transaction[TRANSACTION].split("\n")
+        else:
+            statement = transaction[TRANSACTION]
+            merchant = transaction[TRANSACTION]
+
+        formatted_date = datetime.strptime(f"{date} {year}", "%b %d %Y").strftime(
+            "%Y-%m-%d"
+        )
+        amount = (
+            transaction[DEPOSIT].replace(",", "")
+            if transaction[DEPOSIT]
+            else (
+                f"-{transaction[WITHDRAWAL].replace(',', '')}"
+                if transaction[WITHDRAWAL]
+                else "0.00"
+            )
+        )
+
+        new_row = {
+            "date": formatted_date,
+            "merchant": merchant,
+            "category": "",
+            "account": "",
+            "original statement": statement,
+            "notes": "",
+            "amount": amount,
+            "tags": "",
+        }
+        existing_data.append(new_row)
+
+    # sort all data by date before writing back to the file
+    existing_data.sort(key=lambda x: datetime.strptime(x["date"], "%Y-%m-%d"))
+
+    # write sorted data back to CSV
+    with open(file_path, mode="w", newline="", encoding="utf-8") as file:
+        fieldnames = [
+            "date",
+            "merchant",
+            "category",
+            "account",
+            "original statement",
+            "notes",
+            "amount",
+            "tags",
+        ]
+        writer = DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(existing_data)
+
+
+if __name__ == "__main__":
     main()

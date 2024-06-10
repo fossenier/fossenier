@@ -88,3 +88,6 @@ dmypy.json
 
 # pdf files
 *.pdf
+
+# csv files named "private.csv"
+private.csv
