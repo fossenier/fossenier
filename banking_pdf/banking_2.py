@@ -14,19 +14,17 @@ WITHDRAWAL = "withdrawal"
 
 
 def main():
+    # WARNING no touchy: my .gitignore is set to ignore this file
+    file_path = "private.csv"
+    
+    # TODO factor this out to be dynamic
     pdf_path = "2023Sep.pdf"  # Adjust this path as necessary
-    file_path = "private.csv"  # Adjust this path as necessary
+    
     layouts = read_pages(pdf_path)
 
     dates_rows, year = determine_rows(layouts)
-    # print(dates_rows)
-
     headers_columns = determine_columns(layouts)
-    # print(headers_columns)
-
     transactions = populate_transactions(layouts, dates_rows, headers_columns)
-    # print(transactions)
-
     store_transactions(file_path, transactions, year)
 
 
@@ -38,7 +36,8 @@ def determine_columns(page_layouts: List[LTPage]) -> Dict[str, Tuple[float, floa
         page_layouts: List[LTPage] - the pages of the PDF
 
     rtype:
-        Dict[str, Tuple[float, float]] - a dictionary with the column constants as the key, and the x0 and x1 as the value.
+        Dict[str, Tuple[float, float]] - a dictionary with the column constants as the key, and the x0
+        and x1 as the value.
     """
     # exactly what the columns are called in the PDF
     transaction = "Transactions"
@@ -107,29 +106,34 @@ def populate_transactions(
     layouts: List[LTPage],
     dates_rows: Dict[str, Tuple[float, float]],
     headers_columns: Dict[str, Tuple[float, float]],
-):
+) -> Dict[str, Dict[str, str]]:
     """
-    Populates the transactions from the PDF.
+    Populates a Scotiabank monthly statement PDF into memory using pre-determined search areas.
 
     args:
         layouts: List[LTPage] - the pages of the PDF
-        dates_rows: Dict[str, Tuple[float, float]] - the date rows
-        headers_columns: Dict[str, Tuple[float, float]] - the columns
+        dates_rows: Dict[str, Tuple[float, float]] - a dictionary with each transaction date
+        as the key, mapped to the y0 and y1 of the transaction row
+        headers_columns: Dict[str, Tuple[float, float]] - a dictionary with the column
+        constants as the key, and the x0 and x1 as the value.
 
     rtype:
-        None
+        Dict[str, Dict[str, str]] - a dictionary with each transaction date as the key, mapped to
+        the transaction, withdrawal, and deposit as the value
     """
+    # define a window of space around the textboxes to allow for some error
+    GRACE = 5
+    # the transactions to be returned
     transactions = dict()
 
-    # TODO cleanup this magic number
-    SPACER = 5
     for page_layout in layouts:
         for element in page_layout:
+            # save the text in the correct row and column
             if isinstance(element, LTTextBoxHorizontal):
                 text = element.get_text().strip()
                 # this is a correct row
                 for date, (y0, y1) in dates_rows.items():
-                    if y0 - (SPACER * 2) < element.y0 < y1 + SPACER:
+                    if y0 - (GRACE * 2) < element.y0 < y1 + GRACE:
                         # create the transaction if it doesn't exist
                         try:
                             transactions[date]
@@ -141,7 +145,7 @@ def populate_transactions(
                             }
                         # this is a valid column for the row
                         for column, (x0, x1) in headers_columns.items():
-                            if x0 - SPACER < element.x0 < x1 + SPACER:
+                            if x0 - GRACE < element.x0 < x1 + GRACE:
                                 # populate the transaction
                                 transactions[date][column] = text.strip()
     return transactions
@@ -164,13 +168,7 @@ def read_pages(pdf_path: str) -> List[LTPage]:
         char_margin=char_margin, line_margin=line_margin, detect_vertical=True
     )
 
-    # TODO remove
-    # for page_layout in extract_pages(pdf_path, laparams=laparams):
-    #     for element in page_layout:
-    #         if isinstance(element, LTTextBoxHorizontal):
-    #             print("---")
-    #             print(element.get_text().strip())
-
+    # make into a list to allow for repeated use, but takes up more memory
     return list(extract_pages(pdf_path, laparams=laparams))
 
 
@@ -225,23 +223,6 @@ def store_transactions(
                 amount = "0.00"
 
             file.write(f"{formatted_date},{merchant},,,{statement},,{amount},\n")
-
-
-def stringent_read(pdf_path: str) -> List[LTPage]:
-    """
-    Reads the PDF file with stringent LAParams.
-    Disables multi line, and makes text need to be closer together.
-
-    Great for reading dates, and withdrawals/deposits.
-    """
-    line_margin = -1  # do not allow multi line textboxes
-    char_margin = 1.2  # shrink the default to require words being closer
-    laparams = LAParams(
-        char_margin=char_margin, line_margin=line_margin, detect_vertical=False
-    )
-
-    return list(extract_pages(pdf_path, laparams=laparams))
-
 
 if __name__ == "__main__":
     main()
