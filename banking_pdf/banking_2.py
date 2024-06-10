@@ -7,6 +7,8 @@ from pdfminer.high_level import extract_pages
 from pdfminer.layout import LAParams, LTPage, LTTextBoxHorizontal
 from typing import Dict, Iterator, List, Tuple
 
+import os
+
 # keys for the transactions dictionary
 DEPOSIT = "deposit"
 TRANSACTION = "transaction"
@@ -15,17 +17,33 @@ WITHDRAWAL = "withdrawal"
 
 def main():
     # WARNING no touchy: my .gitignore is set to ignore this file
-    file_path = "private.csv"
+    output_path = "private.csv"
+    target_directory = "/Users/admin/projects/monorepo/fossenier/banking_pdf"
     
-    # TODO factor this out to be dynamic
-    pdf_path = "2023Sep.pdf"  # Adjust this path as necessary
+    # create the output CSV
+    with open(output_path, "w") as file:
+        # put the right columns for the Monarch format
+        file.write(
+            "date,merchant,category,account,original statement,notes,amount,tags\n"
+        )
+        
+    pdf_paths = []
+    # walk through all directories and subdirectories
+    for dirpath, _, filenames in os.walk(target_directory):
+        for filename in filenames:
+            # save Scotiabank PDF paths
+            if filename.endswith(".pdf"):
+                pdf_path = os.path.join(dirpath, filename)
+                pdf_paths.append(pdf_path)
     
-    layouts = read_pages(pdf_path)
-
-    dates_rows, year = determine_rows(layouts)
-    headers_columns = determine_columns(layouts)
-    transactions = populate_transactions(layouts, dates_rows, headers_columns)
-    store_transactions(file_path, transactions, year)
+    # extract all transactions from each PDF
+    for path in pdf_paths:        
+        
+        page_layouts = read_pages(pdf_path)
+        dates_rows, year = determine_rows(page_layouts)
+        headers_columns = determine_columns(page_layouts)
+        transactions = populate_transactions(page_layouts, dates_rows, headers_columns)
+        store_transactions(output_path, transactions, year)
 
 
 def determine_columns(page_layouts: List[LTPage]) -> Dict[str, Tuple[float, float]]:
@@ -103,7 +121,7 @@ def determine_rows(page_layouts: List[LTPage]) -> Tuple[Dict[str, Tuple[float, f
 
 
 def populate_transactions(
-    layouts: List[LTPage],
+    page_layouts: List[LTPage],
     dates_rows: Dict[str, Tuple[float, float]],
     headers_columns: Dict[str, Tuple[float, float]],
 ) -> Dict[str, Dict[str, str]]:
@@ -111,7 +129,7 @@ def populate_transactions(
     Populates a Scotiabank monthly statement PDF into memory using pre-determined search areas.
 
     args:
-        layouts: List[LTPage] - the pages of the PDF
+        page_layouts: List[LTPage] - the pages of the PDF
         dates_rows: Dict[str, Tuple[float, float]] - a dictionary with each transaction date
         as the key, mapped to the y0 and y1 of the transaction row
         headers_columns: Dict[str, Tuple[float, float]] - a dictionary with the column
@@ -126,7 +144,7 @@ def populate_transactions(
     # the transactions to be returned
     transactions = dict()
 
-    for page_layout in layouts:
+    for page_layout in page_layouts:
         for element in page_layout:
             # save the text in the correct row and column
             if isinstance(element, LTTextBoxHorizontal):
@@ -144,10 +162,10 @@ def populate_transactions(
                                 DEPOSIT: None,
                             }
                         # this is a valid column for the row
-                        for column, (x0, x1) in headers_columns.items():
+                        for header, (x0, x1) in headers_columns.items():
                             if x0 - GRACE < element.x0 < x1 + GRACE:
                                 # populate the transaction
-                                transactions[date][column] = text.strip()
+                                transactions[date][header] = text.strip()
     return transactions
 
 
