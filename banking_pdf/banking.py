@@ -44,17 +44,38 @@ class TransactionList(object):
     Represents a set of Scotiabank transactions. For example, from a monthly statement.
     """
 
-    def __init__(self, transaction: Transaction = None) -> None:
+    def __init__(self, transactions: List[Transaction] = None) -> None:
         # mantain a sorted list of transactions
-        self.transactions = []
-
-        if transaction:
-            self.add_transaction(transaction)
+        self.__transactions = []
+        
+        if transactions:
+            # there is one transaction to add
+            if type(transactions) is Transaction:
+                self.add_transaction(transactions)
+            # there are multiple transactions to add
+            else:
+                for transaction in transactions:
+                    self.add_transaction(transaction)
 
     def add_transaction(self, transaction: Transaction) -> None:
         # insert the transaction in the correct order, using a quick and efficient search
         index = bisect_left(self.transactions, transaction, key=lambda t: t.date)
         self.transactions.insert(index, transaction)
+    
+    def transactions(self) -> List[Transaction]:
+        """
+        NOTE: Do not modify the transactions directly. Use add_transaction() instead.
+        """
+        return self.__transactions
+    
+    def __check_sorted(transactions: List[Transaction]) -> bool:
+        """
+        Checks if the transactions are sorted by date.
+        """
+        for i in range(1, len(transactions)):
+            if transactions[i - 1].date > transactions[i].date:
+                return False
+        return True
 
 
 class ScotiabankPDF(object):
@@ -66,7 +87,6 @@ class ScotiabankPDF(object):
         if not path.endswith(".pdf"):
             raise ValueError("The file must be a PDF")
 
-        # raw statement location data
         self.pages = read_pages(path)  # remember pages to save computation
         self.year = None  # the year of the statement as a str
 
@@ -74,21 +94,16 @@ class ScotiabankPDF(object):
         self.deposit_column = None  # the x0 and x1 of the deposit column
         self.transaction_column = None  # the x0 and x1 of the transaction column
         self.withdrawal_column = None  # the x0 and x1 of the withdrawal column
+        
         # the y0 and y1 of the transaction rows mapped to a transaction
         self.transaction_rows = dict()
-
-        self.populate_location_data()
+        self.populate_transactions()
         
-        for _, transaction in self.transaction_rows.items():
-            print(transaction.date, transaction.original_statement, transaction.amount)
-            pass
-
-        # transaction data
         self.transactions = TransactionList()
 
         self.pages = None  # forget pages to save memory
 
-    def populate_location_data(self) -> None:
+    def populate_transactions(self) -> None:
         """
         Populates the location data of the PDF statement.
 
