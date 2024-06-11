@@ -17,10 +17,10 @@ TRANSACTION = "transaction"
 WITHDRAWAL = "withdrawal"
 
 
-class Transaction(object):
+class Transaction:
     def __init__(
         self,
-        date: datetime = datetime.now(),
+        date: datetime = None,
         merchant: str = "",
         category: str = "",
         account: str = "",
@@ -29,7 +29,7 @@ class Transaction(object):
         amount: str = "0.00",
         tags: str = "",
     ) -> None:
-        self.date = date
+        self.date = date if date else datetime.now()
         self.merchant = merchant
         self.category = category
         self.account = account
@@ -38,19 +38,22 @@ class Transaction(object):
         self.amount = amount
         self.tags = tags
 
+    def __lt__(self, other):
+        return self.date < other.date
 
-class TransactionList(object):
+
+class TransactionList:
     """
     Represents a set of Scotiabank transactions. For example, from a monthly statement.
     """
 
     def __init__(self, transactions: List[Transaction] = None) -> None:
-        # mantain a sorted list of transactions
+        # maintain a sorted list of transactions
         self.__transactions = []
 
         if transactions:
             # there is one transaction to add
-            if type(transactions) is Transaction:
+            if isinstance(transactions, Transaction):
                 self.add_transaction(transactions)
             # there are multiple transactions to add
             else:
@@ -62,8 +65,39 @@ class TransactionList(object):
         Adds a transaction to the list of transactions, maintaining the order.
         """
         # insert the transaction in the correct order, using a quick and efficient search
-        index = bisect_left(self.transactions, transaction, key=lambda t: t.date)
-        self.transactions.insert(index, transaction)
+        index = bisect_left(self.__transactions, transaction)
+        self.__transactions.insert(index, transaction)
+
+    def __add__(self, other):
+        """
+        Merges two TransactionList instances.
+        """
+        if not isinstance(other, TransactionList):
+            raise ValueError("Can only add TransactionList to TransactionList")
+
+        merged_transactions = []
+        i, j = 0, 0
+        while i < len(self.__transactions) and j < len(other.__transactions):
+            if self.__transactions[i] < other.__transactions[j]:
+                merged_transactions.append(self.__transactions[i])
+                i += 1
+            else:
+                merged_transactions.append(other.__transactions[j])
+                j += 1
+
+        # Append remaining transactions from either list
+        while i < len(self.__transactions):
+            merged_transactions.append(self.__transactions[i])
+            i += 1
+
+        while j < len(other.__transactions):
+            merged_transactions.append(other.__transactions[j])
+            j += 1
+
+        return TransactionList(merged_transactions)
+
+    def get_transactions(self):
+        return self.__transactions
 
     def transactions(self) -> List[Transaction]:
         """
@@ -89,10 +123,11 @@ class ScotiabankPDF(object):
     def __init__(self, path: str) -> None:
         if not path.endswith(".pdf"):
             raise ValueError("The file must be a PDF")
+        else:
+            self.__path = path
 
         self.transactions = TransactionList()
 
-        self.__pages = read_pages(path)  # remember pages to save computation
         self.year = None  # the year of the statement as a str
 
         self.__date_column = None  # the x0 and x1 of the date column
@@ -103,8 +138,6 @@ class ScotiabankPDF(object):
         # the y0 and y1 of the transaction rows mapped to a transaction
         self.__transaction_rows = dict()
         self.__populate_transactions()
-
-        self.__pages = None  # forget pages to save memory
 
     def __populate_transactions(self) -> None:
         """
@@ -132,13 +165,11 @@ class ScotiabankPDF(object):
         TRANSACTION_X1 = 180
         AMOUNT_X0 = 50
         AMOUNT_X1 = 5
-        for page_layout in self.__pages:
+        for page_layout in self.read_pages(self.__path):
             for element in page_layout:
                 # save coordinates for the desired columns
                 if isinstance(element, LTTextBoxHorizontal):
                     text = element.get_text().strip()
-                    # if len(text) >= 6:
-                    #     print(text, "\n")
 
                     # grab the year from near the top of the document
                     if not self.year and text.startswith("Opening Balance on "):
@@ -199,14 +230,15 @@ class ScotiabankPDF(object):
 
                     # all other data is not needed
                     else:
-                        continue
+                        pass
+
         for _, transaction in self.__transaction_rows.items():
             # skip opening and closing balance
             if transaction.original_statement in ["Opening Balance", "Closing Balance"]:
                 continue
             self.transactions.add_transaction(transaction)
 
-    def read_pages(self, path: str) -> List[LTPage]:
+    def read_pages(self, path: str) -> Iterator[LTPage]:
         """
         Reads the PDF file with LAParams tailored for Scotiabank PDFs.
         Allows multi line and forces sentences to require text closer together.
@@ -215,7 +247,7 @@ class ScotiabankPDF(object):
             path: str - the path to the PDF file
 
         rtype:
-            List[LTPage] - the pages of the PDF
+            Iterator[LTPage] - the pages of the PDF
         """
         line_margin = 0.3  # allow multi line textboxes
         char_margin = 1.2  # shrink the default to require words being closer
@@ -223,7 +255,8 @@ class ScotiabankPDF(object):
             char_margin=char_margin, line_margin=line_margin, detect_vertical=True
         )
 
-        return List[extract_pages(path, laparams=laparams)]
+        for page_layout in extract_pages(path, laparams=laparams):
+            yield page_layout
 
 
 def main():
@@ -248,235 +281,38 @@ def main():
                 pdf_paths.append(pdf_path)
 
     # extract all transactions from each PDF
+    monarch_raw = TransactionList()
     for path in pdf_paths:
+        monarch_raw = monarch_raw + ScotiabankPDF(path).transactions
 
-        page_layouts = read_pages(path)
-        dates_rows, year = determine_rows(page_layouts)
-        headers_columns = determine_columns(page_layouts)
-        transactions = populate_transactions(page_layouts, dates_rows, headers_columns)
-        store_transactions(output_path, transactions, year)
+    store_transactions(output_path, monarch_raw)
 
 
-def determine_columns(page_layouts: List[LTPage]) -> Dict[str, Tuple[float, float]]:
-    """
-    Determines the columns in a Scotiabank monthly statement PDF. Transactions, withdrawals, and deposits.
-
-    args:
-        page_layouts: List[LTPage] - the pages of the PDF
-
-    rtype:
-        Dict[str, Tuple[float, float]] - a dictionary with the column constants as the key, and the x0
-        and x1 as the value.
-    """
-    # exactly what the columns are called in the PDF
-    transaction = "Transactions"
-    withdrawal = "Amounts\nwithdrawn ($)"
-    deposit = "Amounts\ndeposited ($)"
-
-    columns = dict()
-    for page_layout in page_layouts:
-        for element in page_layout:
-            # save coordinates for the desired columns
-            if isinstance(element, LTTextBoxHorizontal):
-                text = element.get_text().strip()
-                # exact match for the column names
-                if transaction == text:
-                    columns[TRANSACTION] = (element.x0, element.x1)
-                elif withdrawal == text:
-                    columns[WITHDRAWAL] = (element.x0, element.x1)
-                elif deposit == text:
-                    columns[DEPOSIT] = (element.x0, element.x1)
-
-    return columns
-
-
-def determine_rows(
-    page_layouts: List[LTPage],
-) -> Tuple[Dict[str, Tuple[float, float]], str]:
-    """
-    Determines the rows of transactions in a Scotiabank monthly statement PDF.
-
-    args:
-        page_layouts: List[LTPage] - the pages of the PDF
-
-    rtype:
-        Tuple[Dict[str, Tuple[float, float]], str] - a dictionary with each transaction date as the key,
-        mapped to the y0 and y1 of the transaction row, as well as the year
-    """
-    # exactly what the month containing textbox starts with
-    opening_balance = "Opening Balance on "
-
-    # the rows to be returned
-    rows = dict()
-    # the month and year of the statement
-    month = None
-    prev_month = None
-    year = None
-
-    for page_layout in page_layouts:
-        for element in page_layout:
-            # save coordinates for the desired rows
-            if isinstance(element, LTTextBoxHorizontal):
-                text = element.get_text().strip()
-                # grab the month as "feb", "mar", etc. from the one specific textbox
-                # the first clause is to save computation
-                if not month and text.startswith(opening_balance):
-                    raw_time = text.split(" ")
-                    raw_month = raw_time[3]
-                    # collect the year
-                    year = raw_time[5]
-                    month = raw_month[:3]
-                    prev_month = previous_month(month)
-                # find all instances of "Jan 30" or "Feb 1" etc. as these mark transactions
-                # the len() check is to avoid usage of the month in a textbox where it's not a transaction
-                elif (
-                    month
-                    and (text.startswith(month) or text.startswith(prev_month))
-                    and len(text) <= 6
-                ):
-                    rows[text] = (element.y0, element.y1)
-
-    return rows, year
-
-
-def populate_transactions(
-    page_layouts: List[LTPage],
-    dates_rows: Dict[str, Tuple[float, float]],
-    # TODO read in the transactions (dates_rows) so that they aren't a dict
-    headers_columns: Dict[str, Tuple[float, float]],
-) -> Dict[str, List[Dict[str, str]]]:
-    """
-    Populates a Scotiabank monthly statement PDF into memory using pre-determined search areas.
-
-    args:
-        page_layouts: List[LTPage] - the pages of the PDF
-        dates_rows: Dict[str, Tuple[float, float]] - a dictionary with each transaction date
-        as the key, mapped to the y0 and y1 of the transaction row
-        headers_columns: Dict[str, Tuple[float, float]] - a dictionary with the column
-        constants as the key, and the x0 and x1 as the value.
-
-    rtype:
-        Dict[str, List[Dict[str, str]]] - a dictionary with each transaction date as the key, mapped to
-        the transaction, withdrawal, and deposit as the value
-    """
-    # define a window of space around the textboxes to allow for some error
-    GRACE = 5
-    # the transactions to be returned
-    transactions = dict()
-
-    for page_layout in page_layouts:
-        for element in page_layout:
-            # save the text in the correct row and column
-            if isinstance(element, LTTextBoxHorizontal):
-                text = element.get_text().strip()
-                # this is a correct row
-                for date, (y0, y1) in dates_rows.items():
-                    if y0 - (GRACE * 2) < element.y0 < y1 + GRACE:
-                        # create the transaction if it doesn't exist
-                        try:
-                            transactions[date].append(
-                                {
-                                    TRANSACTION: None,
-                                    WITHDRAWAL: None,
-                                    DEPOSIT: None,
-                                }
-                            )
-                        except KeyError:
-                            transactions[date] = [
-                                {
-                                    TRANSACTION: None,
-                                    WITHDRAWAL: None,
-                                    DEPOSIT: None,
-                                }
-                            ]
-                        # this is a valid column for the row
-                        for header, (x0, x1) in headers_columns.items():
-                            if x0 - GRACE < element.x0 < x1 + GRACE:
-                                # populate the transaction
-                                transactions[date][-1][header] = text.strip()
-    return transactions
-
-
-def previous_month(month: str) -> str:
-    """
-    Returns the previous month given the current month. Capitalized.
-
-    args:
-        month: str - the current month
-
-    rtype:
-        str - the previous month
-    """
-    months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-    ]
-
-    return months[(months.index(month) - 1) % 12]
-
-
-def read_pages(pdf_path: str) -> List[LTPage]:
-    """
-    Reads the PDF file with LAParams tailored for Scotiabank PDFs.
-    Allows multi line and forces sentences to require text closer together.
-
-    args:
-        pdf_path: str - the path to the PDF file
-
-    rtype:
-        List[LTPage] - the pages of the PDF
-    """
-    line_margin = 0.3  # allow multi line textboxes
-    char_margin = 1.2  # shrink the default to require words being closer
-    laparams = LAParams(
-        char_margin=char_margin, line_margin=line_margin, detect_vertical=True
-    )
-
-    # make into a list to allow for repeated use, but takes up more memory
-    return list(extract_pages(pdf_path, laparams=laparams))
-
-
-def store_transactions(
-    file_path: str, transactions: Dict[str, List[Dict[str, str]]], year: str
-):
+def store_transactions(file_path: str, transactions: TransactionList) -> None:
     """
     Stores the transactions in a CSV file by appending them in chronological order.
-    Assume Monarch data is already present and needs to be kept in order.
 
     args:
         file_path: str - the path to the CSV file
-        transactions: Dict[str, List[Dict[str, str]]] - the transactions
-        year: str - the year of the statement
+        transactions: TransactionList - the transactions to store
     """
-    # read existing data from CSV
-    with open(file_path, mode="r", newline="", encoding="utf-8") as file:
-        reader = DictReader(file)
-        existing_data = [row for row in reader]
-
-    # append new data with the correct formatting
-    for date, transaction_list in transactions.items():
-        for transaction in transaction_list:
-            if not transaction[TRANSACTION]:
-                continue
-
-            # skip if the transaction is opening or closing balance
-            if transaction[TRANSACTION].lower() in [
-                "opening balance",
-                "closing balance",
-            ]:
-                continue
-            if "\n" in transaction[TRANSACTION]:
-                separated = transaction[TRANSACTION].split("\n")
+    for transaction in transactions.transactions():
+        with open(file_path, "a") as file:
+            writer = DictWriter(
+                file,
+                fieldnames=[
+                    "date",
+                    "merchant",
+                    "category",
+                    "account",
+                    "original statement",
+                    "notes",
+                    "amount",
+                    "tags",
+                ],
+            )
+            if "\n" in transaction.original_statement:
+                separated = transaction.original_statement.split("\n")
                 # the cost was tucked into the merchant name
                 # TODO this is a hacky solution, but it works for now
                 if len(separated) > 2:
@@ -484,54 +320,21 @@ def store_transactions(
                     separated.pop(1)
                 statement, merchant = separated
             else:
-                statement = transaction[TRANSACTION]
-                merchant = transaction[TRANSACTION]
-
-            formatted_date = datetime.strptime(f"{date} {year}", "%b %d %Y").strftime(
-                "%Y-%m-%d"
+                statement = transaction.original_statement
+                merchant = transaction.original_statement
+            writer.writerow(
+                {
+                    "date": transaction.date,
+                    "merchant": merchant,
+                    "category": transaction.category,
+                    "account": transaction.account,
+                    "original statement": statement,
+                    "notes": transaction.notes,
+                    "amount": transaction.amount,
+                    "tags": transaction.tags,
+                }
             )
-            amount = (
-                transaction[DEPOSIT].replace(",", "")
-                if transaction[DEPOSIT]
-                else (
-                    f"-{transaction[WITHDRAWAL].replace(',', '')}"
-                    if transaction[WITHDRAWAL]
-                    else "0.00"
-                )
-            )
-
-            new_row = {
-                "date": formatted_date,
-                "merchant": merchant,
-                "category": "",
-                "account": "",
-                "original statement": statement,
-                "notes": "",
-                "amount": amount,
-                "tags": "",
-            }
-            existing_data.append(new_row)
-
-        # sort all data by date before writing back to the file
-        existing_data.sort(key=lambda x: datetime.strptime(x["date"], "%Y-%m-%d"))
-
-        # write sorted data back to CSV
-        with open(file_path, mode="w", newline="", encoding="utf-8") as file:
-            fieldnames = [
-                "date",
-                "merchant",
-                "category",
-                "account",
-                "original statement",
-                "notes",
-                "amount",
-                "tags",
-            ]
-            writer = DictWriter(file, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(existing_data)
 
 
 if __name__ == "__main__":
-    # main()
-    ScotiabankPDF("2023Sep.pdf")
+    main()
