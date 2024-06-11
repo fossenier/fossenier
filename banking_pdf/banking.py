@@ -152,7 +152,7 @@ class ScotiabankPDF(object):
             Checks the y0 and y1 in self.transaction_rows for a transaction.
             """
             # vertical tolerances
-            ROW_Y0 = 10
+            ROW_Y0 = 15
             ROW_Y1 = 100
             for (row_y0, row_y1), transaction in self.__transaction_rows.items():
                 if abs(row_y0 - y0) < ROW_Y0 and abs(row_y1 - y1) < ROW_Y1:
@@ -162,7 +162,7 @@ class ScotiabankPDF(object):
         DATE_X0 = 1
         DATE_X1 = 20
         TRANSACTION_X0 = 1
-        TRANSACTION_X1 = 180
+        TRANSACTION_X1 = 220
         AMOUNT_X0 = 50
         AMOUNT_X1 = 5
         for page_layout in self.read_pages(self.__path):
@@ -193,6 +193,9 @@ class ScotiabankPDF(object):
                         and abs(self.__date_column[0] - element.x0) < DATE_X0
                         and abs(self.__date_column[1] - element.x1) < DATE_X1
                     ):
+                        print(text, element.y0, element.y1)
+                        if len(text) > 6:
+                            text = text[-5:]
                         date = datetime.strptime(f"{text} {self.year}", "%b %d %Y")
                         self.__transaction_rows[(element.y0, element.y1)] = Transaction(
                             date=date
@@ -206,6 +209,7 @@ class ScotiabankPDF(object):
                         and abs(self.__transaction_column[1] - element.x1)
                         < TRANSACTION_X1
                     ):
+                        print(text, element.y0, element.y1)
                         transaction = get_transaction(element.y0, element.y1)
                         if transaction:
                             transaction.original_statement = text
@@ -259,7 +263,7 @@ class ScotiabankPDF(object):
             yield page_layout
 
 
-def main():
+def main(path: str = None) -> None:
     # WARNING no touchy: my .gitignore is set to ignore this file
     output_path = "private.csv"
     target_directory = os.getcwd()
@@ -279,6 +283,9 @@ def main():
             if filename.endswith(".pdf"):
                 pdf_path = os.path.join(dirpath, filename)
                 pdf_paths.append(pdf_path)
+
+    if path:
+        pdf_paths = [os.path.join(target_directory, path)]
 
     # extract all transactions from each PDF
     monarch_raw = TransactionList()
@@ -311,6 +318,8 @@ def store_transactions(file_path: str, transactions: TransactionList) -> None:
                     "tags",
                 ],
             )
+
+            # formatting
             if "\n" in transaction.original_statement:
                 separated = transaction.original_statement.split("\n")
                 # the cost was tucked into the merchant name
@@ -322,9 +331,12 @@ def store_transactions(file_path: str, transactions: TransactionList) -> None:
             else:
                 statement = transaction.original_statement
                 merchant = transaction.original_statement
+
+            formatted_date = transaction.date.strftime("%Y-%m-%d")
+
             writer.writerow(
                 {
-                    "date": transaction.date,
+                    "date": formatted_date,
                     "merchant": merchant,
                     "category": transaction.category,
                     "account": transaction.account,
@@ -337,4 +349,4 @@ def store_transactions(file_path: str, transactions: TransactionList) -> None:
 
 
 if __name__ == "__main__":
-    main()
+    main("2019Apr.pdf")
