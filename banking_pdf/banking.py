@@ -26,7 +26,7 @@ class Transaction(object):
         account: str = "",
         original_statement: str = "",
         notes: str = "",
-        amount: float = 0.00,
+        amount: str = "0.00",
         tags: str = "",
     ) -> None:
         self.date = date
@@ -74,14 +74,17 @@ class ScotiabankPDF(object):
         self.deposit_column = None  # the x0 and x1 of the deposit column
         self.transaction_column = None  # the x0 and x1 of the transaction column
         self.withdrawal_column = None  # the x0 and x1 of the withdrawal column
-        self.transaction_rows = []  # the y0 and y1 of the transaction rows
+        # the y0 and y1 of the transaction rows mapped to a transaction
+        self.transaction_rows = dict()
 
         self.populate_location_data()
+        
+        for _, transaction in self.transaction_rows.items():
+            # print(transaction.date, transaction.original_statement, transaction.amount)
+            pass
 
         # transaction data
         self.transactions = TransactionList()
-        
-        self.populate_transactions()
 
         self.pages = None  # forget pages to save memory
 
@@ -92,14 +95,27 @@ class ScotiabankPDF(object):
         args:
             path: str - the path to the PDF file
         """
+
+        def get_transaction(y0: float, y1: float) -> Transaction:
+            """
+            Checks the y0 and y1 in self.transaction_rows for a transaction.
+            """
+            ROW_Y0 = 0.5
+            ROW_Y1 = 50
+            for (row_y0, row_y1), transaction in self.transaction_rows.items():
+                if row_y0 - ROW_Y0 < y0 and row_y1 + ROW_Y1 > y1:
+                    return transaction
+
         DATE_X0 = 1
         DATE_X1 = 20
+        TRANSACTION_X0 = 1
+        TRANSACTION_X1 = 180
         for page_layout in self.pages:
             for element in page_layout:
                 # save coordinates for the desired columns
                 if isinstance(element, LTTextBoxHorizontal):
                     text = element.get_text().strip()
-                    
+
                     # grab the year from near the top of the document
                     if not self.year and text.startswith("Opening Balance on "):
                         raw_time = text.split(" ")
@@ -122,34 +138,44 @@ class ScotiabankPDF(object):
                         and self.date_column[0] - DATE_X0 < element.x0
                         and self.date_column[1] + DATE_X1 > element.x1
                     ):
-                        self.transaction_rows.append((element.y0, element.y1))
+                        print(text)
+                        date = datetime.strptime(f"{text} {self.year}", "%b %d %Y")
+                        self.transaction_rows[(element.y0, element.y1)] = Transaction(
+                            date=date
+                        )
 
+                    # populate the transaction original statement
+                    elif (
+                        self.transaction_column
+                        and self.transaction_column[0] - TRANSACTION_X0 < element.x0
+                        and self.transaction_column[1] + TRANSACTION_X1 > element.x1
+                    ):
+                        # print(text)
+                        transaction = get_transaction(element.y0, element.y1)
+                        if transaction:
+                            transaction.original_statement = text
+                    
+                    # populate the transaction amount
+                    elif (
+                        self.deposit_column
+                        and self.deposit_column[0] - TRANSACTION_X0 < element.x0
+                        and self.deposit_column[1] + TRANSACTION_X1 > element.x1
+                    ):
+                        transaction = get_transaction(element.y0, element.y1)
+                        if transaction:
+                            transaction.amount = text.replace(",", "")
+                    elif (
+                        self.withdrawal_column
+                        and self.withdrawal_column[0] - TRANSACTION_X0 < element.x0
+                        and self.withdrawal_column[1] + TRANSACTION_X1 > element.x1
+                    ):
+                        transaction = get_transaction(element.y0, element.y1)
+                        if transaction:
+                            transaction.amount = f"-{text.replace(",", "")}"
+                            
+                    # all other data is not needed
                     else:
-                        continue  # this data is not needed
-    
-    def populate_transactions(self) -> None:
-        """
-        Populates the transactions from the PDF statement.
-        """
-        for page_layout in self.pages:
-            for element in page_layout:
-                # save the text in the correct row and column
-                if isinstance(element, LTTextBoxHorizontal):
-                    text = element.get_text().strip()
-                    # this is a correct row
-                    for y0, y1 in self.transaction_rows:
-                        if y0 < element.y0 < y1:
-                            # this is a valid column for the row
-                            if self.date_column[0] < element.x0 < self.date_column[1]:
-                                date = text
-                            elif self.transaction_column[0] < element.x0 < self.transaction_column[1]:
-                                transaction = text
-                            elif self.withdrawal_column[0] < element.x0 < self.withdrawal_column[1]:
-                                withdrawal = text
-                            elif self.deposit_column[0] < element.x0 < self.deposit_column[1]:
-                                deposit = text
-                            else:
-                                continue
+                        continue
 
     def read_pages(self, path: str) -> List[LTPage]:
         """
