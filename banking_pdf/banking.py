@@ -2,6 +2,7 @@
 Reads Scotiabank PDF statements and outputs a CSV file in Monarch format.
 """
 
+from bisect import bisect_left
 from csv import DictReader, DictWriter
 from datetime import datetime
 from pdfminer.high_level import extract_pages
@@ -27,7 +28,7 @@ class Transaction(object):
         notes: str = "",
         amount: float = 0.00,
         tags: str = "",
-    ):
+    ) -> None:
         self.date = date
         self.merchant = merchant
         self.category = category
@@ -37,8 +38,137 @@ class Transaction(object):
         self.amount = amount
         self.tags = tags
 
-    def __str__(self):
-        return f"{self.date} - {self.merchant} - {self.amount}"
+
+class TransactionList(object):
+    """
+    Represents a set of Scotiabank transactions. For example, from a monthly statement.
+    """
+
+    def __init__(self, transaction: Transaction = None) -> None:
+        # mantain a sorted list of transactions
+        self.transactions = []
+
+        if transaction:
+            self.add_transaction(transaction)
+
+    def add_transaction(self, transaction: Transaction) -> None:
+        # insert the transaction in the correct order, using a quick and efficient search
+        index = bisect_left(self.transactions, transaction, key=lambda t: t.date)
+        self.transactions.insert(index, transaction)
+
+
+class ScotiabankPDF(object):
+    """
+    Represents a Scotiabank PDF monthly statement.
+    """
+
+    def __init__(self, path: str) -> None:
+        if not path.endswith(".pdf"):
+            raise ValueError("The file must be a PDF")
+
+        # raw statement location data
+        self.pages = read_pages(path)  # remember pages to save computation
+        self.year = None  # the year of the statement as a str
+
+        self.date_column = None  # the x0 and x1 of the date column
+        self.deposit_column = None  # the x0 and x1 of the deposit column
+        self.transaction_column = None  # the x0 and x1 of the transaction column
+        self.withdrawal_column = None  # the x0 and x1 of the withdrawal column
+        self.transaction_rows = []  # the y0 and y1 of the transaction rows
+
+        self.populate_location_data()
+
+        # transaction data
+        self.transactions = TransactionList()
+        
+        self.populate_transactions()
+
+        self.pages = None  # forget pages to save memory
+
+    def populate_location_data(self) -> None:
+        """
+        Populates the location data of the PDF statement.
+
+        args:
+            path: str - the path to the PDF file
+        """
+        DATE_X0 = 1
+        DATE_X1 = 20
+        for page_layout in self.pages:
+            for element in page_layout:
+                # save coordinates for the desired columns
+                if isinstance(element, LTTextBoxHorizontal):
+                    text = element.get_text().strip()
+                    
+                    # grab the year from near the top of the document
+                    if not self.year and text.startswith("Opening Balance on "):
+                        raw_time = text.split(" ")
+                        self.year = raw_time[5]
+
+                    # find all columns useful for transactions
+                    elif text == "Date":
+                        self.date_column = (element.x0, element.x1)
+                    elif text == "Transactions":
+                        self.transaction_column = (element.x0, element.x1)
+                    elif text == "Amounts\nwithdrawn ($)":
+                        self.withdrawal_column = (element.x0, element.x1)
+                    elif text == "Amounts\ndeposited ($)":
+                        self.deposit_column = (element.x0, element.x1)
+
+                    # find all rows of transactions
+                    # NOTE transactions appear below the date column header
+                    elif (
+                        self.date_column
+                        and self.date_column[0] - DATE_X0 < element.x0
+                        and self.date_column[1] + DATE_X1 > element.x1
+                    ):
+                        self.transaction_rows.append((element.y0, element.y1))
+
+                    else:
+                        continue  # this data is not needed
+    
+    def populate_transactions(self) -> None:
+        """
+        Populates the transactions from the PDF statement.
+        """
+        for page_layout in self.pages:
+            for element in page_layout:
+                # save the text in the correct row and column
+                if isinstance(element, LTTextBoxHorizontal):
+                    text = element.get_text().strip()
+                    # this is a correct row
+                    for y0, y1 in self.transaction_rows:
+                        if y0 < element.y0 < y1:
+                            # this is a valid column for the row
+                            if self.date_column[0] < element.x0 < self.date_column[1]:
+                                date = text
+                            elif self.transaction_column[0] < element.x0 < self.transaction_column[1]:
+                                transaction = text
+                            elif self.withdrawal_column[0] < element.x0 < self.withdrawal_column[1]:
+                                withdrawal = text
+                            elif self.deposit_column[0] < element.x0 < self.deposit_column[1]:
+                                deposit = text
+                            else:
+                                continue
+
+    def read_pages(self, path: str) -> List[LTPage]:
+        """
+        Reads the PDF file with LAParams tailored for Scotiabank PDFs.
+        Allows multi line and forces sentences to require text closer together.
+
+        args:
+            path: str - the path to the PDF file
+
+        rtype:
+            List[LTPage] - the pages of the PDF
+        """
+        line_margin = 0.3  # allow multi line textboxes
+        char_margin = 1.2  # shrink the default to require words being closer
+        laparams = LAParams(
+            char_margin=char_margin, line_margin=line_margin, detect_vertical=True
+        )
+
+        return List[extract_pages(path, laparams=laparams)]
 
 
 def main():
@@ -349,5 +479,4 @@ def store_transactions(
 
 if __name__ == "__main__":
     # main()
-    time = Transaction()
-    print(time)
+    ScotiabankPDF("2023Sep.pdf")
