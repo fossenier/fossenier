@@ -47,7 +47,7 @@ class TransactionList(object):
     def __init__(self, transactions: List[Transaction] = None) -> None:
         # mantain a sorted list of transactions
         self.__transactions = []
-        
+
         if transactions:
             # there is one transaction to add
             if type(transactions) is Transaction:
@@ -58,16 +58,19 @@ class TransactionList(object):
                     self.add_transaction(transaction)
 
     def add_transaction(self, transaction: Transaction) -> None:
+        """
+        Adds a transaction to the list of transactions, maintaining the order.
+        """
         # insert the transaction in the correct order, using a quick and efficient search
         index = bisect_left(self.transactions, transaction, key=lambda t: t.date)
         self.transactions.insert(index, transaction)
-    
+
     def transactions(self) -> List[Transaction]:
         """
         NOTE: Do not modify the transactions directly. Use add_transaction() instead.
         """
         return self.__transactions
-    
+
     def __check_sorted(transactions: List[Transaction]) -> bool:
         """
         Checks if the transactions are sorted by date.
@@ -87,23 +90,23 @@ class ScotiabankPDF(object):
         if not path.endswith(".pdf"):
             raise ValueError("The file must be a PDF")
 
-        self.pages = read_pages(path)  # remember pages to save computation
-        self.year = None  # the year of the statement as a str
-
-        self.date_column = None  # the x0 and x1 of the date column
-        self.deposit_column = None  # the x0 and x1 of the deposit column
-        self.transaction_column = None  # the x0 and x1 of the transaction column
-        self.withdrawal_column = None  # the x0 and x1 of the withdrawal column
-        
-        # the y0 and y1 of the transaction rows mapped to a transaction
-        self.transaction_rows = dict()
-        self.populate_transactions()
-        
         self.transactions = TransactionList()
 
-        self.pages = None  # forget pages to save memory
+        self.__pages = read_pages(path)  # remember pages to save computation
+        self.year = None  # the year of the statement as a str
 
-    def populate_transactions(self) -> None:
+        self.__date_column = None  # the x0 and x1 of the date column
+        self.__deposit_column = None  # the x0 and x1 of the deposit column
+        self.__transaction_column = None  # the x0 and x1 of the transaction column
+        self.__withdrawal_column = None  # the x0 and x1 of the withdrawal column
+
+        # the y0 and y1 of the transaction rows mapped to a transaction
+        self.__transaction_rows = dict()
+        self.__populate_transactions()
+
+        self.__pages = None  # forget pages to save memory
+
+    def __populate_transactions(self) -> None:
         """
         Populates the location data of the PDF statement.
 
@@ -115,19 +118,21 @@ class ScotiabankPDF(object):
             """
             Checks the y0 and y1 in self.transaction_rows for a transaction.
             """
+            # vertical tolerances
             ROW_Y0 = 10
             ROW_Y1 = 100
-            for (row_y0, row_y1), transaction in self.transaction_rows.items():
+            for (row_y0, row_y1), transaction in self.__transaction_rows.items():
                 if abs(row_y0 - y0) < ROW_Y0 and abs(row_y1 - y1) < ROW_Y1:
                     return transaction
 
+        # horizontal tolerances
         DATE_X0 = 1
         DATE_X1 = 20
         TRANSACTION_X0 = 1
         TRANSACTION_X1 = 180
-        AMOUNT_X0 = 50 
+        AMOUNT_X0 = 50
         AMOUNT_X1 = 5
-        for page_layout in self.pages:
+        for page_layout in self.__pages:
             for element in page_layout:
                 # save coordinates for the desired columns
                 if isinstance(element, LTTextBoxHorizontal):
@@ -142,57 +147,64 @@ class ScotiabankPDF(object):
 
                     # find all columns useful for transactions
                     elif text == "Date":
-                        self.date_column = (element.x0, element.x1)
+                        self.__date_column = (element.x0, element.x1)
                     elif text == "Transactions":
-                        self.transaction_column = (element.x0, element.x1)
+                        self.__transaction_column = (element.x0, element.x1)
                     elif text == "Amounts\nwithdrawn ($)":
-                        self.withdrawal_column = (element.x0, element.x1)
+                        self.__withdrawal_column = (element.x0, element.x1)
                     elif text == "Amounts\ndeposited ($)":
-                        self.deposit_column = (element.x0, element.x1)
+                        self.__deposit_column = (element.x0, element.x1)
 
                     # find all rows of transactions
                     # NOTE transactions appear below the date column header
                     elif (
-                        self.date_column
-                        and abs(self.date_column[0] - element.x0) < DATE_X0
-                        and abs(self.date_column[1] - element.x1) < DATE_X1
+                        self.__date_column
+                        and abs(self.__date_column[0] - element.x0) < DATE_X0
+                        and abs(self.__date_column[1] - element.x1) < DATE_X1
                     ):
                         date = datetime.strptime(f"{text} {self.year}", "%b %d %Y")
-                        self.transaction_rows[(element.y0, element.y1)] = Transaction(
+                        self.__transaction_rows[(element.y0, element.y1)] = Transaction(
                             date=date
                         )
 
                     # populate the transaction original statement
                     elif (
-                        self.transaction_column
-                        and abs(self.transaction_column[0] - element.x0) < TRANSACTION_X0
-                        and abs(self.transaction_column[1] - element.x1) < TRANSACTION_X1
+                        self.__transaction_column
+                        and abs(self.__transaction_column[0] - element.x0)
+                        < TRANSACTION_X0
+                        and abs(self.__transaction_column[1] - element.x1)
+                        < TRANSACTION_X1
                     ):
                         transaction = get_transaction(element.y0, element.y1)
                         if transaction:
                             transaction.original_statement = text
-                    
+
                     # populate the transaction amount
                     elif (
-                        self.deposit_column
-                        and abs(self.deposit_column[0] - element.x0) < AMOUNT_X0
-                        and abs(self.deposit_column[1] - element.x1) < AMOUNT_X1
+                        self.__deposit_column
+                        and abs(self.__deposit_column[0] - element.x0) < AMOUNT_X0
+                        and abs(self.__deposit_column[1] - element.x1) < AMOUNT_X1
                     ):
                         transaction = get_transaction(element.y0, element.y1)
                         if transaction:
                             transaction.amount = text.replace(",", "")
                     elif (
-                        self.withdrawal_column
-                        and abs(self.withdrawal_column[0] - element.x0) < AMOUNT_X0
-                        and abs(self.withdrawal_column[1] - element.x1) < AMOUNT_X1
+                        self.__withdrawal_column
+                        and abs(self.__withdrawal_column[0] - element.x0) < AMOUNT_X0
+                        and abs(self.__withdrawal_column[1] - element.x1) < AMOUNT_X1
                     ):
                         transaction = get_transaction(element.y0, element.y1)
                         if transaction:
-                            transaction.amount = f"-{text.replace(",", "")}"
-                            
+                            transaction.amount = "-" + text.replace(",", "")
+
                     # all other data is not needed
                     else:
                         continue
+        for _, transaction in self.__transaction_rows.items():
+            # skip opening and closing balance
+            if transaction.original_statement in ["Opening Balance", "Closing Balance"]:
+                continue
+            self.transactions.add_transaction(transaction)
 
     def read_pages(self, path: str) -> List[LTPage]:
         """
