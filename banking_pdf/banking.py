@@ -16,6 +16,31 @@ TRANSACTION = "transaction"
 WITHDRAWAL = "withdrawal"
 
 
+class Transaction(object):
+    def __init__(
+        self,
+        date: datetime = datetime.now(),
+        merchant: str = "",
+        category: str = "",
+        account: str = "",
+        original_statement: str = "",
+        notes: str = "",
+        amount: float = 0.00,
+        tags: str = "",
+    ):
+        self.date = date
+        self.merchant = merchant
+        self.category = category
+        self.account = account
+        self.original_statement = original_statement
+        self.notes = notes
+        self.amount = amount
+        self.tags = tags
+
+    def __str__(self):
+        return f"{self.date} - {self.merchant} - {self.amount}"
+
+
 def main():
     # WARNING no touchy: my .gitignore is set to ignore this file
     output_path = "private.csv"
@@ -323,4 +348,6 @@ def store_transactions(
 
 
 if __name__ == "__main__":
-    main()
+    # main()
+    time = Transaction()
+    print(time)
