@@ -3,33 +3,32 @@ Reads Scotiabank PDF statements and outputs a CSV file in Monarch format.
 """
 
 from bisect import bisect_left
-from csv import DictReader, DictWriter
+from csv import DictWriter
 from datetime import datetime
 from pdfminer.high_level import extract_pages
 from pdfminer.layout import LAParams, LTPage, LTTextBoxHorizontal
-from typing import Dict, Iterator, List, Tuple
+from typing import Iterator, List
 
 import os
 
-# keys for the transactions dictionary
-DEPOSIT = "deposit"
-TRANSACTION = "transaction"
-WITHDRAWAL = "withdrawal"
-
 
 class Transaction:
+    """
+    Represents a transaction to be imported into Monarch.
+    """
+
     def __init__(
         self,
-        date: datetime = None,
+        date: datetime = datetime.now(),
         merchant: str = "",
         category: str = "",
         account: str = "",
-        original_statement: str = "not populated",
+        original_statement: str = "",
         notes: str = "",
         amount: str = "0.00",
         tags: str = "",
     ) -> None:
-        self.date = date if date else datetime.now()
+        self.date = date
         self.merchant = merchant
         self.category = category
         self.account = account
@@ -44,7 +43,8 @@ class Transaction:
 
 class TransactionList:
     """
-    Represents a set of Scotiabank transactions. For example, from a monthly statement.
+    Represents a set of transactions in the Monarch. For example, from a bank's
+    monthly statement.
     """
 
     def __init__(self, transactions: List[Transaction] = None) -> None:
@@ -69,6 +69,7 @@ class TransactionList:
         self.__transactions.insert(index, transaction)
 
     def __add__(self, other):
+        # ChatGPT wrote this method
         """
         Merges two TransactionList instances.
         """
@@ -85,7 +86,7 @@ class TransactionList:
                 merged_transactions.append(other.__transactions[j])
                 j += 1
 
-        # Append remaining transactions from either list
+        # append remaining transactions from either list
         while i < len(self.__transactions):
             merged_transactions.append(self.__transactions[i])
             i += 1
@@ -96,23 +97,11 @@ class TransactionList:
 
         return TransactionList(merged_transactions)
 
-    def get_transactions(self):
-        return self.__transactions
-
     def transactions(self) -> List[Transaction]:
         """
         NOTE: Do not modify the transactions directly. Use add_transaction() instead.
         """
         return self.__transactions
-
-    def __check_sorted(transactions: List[Transaction]) -> bool:
-        """
-        Checks if the transactions are sorted by date.
-        """
-        for i in range(1, len(transactions)):
-            if transactions[i - 1].date > transactions[i].date:
-                return False
-        return True
 
 
 class ScotiabankPDF(object):
@@ -274,8 +263,18 @@ class ScotiabankPDF(object):
 
 
 def main(path: str = None) -> None:
+    """
+    Reads all (or just one) Scotiabank PDF statements in the current directory and child directories.
+    Outputs to a Monarch CSV file, without the account name. (Put that in yourself.)
+    """
+    # check for command line args, and pull the first one and treat as path
+    if len(os.sys.argv) > 1:
+        path = os.sys.argv[1]
+
     # WARNING no touchy: my .gitignore is set to ignore this file
     output_path = "private.csv"
+
+    # get the current directory
     target_directory = os.getcwd()
 
     # create the output CSV
@@ -286,16 +285,17 @@ def main(path: str = None) -> None:
         )
 
     pdf_paths = []
-    # walk through all directories and subdirectories
-    for dirpath, _, filenames in os.walk(target_directory):
-        for filename in filenames:
-            # save Scotiabank PDF paths
-            if filename.endswith(".pdf"):
-                pdf_path = os.path.join(dirpath, filename)
-                pdf_paths.append(pdf_path)
-
+    # when a specific path is given, only use that one
     if path:
         pdf_paths = [os.path.join(target_directory, path)]
+    else:
+        # walk through all directories and subdirectories
+        for dirpath, _, filenames in os.walk(target_directory):
+            for filename in filenames:
+                # save Scotiabank PDF paths
+                if filename.endswith(".pdf"):
+                    pdf_path = os.path.join(dirpath, filename)
+                    pdf_paths.append(pdf_path)
 
     # extract all transactions from each PDF
     monarch_raw = TransactionList()
@@ -334,6 +334,7 @@ def store_transactions(file_path: str, transactions: TransactionList) -> None:
                 separated = transaction.original_statement.split("\n")
                 # the cost was tucked into the merchant name
                 # TODO this is a hacky solution, but it works for now
+                # 1 PDF in 7 years tripped needed this
                 if len(separated) > 2:
                     print(f"WARNING: {separated}")
                     separated.pop(1)
