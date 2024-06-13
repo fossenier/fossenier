@@ -18,6 +18,7 @@ class ScotiabankPDF(object):
             self.__path = path
 
         self.transactions = TransactionList()
+        self.closing_balance = None  # a tuple of the year, month, date, and balance
 
         self.year = None  # the year of the statement as a str
 
@@ -25,9 +26,49 @@ class ScotiabankPDF(object):
         self.__deposit_column = None  # the x0 and x1 of the deposit column
         self.__transaction_column = None  # the x0 and x1 of the transaction column
         self.__withdrawal_column = None  # the x0 and x1 of the withdrawal column
+        self.__closing_balance_row = None  # the y0 and y1 of the closing balance row
 
         # the y0 and y1 of the transaction rows mapped to a transaction
         self.__transaction_rows = dict()
+
+    def populate_closing_balance(self) -> None:
+        """
+        Populates the closing balance of the PDF statement.
+        """
+        # vertical tolerance
+        BALANCE_TOLERANCE = 5
+        if not self.__closing_balance_row:
+            # the PDF does not have the necessary columns
+            print(f"Empty PDF at {self.__path}")
+            return
+
+        for page_layout in self.read_pages(self.__path):
+            for element in page_layout:
+                if isinstance(element, LTTextBoxHorizontal):
+                    text = element.get_text().strip()
+                    if (
+                        abs(self.__closing_balance_row[0] - element.y0)
+                        < BALANCE_TOLERANCE
+                        and abs(self.__closing_balance_row[1] - element.y1)
+                        < BALANCE_TOLERANCE
+                        and len(text) < 15  # allows up to one billion dollars
+                    ):
+                        # prepare the text to become a float
+                        text.replace(",", "")
+                        text.replace("$", "")
+
+                        year = self.year
+
+                        month_raw = datetime.strptime(f"Jan 1 1900", "%b %d %Y")
+                        # find the latest date of the month (closing day)
+                        for _, transaction in self.__transaction_rows.items():
+                            if transaction.date > month_raw:
+                                month_raw = transaction.date
+
+                        month, day = month_raw.strftime("%b %d").split(" ")
+
+                        self.closing_balance = (year, month, day, text)
+                        break
 
     def populate_transaction_coordinates(self) -> None:
         """
@@ -57,6 +98,10 @@ class ScotiabankPDF(object):
                         self.__withdrawal_column = (element.x0, element.x1)
                     elif text == "Amounts\ndeposited ($)":
                         self.__deposit_column = (element.x0, element.x1)
+
+                    # find row useful for monthly balance
+                    elif text.startswith("Closing Balance on "):
+                        self.__closing_balance_row = (element.y0, element.y1)
 
                     # find all rows of transactions
                     # NOTE transactions appear below the date column header
