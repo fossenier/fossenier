@@ -18,7 +18,7 @@ class ScotiabankPDF(object):
             self.__path = path
 
         self.transactions = TransactionList()
-        self.closing_balance = None  # a tuple of the year, month, date, and balance
+        self.closing_balance = None  # a tuple of the datetime and balance
 
         self.year = None  # the year of the statement as a str
 
@@ -57,17 +57,13 @@ class ScotiabankPDF(object):
                         text.replace(",", "")
                         text.replace("$", "")
 
-                        year = self.year
-
-                        month_raw = datetime.strptime(f"Jan 1 1900", "%b %d %Y")
+                        latest_date = datetime.strptime(f"Jan 1 1900", "%b %d %Y")
                         # find the latest date of the month (closing day)
                         for _, transaction in self.__transaction_rows.items():
-                            if transaction.date > month_raw:
-                                month_raw = transaction.date
+                            if transaction.date > latest_date:
+                                latest_date = transaction.date
 
-                        month, day = month_raw.strftime("%b %d").split(" ")
-
-                        self.closing_balance = (year, month, day, text)
+                        self.closing_balance = (latest_date, text)
                         break
 
     def populate_transaction_coordinates(self) -> None:
