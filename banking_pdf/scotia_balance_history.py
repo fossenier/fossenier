@@ -6,7 +6,7 @@ from csv import DictWriter
 from datetime import datetime, timedelta
 from monarch_transactions import TransactionList
 from scotiabank_pdf import ScotiabankPDF
-from typing import Iterator, List, Tuple
+from typing import List, Tuple
 
 import os
 
@@ -69,9 +69,11 @@ def store_balances(
         writer = DictWriter(file, fieldnames=["Date", "Balance", "Account"])
         writer.writeheader()
 
+        # transactions and balances to iterate through
         transactions = read_transactions(transactions_path)
         balances = sorted(monthly_balances, key=lambda x: x[0])
 
+        # the next transaction and balance
         next_transaction = transactions.pop()
         next_balance = balances.pop()
 
@@ -79,10 +81,6 @@ def store_balances(
         while True:
             # step to yesterday
             current_date -= timedelta(days=1)
-            # print(f"Processing {current_date.strftime('%Y-%m-%d')} ...")
-            # print(
-            #     f"Balance: {balance}, Next Transaction: {next_transaction}, Next Balance: {next_balance}"
-            # )
 
             # if there are no more transactions or balances, break
             if not next_transaction and not next_balance:
