@@ -189,8 +189,8 @@ class AffinityPDF(object):
                             transaction.amount = "-" + text.replace(",", "")
 
         for _, transaction in self.__transaction_rows.items():
-            # skip opening and closing balance
-            if transaction.original_statement in ["Opening Balance", "Closing Balance"]:
+            # skip opening balance
+            if transaction.original_statement == "Balance Forward":
                 continue
             self.transactions.add_transaction(transaction)
 
