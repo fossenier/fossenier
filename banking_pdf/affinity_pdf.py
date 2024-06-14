@@ -77,14 +77,19 @@ class AffinityPDF(object):
         DATE_X0 = 1
         DATE_X1 = 20
 
+        date_seen = (
+            0  # track when "Date" is seen since it appears once at the top of each page
+        )
+
         for i, page_layout in enumerate(self.read_pages(self.__path)):
+            date_seen = 0
             for element in page_layout:
                 # save coordinates for columns and rows
                 if isinstance(element, LTTextBoxHorizontal):
                     text = element.get_text().strip()
 
                     # grab the year and month from near the top of the document
-                    if not (self.year or self.month) and "," in text:
+                    if not (self.year or self.month or self.date) and "," in text:
                         words = text.split(" ")
                         self.year = words[-1]
                         self.month = words[-3][:3]
@@ -92,12 +97,14 @@ class AffinityPDF(object):
 
                     # find all columns useful for transactions
                     elif text == "Date":
+                        date_seen += 1
+                    elif date_seen == 1 and text == "Date":
                         self.__date_column = (element.x0, element.x1)
-                    elif text == "Transactions":
+                    elif text == "Description":
                         self.__description_column = (element.x0, element.x1)
-                    elif text == "Amounts\nwithdrawn ($)":
+                    elif text == "Withdrawals":
                         self.__withdrawal_column = (element.x0, element.x1)
-                    elif text == "Amounts\ndeposited ($)":
+                    elif text == "Deposits":
                         self.__deposit_column = (element.x0, element.x1)
 
                     # find row useful for monthly balance
@@ -111,9 +118,7 @@ class AffinityPDF(object):
                         and abs(self.__date_column[0] - element.x0) < DATE_X0
                         and abs(self.__date_column[1] - element.x1) < DATE_X1
                     ):
-                        if len(text) > 6:
-                            text = text[-5:]
-                        date = datetime.strptime(f"{text} {self.year}", "%b %d %Y")
+                        date = datetime.strptime(text, "%d %b %Y")
                         self.__transaction_rows[(i, element.y0, element.y1)] = (
                             Transaction(date=date)
                         )
