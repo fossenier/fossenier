@@ -4,14 +4,14 @@ Reads Affinity PDF statements and outputs a CSV file in Monarch format.
 
 from csv import DictWriter
 from monarch_transactions import TransactionList
-from scotiabank_pdf import ScotiabankPDF
+from affinity_pdf import AffinityPDF
 
 import os
 
 
 def main(path: str = None) -> None:
     """
-    Reads all (or just one) Scotiabank PDF statements in the current directory and child directories.
+    Reads all (or just one) Affinity PDF statements in the current directory and child directories.
     Outputs to a Monarch CSV file, without the account name. (Put that in yourself.)
     """
     # check for command line args, and pull the first one and treat as path
@@ -47,7 +47,7 @@ def main(path: str = None) -> None:
     # extract all transactions from each PDF
     monarch_raw = TransactionList()
     for path in pdf_paths:
-        pdf = ScotiabankPDF(path)
+        pdf = AffinityPDF(path)
         pdf.populate_transaction_coordinates()
         pdf.populate_transactions()
         monarch_raw = monarch_raw + pdf.transactions

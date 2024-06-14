@@ -73,16 +73,32 @@ class AffinityPDF(object):
         """
         Populates the transaction coordinates of the PDF statement.
         """
-        # horizontal tolerance
-        DATE_X0 = 1
-        DATE_X1 = 20
 
-        date_seen = (
-            0  # track when "Date" is seen since it appears once at the top of each page
-        )
+        def populate_transaction_rows() -> None:
+            # horizontal tolerance
+            DATE_X0 = 1
+            DATE_X1 = 30
+
+            for i, page_layout in enumerate(self.read_pages(self.__path)):
+                for element in page_layout:
+                    # save coordinates for columns and rows
+                    if isinstance(element, LTTextBoxHorizontal):
+                        text = element.get_text().strip()
+
+                        # find all rows of transactions
+                        # NOTE transactions appear below the date column header
+                        if (
+                            self.__date_column
+                            and abs(self.__date_column[0] - element.x0) < DATE_X0
+                            and abs(self.__date_column[1] - element.x1) < DATE_X1
+                            and text != "Date"
+                        ):
+                            date = datetime.strptime(text, "%d %b %Y")
+                            self.__transaction_rows[(i, element.y0, element.y1)] = (
+                                Transaction(date=date)
+                            )
 
         for i, page_layout in enumerate(self.read_pages(self.__path)):
-            date_seen = 0
             for element in page_layout:
                 # save coordinates for columns and rows
                 if isinstance(element, LTTextBoxHorizontal):
@@ -96,9 +112,7 @@ class AffinityPDF(object):
                         self.date = words[-2].replace(",", "")
 
                     # find all columns useful for transactions
-                    elif text == "Date":
-                        date_seen += 1
-                    elif date_seen == 1 and text == "Date":
+                    elif text == "Date" and element.y0 < 600:
                         self.__date_column = (element.x0, element.x1)
                     elif text == "Description":
                         self.__description_column = (element.x0, element.x1)
@@ -111,17 +125,7 @@ class AffinityPDF(object):
                     elif not self.__closing_balance_row and text == "Chequing":
                         self.__closing_balance_row = (element.y0, element.y1)
 
-                    # find all rows of transactions
-                    # NOTE transactions appear below the date column header
-                    elif (
-                        self.__date_column
-                        and abs(self.__date_column[0] - element.x0) < DATE_X0
-                        and abs(self.__date_column[1] - element.x1) < DATE_X1
-                    ):
-                        date = datetime.strptime(text, "%d %b %Y")
-                        self.__transaction_rows[(i, element.y0, element.y1)] = (
-                            Transaction(date=date)
-                        )
+        populate_transaction_rows()
 
     def populate_transactions(self) -> None:
         """
@@ -136,6 +140,9 @@ class AffinityPDF(object):
         ):
             # the PDF does not have the necessary columns
             print(f"Empty PDF at {self.__path}")
+            print(
+                f"date: {self.__date_column} deposit: {self.__deposit_column} description: {self.__description_column} withdrawal: {self.__withdrawal_column} transactions: {self.__transaction_rows}"
+            )
             return
 
         def get_transaction(page: int, y0: float, y1: float) -> Transaction:
@@ -190,7 +197,7 @@ class AffinityPDF(object):
 
         for _, transaction in self.__transaction_rows.items():
             # skip opening balance
-            if transaction.original_statement == "Balance Forward":
+            if transaction.original_statement in ["Balance Forward", ""]:
                 continue
             self.transactions.add_transaction(transaction)
 
