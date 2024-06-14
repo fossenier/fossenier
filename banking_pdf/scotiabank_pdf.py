@@ -42,7 +42,9 @@ class ScotiabankPDF(object):
             print(f"Empty PDF at {self.__path}")
             return
 
-        for page_layout in self.read_pages(self.__path):
+        for i, page_layout in enumerate(self.read_pages(self.__path)):
+            if i > 0:
+                break
             for element in page_layout:
                 if isinstance(element, LTTextBoxHorizontal):
                     text = element.get_text().strip()
@@ -54,8 +56,8 @@ class ScotiabankPDF(object):
                         and len(text) < 15  # allows up to one billion dollars
                     ):
                         # prepare the text to become a float
-                        text.replace(",", "")
-                        text.replace("$", "")
+                        text = text.replace(",", "")
+                        text = text.replace("$", "")
 
                         latest_date = datetime.strptime(f"Jan 1 1900", "%b %d %Y")
                         # find the latest date of the month (closing day)
@@ -63,8 +65,12 @@ class ScotiabankPDF(object):
                             if transaction.date > latest_date:
                                 latest_date = transaction.date
 
-                        self.closing_balance = (latest_date, text)
-                        break
+                        # Do not allow undated pdfs
+                        if latest_date == datetime.strptime(f"Jan 1 1900", "%b %d %Y"):
+                            self.closing_balance = (None, None)
+                        else:
+                            self.closing_balance = (latest_date, float(text))
+                            break
 
     def populate_transaction_coordinates(self) -> None:
         """

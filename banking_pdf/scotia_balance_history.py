@@ -24,6 +24,7 @@ def main(path: str = None, balance: float = None) -> None:
 
     # WARNING no touchy: my .gitignore is set to ignore this file
     output_path = "private.csv"
+    transactions_path = "/Users/admin/Downloads/scotiabankTransactions/transactions.csv"
 
     # get the current directory
     target_directory = os.getcwd()
@@ -47,74 +48,78 @@ def main(path: str = None, balance: float = None) -> None:
         pdf = ScotiabankPDF(path)
         pdf.populate_transaction_coordinates()
         pdf.populate_closing_balance()
-        guaranteed_balances.append(pdf.closing_balance)
+        if pdf.closing_balance[0]:
+            guaranteed_balances.append(pdf.closing_balance)
 
-    store_transactions(output_path, monarch_raw)
+    store_balances(output_path, transactions_path, balance, guaranteed_balances)
 
 
 def store_balances(
     output_path: str,
     transactions_path: str,
     balance: float,
-    balances: List[Tuple[datetime, float]],
+    monthly_balances: List[Tuple[datetime, float]],
 ) -> None:
     """
     Takes in a Monarch transactions csv, a starting balance, and a list of guaranteed balances.
     Goes back in time creating a daily balance history.
     """
-    transactions = list(read_transactions(transactions_path))
-    balances = sorted(balances, key=lambda x: x[0], reverse=True)
-    current_balance = balance
-
     with open(output_path, "w") as file:
+        # put the file header
         writer = DictWriter(file, fieldnames=["Date", "Balance", "Account"])
         writer.writeheader()
 
-        # Starting from the last known balance
-        current_date = balances[0][0]
-        balance_dict = {date: bal for date, bal in balances}
+        transactions = read_transactions(transactions_path)
+        balances = sorted(monthly_balances, key=lambda x: x[0])
 
-        for transaction_date, amount in transactions:
-            while current_date > transaction_date:
-                writer.writerow(
-                    {
-                        "Date": current_date.strftime("%Y-%m-%d"),
-                        "Balance": current_balance,
-                        "Account": "Scotiabank",
-                    }
-                )
-                current_date -= timedelta(days=1)
-                if current_date in balance_dict:
-                    current_balance = balance_dict[current_date]
+        next_transaction = transactions.pop()
+        next_balance = balances.pop()
 
-            # Process the transaction
-            current_balance -= amount
-            writer.writerow(
-                {
-                    "Date": transaction_date.strftime("%Y-%m-%d"),
-                    "Balance": current_balance,
-                    "Account": "Scotiabank",
-                }
-            )
-            current_date = transaction_date - timedelta(days=1)
+        current_date = datetime.now()
+        while True:
+            # step to yesterday
+            current_date -= timedelta(days=1)
+            # print(f"Processing {current_date.strftime('%Y-%m-%d')} ...")
+            # print(
+            #     f"Balance: {balance}, Next Transaction: {next_transaction}, Next Balance: {next_balance}"
+            # )
 
-        # Fill in the remaining days up to the earliest transaction
-        while current_date >= transactions[-1][0]:
+            # if there are no more transactions or balances, break
+            if not next_transaction and not next_balance:
+                break
+
+            # when there is a balance for today, update the balance
+            while next_balance and next_balance[0].date() == current_date.date():
+                balance = next_balance[1]
+                try:
+                    next_balance = balances.pop()
+                except IndexError:
+                    next_balance = None
+
+            # when there are transactions for today, update the balance
+            while (
+                next_transaction and next_transaction[0].date() == current_date.date()
+            ):
+                balance -= next_transaction[1]
+                try:
+                    next_transaction = transactions.pop()
+                except IndexError:
+                    next_transaction = None
+
+            # write the balance for today
             writer.writerow(
                 {
                     "Date": current_date.strftime("%Y-%m-%d"),
-                    "Balance": current_balance,
+                    "Balance": balance,
                     "Account": "Scotiabank",
                 }
             )
-            current_date -= timedelta(days=1)
-            if current_date in balance_dict:
-                current_balance = balance_dict[current_date]
 
 
-def read_transactions(file_path: str) -> Iterator[Tuple[datetime, float]]:
+def read_transactions(file_path: str) -> List[Tuple[datetime, float]]:
     """
     Reads a Monarch transactions CSV file and returns an iterator of datetime and balance tuples.
+    Most recent date to most ancient date.
 
     args:
         file_path: str - the path to the CSV file
@@ -122,9 +127,11 @@ def read_transactions(file_path: str) -> Iterator[Tuple[datetime, float]]:
     with open(file_path, "r") as file:
         # skip the header
         next(file)
-        for line in file:
-            date, _, _, _, _, _, amount, _ = line.strip().split(",")
-            yield datetime.strptime(date, "%Y-%m-%d"), float(amount)
+
+        lines = [line.strip().split(",") for line in file]
+        return [
+            (datetime.strptime(line[0], "%Y-%m-%d"), float(line[6])) for line in lines
+        ]
 
 
 def store_transactions(file_path: str, transactions: TransactionList) -> None:
