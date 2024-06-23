@@ -34,7 +34,7 @@ class Transaction:
         self.tags = tags
 
     def __lt__(self, other):
-        return self.date < other.date
+        return self.date > other.date
 
 
 class TransactionList:

@@ -55,6 +55,7 @@ class AffinityPDF(object):
                         and abs(self.__closing_balance_row[1] - element.y1)
                         < BALANCE_TOLERANCE
                         and text != "Chequing"
+                        and len(text) < 15  # allows up to one billion dollars
                     ):
                         # prepare the text to become a float
                         text = text.replace(",", "")
@@ -150,8 +151,8 @@ class AffinityPDF(object):
             Checks the y0 and y1 in self.transaction_rows for a transaction.
             """
             # vertical tolerances
-            ROW_Y0 = 15
-            ROW_Y1 = 100
+            ROW_Y0 = 5
+            ROW_Y1 = 15
             for (i, row_y0, row_y1), transaction in self.__transaction_rows.items():
                 if (
                     abs(row_y0 - y0) < ROW_Y0
