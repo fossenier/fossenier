@@ -33,7 +33,7 @@ def main() -> None:
     with open(output_path, "w") as file:
         # put the right columns for the Monarch format
         file.write(
-            "date,merchant,category,account,original statement,notes,amount,tags\n"
+            "Date,Merchant,Category,Account,Original Statement,Notes,Amount,Tags\n"
         )
 
     # extract transactions from the CSV
@@ -99,28 +99,28 @@ def store_transactions(file_path: str, transactions: TransactionList) -> None:
             writer = DictWriter(
                 file,
                 fieldnames=[
-                    "date",
-                    "merchant",
-                    "category",
-                    "account",
-                    "original statement",
-                    "notes",
-                    "amount",
-                    "tags",
+                    "Date",
+                    "Merchant",
+                    "Category",
+                    "Account",
+                    "Original Statement",
+                    "Notes",
+                    "Amount",
+                    "Tags",
                 ],
             )
 
             # formatting
             writer.writerow(
                 {
-                    "date": transaction.date,
-                    "merchant": transaction.merchant,
-                    "category": transaction.category,
-                    "account": transaction.account,
-                    "original statement": transaction.original_statement,
-                    "notes": transaction.notes,
-                    "amount": transaction.amount,
-                    "tags": transaction.tags,
+                    "Date": transaction.date,
+                    "Merchant": transaction.merchant,
+                    "Category": transaction.category,
+                    "Account": transaction.account,
+                    "Original Statement": transaction.original_statement,
+                    "Notes": transaction.notes,
+                    "Amount": transaction.amount,
+                    "Tags": transaction.tags,
                 }
             )
 
