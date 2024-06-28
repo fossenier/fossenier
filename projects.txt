@@ -1,0 +1,33 @@
+The projects I have in mind that I can implement whenever.
+
+
+- Monarch pdf converter
+Polish it up, make a readme, make it user friendly, put it somewhere people can use it.
+
+- Grade calculator
+Work inside of Canvas to make that grade calculator which is more useful to students. Chrome extension and partner with that dude who made one already.
+
+- Arduino speaker
+Get my Arduino hardware playing sound nicely.
+
+- Arduino audio driver
+Figure out how to generate the analog signals to power a speaker from something like an mp4 or wav file.
+
+- Kubos
+Learn how the Kubos development ecosystem works and get it functioning in a VM. Then, get it talking between something like a Beaglebone and an Arduino.
+
+- Harvard CS50 AI
+Continue the course.
+
+- Minecraft mod
+Figure out how to write a Minecraft mod.
+
+- Clue AI
+Develop the Clue AI to play better, and follow all the rules.
+
+- Personal website
+Make a Logan Fossenier website, and start blogging and putting projects / usable tools on my site.
+
+- Boston Pizza reader
+Write code to take scans / photos / whatever of my Boston Pizza cash out reports and convert them into a data dashboard.
+

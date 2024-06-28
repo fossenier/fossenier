@@ -91,3 +91,5 @@ dmypy.json
 
 # csv files named "private.csv"
 private.csv
+# txt files named "private.txt"
+private.txt
