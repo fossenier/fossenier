@@ -20,7 +20,7 @@ import os
 OUTPUT_PATH = "fund_facts.csv"
 
 
-def main(output_path: str = OUTPUT_PATH) -> None:
+def main(output_path: str = OUTPUT_PATH, path: str = None) -> None:
     """
     Grabs all PDFs in the current directory and child directories.
     Parses the Scotiabank Fund Fact PDFs.
@@ -33,6 +33,8 @@ def main(output_path: str = OUTPUT_PATH) -> None:
     # When a specific path is given, only use that one.
     if len(os.sys.argv) > 1:
         pdf_paths = [os.path.join(target_directory, os.sys.argv[1])]
+    elif path:
+        pdf_paths = [os.path.join(target_directory, path)]
     else:
         # Walk through all directories and subdirectories.
         for dirpath, _, filenames in os.walk(target_directory):
@@ -62,12 +64,19 @@ def store_funds(output_path: str, funds: list[Fund]) -> None:
     # Find the earliest and latest years.
     earliest_year = None
     latest_year = None
+    bad_funds = []
     for fund in funds:
         for year in fund.years:
-            if not earliest_year or year < earliest_year:
-                earliest_year = year
-            if not latest_year or year > latest_year:
-                latest_year = year
+            try:
+                if not earliest_year or year < earliest_year:
+                    earliest_year = year
+                if not latest_year or year > latest_year:
+                    latest_year = year
+            except Exception:
+                bad_funds.append(fund)
+                break
+    for bad_fund in bad_funds:
+        funds.remove(bad_fund)
 
     with open(output_path, "w") as file:
         writer = DictWriter(

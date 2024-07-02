@@ -15,7 +15,7 @@ def main() -> None:
     # print a big notable block to the command line
     for _ in range(14):
         print("!" * 80)
-    path = "fund1.pdf"
+    path = "fund3.pdf"
 
     # print_content(path, True)
     search_content(path, True)

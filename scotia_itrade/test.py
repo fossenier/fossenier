@@ -1,8 +1,9 @@
-x = dict()
+from fund_fact_reader import main as fund_fact_reader_main
 
-x[20] = "hi"
-x[30] = "bye"
 
-for i in x:
-    print(i)
-    print(x[i])
+def main():
+    fund_fact_reader_main(path="fund3.pdf")
+
+
+if __name__ == "__main__":
+    main()
