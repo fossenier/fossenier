@@ -75,13 +75,37 @@ class Fund(object):
                         elif (element.y0 - CODE_TOLERANCE) < CODE_BOTTOM:
                             break
             elif page_number == 1:
-                table_elements = dict()
+                cached_elements = []
+                table_y1 = None  # The top of the performance graph (taken as the top of the highest % symbol).
+                table_y0 = None  # The bottom of the performance graph (taken as the top of the following header).
+                table_x0 = None  # The left of the performance graph (taken as the x1 of the rightmost % symbol).
                 for element in page_layout:
+                    cached_elements.append(element)
+                    if isinstance(element, LTTextBoxHorizontal):
+                        text = element.get_text().strip()
+                        if "Best and worst 3-month returns" in text:
+                            table_y0 = element.y1
+                            # Assume no more table data
+                            break
+                        # Not a year or performance indicator.
+                        if len(text) > 5:
+                            continue
+                        elif "%" in text:
+                            if not table_y1 or element.y1 > table_y1:
+                                table_y1 = element.y1
+                            if not table_x0 or element.x1 > table_x0:
+                                table_x0 = element.x1
+
+                # Parse the performance table.
+                print(table_y0, table_y1, table_x0)
+
+                table_elements = dict()
+                for element in cached_elements:
                     # Data contained within the performance table.
                     if (
-                        element.y1 < YEARS_TOP
-                        and element.y0 > YEARS_BOTTOM
-                        and element.x0 > YEARS_LEFT
+                        element.y1 < table_y1
+                        and element.y0 > table_y0
+                        and element.x0 > table_x0
                         and isinstance(element, LTTextBoxHorizontal)
                     ):
                         # When finding a new table entry, see if it can be lined up

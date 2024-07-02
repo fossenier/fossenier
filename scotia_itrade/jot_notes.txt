@@ -24,3 +24,9 @@ Scotia Partners Maximum Growth Portfolio Class - Series A
 
 - MER
 of the Fund's expenses were 
+
+
+
+
+590.22 706.08 338.38640000000004
+print(table_y0, table_y1, table_x0)
