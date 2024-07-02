@@ -1,5 +1,8 @@
-from scotia_fund import Fund
+x = dict()
 
+x[20] = "hi"
+x[30] = "bye"
 
-fund = Fund("fund1.pdf")
-print(fund.code)
+for i in x:
+    print(i)
+    print(x[i])

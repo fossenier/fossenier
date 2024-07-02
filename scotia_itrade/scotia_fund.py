@@ -43,7 +43,6 @@ class Fund(object):
         YEARS_TOP = 663
         YEARS_BOTTOM = 558
         YEARS_LEFT = 340
-        YEARS_TOLERANCE = 25
         COLUMN_TOLERANCE = 10
         for page_number, page_layout in enumerate(self.__read_pdf()):
             if page_number == 0:
