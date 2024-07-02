@@ -28,7 +28,7 @@ class Fund(object):
         self.code = None  # The distinguisihing code of the fund.
         self.series = None  # The series of the fund.
         self.mer = None  # The (%) management expense ratio of the fund.
-        self.years = None  # The (%) performance of the fund by year.
+        self.years = dict()  # The (%) performance of the fund by year.
 
         self.__populate_fund_data()
 
@@ -45,7 +45,7 @@ class Fund(object):
         YEARS_LEFT = 340
         YEARS_TOLERANCE = 25
         COLUMN_TOLERANCE = 10
-        for page_number, page_layout in enumerate(extract_pages(self.__path)):
+        for page_number, page_layout in enumerate(self.__read_pdf()):
             if page_number == 0:
                 for element in page_layout:
                     if isinstance(element, LTTextBoxHorizontal):
@@ -97,9 +97,7 @@ class Fund(object):
                         if not stored:
                             table_elements[element.x0] = [element.get_text().strip()]
 
-                print(table_elements)
-                for pair in table_elements.items():
-                    print(f"pair!    {pair}")
+                for pair in table_elements.values():
                     # One item in the stored list is the year, the other the % performance.
                     year, performance = None, None
                     for item in pair:
@@ -118,6 +116,16 @@ class Fund(object):
                             # This is the pure MER.
                             numerical_MER = raw_MER.split("%")[0]
                             self.mer = float(numerical_MER)
+
+    def __read_pdf(self) -> Iterator[LTPage]:
+        """
+        Reads a PDF file and returns the pages.
+        """
+        line_margin = 0.3  # allow multi line textboxes
+        char_margin = 1.2  # shrink the default to require words being closer
+        laparams = LAParams(char_margin=char_margin, line_margin=line_margin)
+        for page_layout in extract_pages(self.__path, laparams=laparams):
+            yield page_layout
 
     def __str__(self) -> str:
         return f"NAME: {self.name} SERIES: {self.series} CODE: {self.code}"
