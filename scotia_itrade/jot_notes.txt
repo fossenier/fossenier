@@ -1,0 +1,26 @@
+Exploring the PDFs
+
+- bounding boxes for the graph
+Partners
+upper % TL x 324.018 y 663.12
+bottom year y 560.32
+Pinnacle
+upper % TL x 324.018 y 663.12
+bottom year y 560.32
+
+we can thus extract from the graph within these bounds, then line up the columns
+
+- name + series
+Pinnacle
+`
+1832 Asset Management L.P.
+Scotia Wealth High Yield Income Pool - Pinnacle Series
+`
+Partners
+`
+1832 Asset Management L.P.
+Scotia Partners Maximum Growth Portfolio Class - Series A
+`
+
+- MER
+of the Fund's expenses were 
