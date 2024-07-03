@@ -48,7 +48,8 @@ def main(output_path: str = OUTPUT_PATH, path: str = None) -> None:
     funds = []
     for path in pdf_paths:
         fund = Fund(path)
-        funds.append(fund)
+        if not fund.invalid:
+            funds.append(fund)
 
     store_funds(output_path, funds)
 

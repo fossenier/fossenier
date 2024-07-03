@@ -29,6 +29,7 @@ class Fund(object):
         self.series = None  # The series of the fund.
         self.mer = None  # The (%) management expense ratio of the fund.
         self.years = dict()  # The (%) performance of the fund by year.
+        self.invalid = False  # The fund is invalid and should not be stored.
 
         self.__populate_fund_data()
 
@@ -40,9 +41,6 @@ class Fund(object):
         CODE_TOP = 600
         CODE_BOTTOM = 550
         CODE_TOLERANCE = 35
-        YEARS_TOP = 663
-        YEARS_BOTTOM = 558
-        YEARS_LEFT = 340
         COLUMN_TOLERANCE = 10
         for page_number, page_layout in enumerate(self.__read_pdf()):
             if page_number == 0:
@@ -60,33 +58,39 @@ class Fund(object):
                             self.series = (
                                 raw_series.split("/n")[0].replace("Series", "").strip()
                             )
-                        elif (
-                            abs(element.y1 - CODE_TOP) < CODE_TOLERANCE
-                            and abs(element.y0 - CODE_BOTTOM) < CODE_TOLERANCE
-                        ):
+                        # Ignore the fund if you need a million dollars to invest.
+                        elif "$1,000,000 initial" in text:
+                            self.invalid = True
+                        else:
                             # The fund code is 3 letters and then numbers.
                             try:
-                                int(text[3:])
-                                self.code = text
+                                words = text.split(" ")
+                                possible_code = words[0]
+                                # This is another part of the document.
+                                if "$" in possible_code or "1832" in possible_code:
+                                    raise ValueError
+                                numerical_code = int(possible_code[3:])
+                                # This is random text.
+                                if numerical_code < 100:
+                                    raise ValueError
+                                self.code = possible_code
                             # This was not the fund code and was just close.
                             except ValueError:
                                 pass
-                        # The code is found, so stop searching.
-                        elif (element.y0 - CODE_TOLERANCE) < CODE_BOTTOM:
-                            break
             elif page_number == 1:
                 cached_elements = []
                 table_y1 = None  # The top of the performance graph (taken as the top of the highest % symbol).
                 table_y0 = None  # The bottom of the performance graph (taken as the top of the following header).
                 table_x0 = None  # The left of the performance graph (taken as the x1 of the rightmost % symbol).
+                caching = True
                 for element in page_layout:
                     cached_elements.append(element)
-                    if isinstance(element, LTTextBoxHorizontal):
+                    if caching and isinstance(element, LTTextBoxHorizontal):
                         text = element.get_text().strip()
                         if "Best and worst 3-month returns" in text:
                             table_y0 = element.y1
                             # Assume no more table data
-                            break
+                            caching = False
                         # Not a year or performance indicator.
                         if len(text) > 5:
                             continue
@@ -95,10 +99,21 @@ class Fund(object):
                                 table_y1 = element.y1
                             if not table_x0 or element.x1 > table_x0:
                                 table_x0 = element.x1
+                    elif not caching and isinstance(element, LTTextBoxHorizontal):
+                        text = element.get_text().strip()
+                        if "of the Fund's expenses were " in text:
+                            # This has the start of the MER and the trailing junk.
+                            raw_MER = text.split("of the Fund's expenses were ")[1]
+                            # This is the pure MER.
+                            numerical_MER = raw_MER.split("%")[0]
+                            self.mer = float(numerical_MER)
+
+                # The performance table was not found (i.e. has not matured to one year).
+                if not table_y1 or not table_y0 or not table_x0:
+                    self.invalid = True
+                    break
 
                 # Parse the performance table.
-                print(table_y0, table_y1, table_x0)
-
                 table_elements = dict()
                 for element in cached_elements:
                     # Data contained within the performance table.
