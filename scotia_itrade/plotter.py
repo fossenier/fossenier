@@ -2,7 +2,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Read data from CSV file
-data = pd.read_csv("fund_facts.csv")
+data = pd.read_csv("data2.csv")
 
 # List to hold annual performance data for plotting
 annual_data = []
@@ -12,6 +12,9 @@ for index, row in data.iterrows():
     name = row["name"]
     code = row["code"]
     mer = row["mer"]
+
+    # if "dividend" not in name.lower():
+    #     continue
 
     # Extract performance data and adjust for MER
     performance = row[4:] - mer
