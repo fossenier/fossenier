@@ -31,3 +31,14 @@ Make a Logan Fossenier website, and start blogging and putting projects / usable
 - Boston Pizza reader
 Write code to take scans / photos / whatever of my Boston Pizza cash out reports and convert them into a data dashboard.
 
+- Biking tracker
+Ability to track my journeying via bike. To cross every road in Saskatoon. You could have a site that's interactive where people can click on the map and it pulls up footage.
+
+- Lego inventory + instructions.
+That idea
+
+- MTG card selling website
+Dad says there's room for improvement and innovation.
+
+- CS website
+Where jobs / hackathons / learning opportunities are posted specifically for people in CS.
