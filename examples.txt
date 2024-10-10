@@ -1,0 +1,11 @@
+1) Logan's Estimate of the difficulty
+
+" Write some code that adds all the numbers together from an array "
+
+
+
+
+2) Challenge question for those who want to try pushing themselves
+
+" Write a function that takes in as a parameter a word, and returns
+true or false if it is a Palindrome (i.e. 'racecar', 'mom') "
