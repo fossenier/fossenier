@@ -1,15 +1,27 @@
-N = 10000000
-# 1 is not considered, [2, 100]
-primes = [True] * (N - 1)
+import random as r
 
-for idx, prime in enumerate(primes):
-    if not prime:
-        continue
-    print(idx + 2)
 
-    # + 2 since we start at 2
-    mod = idx + 2
-    composite = 2 * (mod)
-    while composite <= N:
-        primes[composite - 2] = False
-        composite += mod
+def gen_stats():
+    stats = []
+    for i in range(6):
+        stat = 0
+        for i in range(3):
+            stat += r.randint(1, 6)
+        stats.append(stat)
+    return stats
+
+
+def check_ranger(stats):
+    return stats[0] >= 13 and stats[1] >= 12 and stats[2] >= 14 and stats[4] >= 14
+
+
+def sim():
+    sims = 1000000
+    true = 0
+    for i in range(sims):
+        true += 1 if check_ranger(gen_stats()) else 0
+
+    print(true / sims * 100)
+
+
+sim()
