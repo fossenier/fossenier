@@ -1,15 +1,55 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+typedef struct Node
+{
+    int value;
+    struct Node *next;
+} Node;
+
+void reverse(Node **head);
+Node *recurse(Node *chain);
+
 int main(void)
 {
-    char *target = malloc(2 * sizeof(char));
-    target[0] = 104;
-    target[1] = '\0';
+    Node three = {3, NULL};
+    Node two = {2, &three};
+    Node one = {1, &two};
 
-    target[0]++;
+    Node *walker = &one;
+    while (walker != NULL)
+    {
+        printf("%i\n", walker->value);
+        walker = walker->next;
+    }
 
-    printf("%s\n", target);
+    Node *head = &one;
+    reverse(&head);
 
-    free(target);
+    walker = &three;
+    while (walker != NULL)
+    {
+        printf("%i\n", walker->value);
+        walker = walker->next;
+    }
+}
+
+void reverse(Node **head)
+{
+    Node *start = *head;
+    Node *chain = recurse(*head);
+    while (chain != start)
+    {
+        chain = chain->next;
+    }
+    chain->next = NULL;
+}
+
+Node *recurse(Node *chain)
+{
+    if (chain->next == NULL)
+    {
+        return chain;
+    }
+    return recurse(chain->next)->next = chain;
 }
