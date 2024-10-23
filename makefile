@@ -1,20 +1,17 @@
-# Flags to be passed to the g++ compiler
-CXXFLAGS = -Wall -Weffc++ -Wextra -Wconversion -Wsign-conversion -Wshadow -Werror -std=c++20
+CFLAGS = -Wall -Wextra -Werror -Wconversion -Wsign-conversion -std=c99 -pedantic
+CC = gcc # Maybe g++
 
-# The compiler to use
-CXX = g++
+OBJS = test.o
 
-# Target 'all' depends on 'program'
-all: program
+.PHONY: all clean
 
-# 'program' depends on 'main.o'. Link the object files into an executable
-program: main.o
-	$(CXX) $(CXXFLAGS) main.o -o program
+all: test
 
-# 'main.o' depends on 'main.cpp'. Compile the source files into object files
-main.o: main.cpp
-	$(CXX) $(CXXFLAGS) -c main.cpp
+test: ${OBJS}
+	${CC} ${CFLAGS} ${OBJS} -o test
 
-# Clean up binary files. This doesn't produce a file named 'clean', so it's a phony target
+test.o: test.c
+	${CC} ${CFLAGS} -c test.c
+
 clean:
-	rm -f *.o program
+	rm -f *.o test
