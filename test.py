@@ -1,25 +1,31 @@
 import random as r
 
 
-def gen_stats():
-    stats = []
+def gen_dice():
+    dice = []
     for i in range(6):
-        stat = 0
-        for i in range(3):
-            stat += r.randint(1, 6)
-        stats.append(stat)
-    return stats
+        rolls = []
+        for i in range(4):
+            rolls.append(r.randint(1, 6))
+        rolls.remove(min(rolls))
+        dice.append(sum(rolls))
+    return dice
 
 
-def check_ranger(stats):
-    return stats[0] >= 13 and stats[1] >= 12 and stats[2] >= 14 and stats[4] >= 14
+def check_ranger(dice):
+    dice = sorted(gen_dice())
+    required_rolls = [12, 13, 14, 14]
+    for roll in required_rolls:
+        if dice.pop() < required_rolls.pop():
+            return False
+    return True
 
 
 def sim():
     sims = 1000000
     true = 0
     for i in range(sims):
-        true += 1 if check_ranger(gen_stats()) else 0
+        true += 1 if check_ranger(gen_dice()) else 0
 
     print(true / sims * 100)
 
