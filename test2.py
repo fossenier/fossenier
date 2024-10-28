@@ -1,3 +1,8 @@
-x = [3, 1, 2]
+alphabet = "abcdefghijklmnopqrstuvwxyz"
+storage = {c: i for i, c in enumerate(alphabet)}  # Create example dictionary
 
-print(sorted(x))
+with open("output.txt", "w") as f:
+    for key, value in storage.items():
+        f.write("a" + "\n")
+        f.write(key + "\n")
+        f.write(f"{value}" + "\n")
