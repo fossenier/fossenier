@@ -1,0 +1,6 @@
+{
+  "files.associations": {
+    "node.h": "c"
+  },
+  "C_Cpp.default.compilerPath": "/usr/bin/clang++"
+}

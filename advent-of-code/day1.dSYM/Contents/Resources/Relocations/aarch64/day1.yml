@@ -1,0 +1,5 @@
+---
+triple:          'arm64-apple-darwin'
+binary-path:     '/Users/admin/projects/monorepo/fossenier/advent-of-code/day1'
+relocations:     []
+...

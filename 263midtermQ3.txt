@@ -1,0 +1,84 @@
+Abstract and Algebraic Data and Specifications
+
+A stack is a list with a protocol: namely all additions to the list (called pushes) and all removals from
+the list (called pops) occur at the same end. We often want to know the depth of the stack. This protocol
+distinguishes a stack from a queue where the protocol stipulates that additions occur at one end, and
+removals are from the other end. We ofter want to know the length of a queue. These protocols make
+a stack be a first-in = last-out container, and a queue be a first-in = first-out container.
+
+Given the abstract data specification for list of integers (below), write the abstract data specifications
+for stack of integens, using our HtDCP formalism using orthodox c in functional style
+
+// list.HtDCP
+// list elements come in two variants
+enum { NUL, CONS } list_hape;
+
+// a NUL tag means no fields, and end of list
+// a CONS tag means data payload, and a pointer to the sublist
+
+struct {
+    list_shape tag;
+    int data; //CONS - data: customize this to the list contents
+    size_t *next; // CONS - sublist
+} list_node;
+
+// is the list empty?
+bool empty(const list_node *l);
+
+// add before node, returning new list
+list_node *insert(const list_node *l, const int k);
+
+
+Using list.h, write the contents of stack.h:
+
+// stack.HtDCP
+// write your stack abstract data specification here
+
+*** (math definitions / models from textbook should go here)
+
+// specification for push(): include pre- and post-conditions
+
+*** (funcition of pushes)
+
+// specification for pop(): include pre- and post-conditions
+
+***
+
+// specification for depth(): tells how deep the stack is
+
+And then provide implementation for the three routines:
+
+//stack.cc
+
+// implementation for each: include pre- and post-conditions
+(a) push():
+
+***
+
+(b) pop():
+
+***
+
+(c) depth():
+
+***
+
+
+Show the correctness of each of the three functions.
+(a) push():
+
+***
+
+(b) pop():
+
+***
+
+(c) depth():
+
+***
+
+
+
+
+
+## Note: textbook has a good mention of the mathematics invariant

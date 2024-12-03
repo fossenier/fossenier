@@ -1,0 +1,22 @@
+{
+  "configurations": [
+    {
+      "name": "Mac",
+      "includePath": [
+        "${workspaceFolder}/**",
+        "/Library/Developer/CommandLineTools/usr/include",
+        "/System/Library/Frameworks"
+      ],
+      "defines": [],
+      "compilerPath": "/usr/bin/clang++", // Path to Clang++ (default on macOS)
+      "cStandard": "c17", // Specify C standard
+      "cppStandard": "c++17", // Specify C++ standard
+      "intelliSenseMode": "macos-clang-arm64", // Use Clang on macOS (ARM64)
+      "browse": {
+        "path": ["${workspaceFolder}"],
+        "limitSymbolsToIncludedHeaders": true
+      }
+    }
+  ],
+  "version": 4
+}
