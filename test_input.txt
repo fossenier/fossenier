@@ -1,0 +1,1088 @@
+a v
+key_433 31.24
+a a
+key_573 47.29
+a k
+key_633 17.64
+a v
+key_293 56.66
+a k
+key_209 66.45
+a v
+key_963 49.48
+a a
+key_701 54.82
+a k
+key_526 17.88
+a v
+key_605 40.36
+a v
+key_156 85.78
+a k
+key_898 14.77
+a a
+key_509 17.05
+a v
+key_130 32.18
+a k
+key_783 94.53
+a k
+key_683 82.15
+a v
+key_246 2.98
+a k
+key_931 30.51
+a v
+key_570 34.81
+a k
+key_958 59.76
+a a
+key_524 16.4
+a k
+key_381 78.11
+a k
+key_599 75.14
+a v
+key_495 64.93
+a k
+key_112 53.04
+a k
+key_241 84.99
+a k
+key_909 2.32
+a k
+key_826 78.53
+a k
+key_813 79.02
+a v
+key_991 16.89
+a k
+key_324 33.99
+a v
+key_46 24.71
+a a
+key_342 35.43
+a v
+key_106 60.19
+a k
+key_574 58.15
+a k
+key_213 73.53
+a a
+key_85 6.25
+a k
+key_559 14.89
+a v
+key_407 72.54
+a v
+key_696 53.65
+a a
+key_592 45.96
+a k
+key_431 53.41
+a a
+key_989 34.49
+a k
+key_986 2.31
+a k
+key_32 73.82
+a k
+key_669 35.34
+a v
+key_281 98.42
+a a
+key_278 45.48
+a k
+key_144 44.18
+a v
+key_653 45.39
+a k
+key_967 87.82
+a k
+key_158 88.35
+a a
+key_234 84.85
+a a
+key_928 23.37
+a v
+key_772 95.38
+a a
+key_896 89.99
+a k
+key_85 19.9
+a v
+key_232 1.74
+a a
+key_36 5.59
+a v
+key_956 30.86
+a v
+key_616 34.68
+a a
+key_177 73.08
+a k
+key_76 8.37
+a k
+key_961 67.41
+a k
+key_161 30.56
+a k
+key_695 66.95
+a v
+key_478 73.76
+a v
+key_171 66.15
+a v
+key_924 41.31
+a a
+key_48 59.48
+a a
+key_714 33.02
+a v
+key_898 82.89
+a k
+key_325 50.85
+a k
+key_639 69.98
+a v
+key_295 33.41
+a v
+key_437 92.2
+a k
+key_615 5.97
+a a
+key_139 57.81
+a v
+key_420 72.27
+a v
+key_174 77.91
+a a
+key_1 20.26
+a v
+key_646 31.34
+a a
+key_716 60.07
+a v
+key_297 77.46
+a v
+key_271 19.41
+a a
+key_204 6.31
+a v
+key_30 92.01
+a v
+key_565 6.81
+a v
+key_826 42.8
+a v
+key_899 49.2
+a a
+key_754 16.65
+a v
+key_84 82.63
+a k
+key_44 23.22
+a k
+key_555 73.22
+a a
+key_707 25.56
+a a
+key_54 52.57
+a a
+key_431 46.03
+a v
+key_281 40.75
+a k
+key_472 50.7
+a v
+key_100 78.06
+a v
+key_736 93.85
+a a
+key_769 3.85
+a k
+key_301 90.51
+a k
+key_879 74.18
+a k
+key_877 9.12
+a v
+key_396 97.69
+a v
+key_318 77.21
+a v
+key_454 15.16
+a v
+key_831 31.36
+a v
+key_866 93.03
+a a
+key_666 58.18
+a v
+key_735 96.83
+a v
+key_246 51.33
+a k
+key_452 17.02
+a v
+key_369 12.21
+a a
+key_982 45.09
+a v
+key_369 50.29
+a a
+key_664 16.31
+a a
+key_974 51.58
+a v
+key_645 96.4
+a k
+key_715 56.6
+a v
+key_365 9.88
+a k
+key_335 54.16
+a v
+key_173 56.92
+a k
+key_85 15.2
+a a
+key_636 56.9
+a k
+key_717 59.04
+a a
+key_184 28.04
+a v
+key_607 61.23
+a v
+key_115 89.71
+a k
+key_715 81.66
+a a
+key_420 20.01
+a a
+key_774 11.49
+a a
+key_155 51.71
+a a
+key_152 90.84
+a a
+key_712 2.22
+a a
+key_29 72.8
+a v
+key_410 27.42
+a a
+key_963 65.2
+a a
+key_230 15.59
+a v
+key_147 67.91
+a k
+key_323 55.33
+a k
+key_150 23.1
+a a
+key_70 12.34
+a k
+key_803 69.87
+a a
+key_133 84.21
+a k
+key_237 1.68
+a a
+key_672 6.7
+a v
+key_412 62.96
+a v
+key_909 79.81
+a v
+key_102 81.47
+a a
+key_686 63.72
+a k
+key_859 1.28
+a v
+key_907 26.21
+a v
+key_988 18.42
+a v
+key_428 62.44
+a v
+key_60 54.03
+a k
+key_72 52.95
+a k
+key_587 73.98
+a a
+key_846 41.49
+a k
+key_256 13.25
+a a
+key_960 22.26
+a v
+key_666 36.2
+a k
+key_494 87.71
+a v
+key_394 1.85
+a k
+key_437 72.39
+a v
+key_769 64.19
+a a
+key_353 6.82
+a a
+key_193 35.2
+a a
+key_157 26.63
+a k
+key_549 60.82
+a a
+key_465 76.26
+a a
+key_264 62.17
+a v
+key_640 31.18
+a v
+key_945 99.2
+a k
+key_717 95.97
+a k
+key_75 36.3
+a k
+key_495 10.41
+a v
+key_73 23.56
+a a
+key_669 96.19
+a v
+key_441 58.95
+a a
+key_421 39.69
+a a
+key_352 14.61
+a k
+key_808 14.06
+a v
+key_192 85.16
+a k
+key_529 81.84
+a v
+key_548 4.81
+a v
+key_323 80.87
+a k
+key_776 9.83
+a v
+key_250 37.85
+a k
+key_267 77.6
+a k
+key_422 33.57
+a v
+key_574 27.16
+a k
+key_863 1.83
+a k
+key_468 79.78
+a a
+key_505 41.19
+a v
+key_244 80.09
+a a
+key_936 37.98
+a a
+key_598 21.88
+a a
+key_38 82.61
+a a
+key_379 44.38
+a a
+key_83 82.26
+a k
+key_701 2.19
+a k
+key_362 13.69
+a a
+key_475 79.63
+a v
+key_874 47.78
+a k
+key_981 34.25
+r
+key_717
+r
+key_783
+a v
+key_12 54.34
+a k
+key_779 16.56
+r
+key_412
+a a
+key_438 54.75
+r
+key_323
+r
+key_410
+a a
+key_1000 31.14
+a v
+key_425 86.04
+a v
+key_49 41.06
+a a
+key_173 33.97
+a a
+key_149 62.01
+a v
+key_299 10.98
+a k
+key_92 68.33
+r
+key_173
+a k
+key_107 26.26
+r
+key_139
+a a
+key_664 24.95
+a k
+key_924 53.54
+a k
+key_908 94.46
+r
+key_826
+a a
+key_981 14.15
+a k
+key_115 37.46
+r
+key_352
+r
+key_616
+a k
+key_375 1.71
+r
+key_237
+r
+key_899
+a v
+key_559 22.75
+a k
+key_25 27.8
+a v
+key_483 5.02
+r
+key_633
+a k
+key_824 62.6
+a v
+key_585 91.4
+r
+key_297
+a a
+key_828 21.99
+r
+key_425
+a k
+key_583 74.88
+r
+key_683
+a v
+key_171 33.43
+a k
+key_427 76.09
+a v
+key_333 59.9
+a k
+key_449 90.64
+a a
+key_891 81.33
+r
+key_70
+a a
+key_29 36.13
+r
+key_325
+a k
+key_274 40.29
+r
+key_156
+a v
+key_171 97.43
+a v
+key_293 67.85
+r
+key_30
+a k
+key_527 66.74
+a k
+key_590 16.82
+a v
+key_419 26.79
+a v
+key_599 35.52
+a k
+key_660 83.03
+r
+key_427
+a a
+key_723 84.12
+a v
+key_247 33.95
+a v
+key_593 94.8
+a v
+key_1000 35.93
+a a
+key_9 54.19
+a k
+key_468 86.64
+a a
+key_357 49.77
+a a
+key_5 8.98
+r
+key_133
+r
+key_76
+a k
+key_374 82.65
+a v
+key_413 16.17
+a a
+key_297 70.17
+a k
+key_595 64.4
+r
+key_565
+a v
+key_171 61.84
+r
+key_107
+a k
+key_83 55.83
+a a
+key_856 18.51
+a a
+key_964 84.45
+a a
+key_616 16.99
+a a
+key_199 48.36
+a a
+key_575 5.89
+r
+key_241
+a a
+key_492 11.62
+a a
+key_397 54.81
+a v
+key_103 71.27
+a a
+key_651 17.45
+a k
+key_1 85.77
+r
+key_184
+a a
+key_251 91.41
+a k
+key_454 87.5
+a v
+key_263 43.08
+r
+key_449
+a a
+key_915 93.76
+r
+key_915
+r
+key_263
+r
+key_454
+r
+key_251
+r
+key_1
+r
+key_651
+r
+key_103
+r
+key_397
+r
+key_492
+r
+key_575
+r
+key_199
+r
+key_616
+r
+key_964
+r
+key_856
+r
+key_83
+r
+key_171
+r
+key_595
+r
+key_297
+r
+key_413
+r
+key_374
+r
+key_5
+r
+key_357
+r
+key_468
+r
+key_9
+r
+key_1000
+r
+key_593
+r
+key_247
+r
+key_723
+r
+key_660
+r
+key_599
+r
+key_419
+r
+key_590
+r
+key_527
+r
+key_293
+r
+key_171
+r
+key_274
+r
+key_29
+r
+key_891
+r
+key_333
+r
+key_171
+r
+key_583
+r
+key_828
+r
+key_585
+r
+key_824
+r
+key_483
+r
+key_25
+r
+key_559
+r
+key_375
+r
+key_115
+r
+key_981
+r
+key_908
+r
+key_924
+r
+key_664
+r
+key_92
+r
+key_299
+r
+key_149
+r
+key_173
+r
+key_49
+r
+key_1000
+r
+key_438
+r
+key_779
+r
+key_12
+r
+key_981
+r
+key_874
+r
+key_475
+r
+key_362
+r
+key_701
+r
+key_83
+r
+key_379
+r
+key_38
+r
+key_598
+r
+key_936
+r
+key_244
+r
+key_505
+r
+key_468
+r
+key_863
+r
+key_574
+r
+key_422
+r
+key_267
+r
+key_250
+r
+key_776
+r
+key_323
+r
+key_548
+r
+key_529
+r
+key_192
+r
+key_808
+r
+key_421
+r
+key_441
+r
+key_669
+r
+key_73
+r
+key_495
+r
+key_75
+r
+key_717
+r
+key_945
+r
+key_640
+r
+key_264
+r
+key_465
+r
+key_549
+r
+key_157
+r
+key_193
+r
+key_353
+r
+key_769
+r
+key_437
+r
+key_394
+r
+key_494
+r
+key_666
+r
+key_960
+r
+key_256
+r
+key_846
+r
+key_587
+r
+key_72
+r
+key_60
+r
+key_428
+r
+key_988
+r
+key_907
+r
+key_859
+r
+key_686
+r
+key_102
+r
+key_909
+r
+key_672
+r
+key_803
+r
+key_150
+r
+key_147
+r
+key_230
+r
+key_963
+r
+key_29
+r
+key_712
+r
+key_152
+r
+key_155
+r
+key_774
+r
+key_420
+r
+key_715
+r
+key_115
+r
+key_607
+r
+key_636
+r
+key_85
+r
+key_335
+r
+key_365
+r
+key_715
+r
+key_645
+r
+key_974
+r
+key_664
+r
+key_369
+r
+key_982
+r
+key_369
+r
+key_452
+r
+key_246
+r
+key_735
+r
+key_666
+r
+key_866
+r
+key_831
+r
+key_454
+r
+key_318
+r
+key_396
+r
+key_877
+r
+key_879
+r
+key_301
+r
+key_769
+r
+key_736
+r
+key_100
+r
+key_472
+r
+key_281
+r
+key_431
+r
+key_54
+r
+key_707
+r
+key_555
+r
+key_44
+r
+key_84
+r
+key_754
+r
+key_826
+r
+key_204
+r
+key_271
+r
+key_716
+r
+key_646
+r
+key_1
+r
+key_174
+r
+key_420
+r
+key_615
+r
+key_437
+r
+key_295
+r
+key_639
+r
+key_898
+r
+key_714
+r
+key_48
+r
+key_924
+r
+key_171
+r
+key_478
+r
+key_695
+r
+key_161
+r
+key_961
+r
+key_177
+r
+key_956
+r
+key_36
+r
+key_232
+r
+key_85
+r
+key_896
+r
+key_772
+r
+key_928
+r
+key_234
+r
+key_158
+r
+key_967
+r
+key_653
+r
+key_144
+r
+key_278
+r
+key_281
+r
+key_669
+r
+key_32
+r
+key_986
+r
+key_989
+r
+key_431
+r
+key_592
+r
+key_696
+r
+key_407
+r
+key_559
+r
+key_85
+r
+key_213
+r
+key_574
+r
+key_106
+r
+key_342
+r
+key_46
+r
+key_324
+r
+key_991
+r
+key_813
+r
+key_909
+r
+key_112
+r
+key_495
+r
+key_599
+r
+key_381
+r
+key_524
+r
+key_958
+r
+key_570
+r
+key_931
+r
+key_246
+r
+key_130
+r
+key_509
+r
+key_898
+r
+key_605
+r
+key_526
+r
+key_701
+r
+key_963
+r
+key_209
+r
+key_293
+r
+key_573
+r
+key_433

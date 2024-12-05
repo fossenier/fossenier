@@ -1,0 +1,63 @@
+Last lecture in 214
+Final Exam prep
+
+
+[Client Server Programs]
+#include <errno.h> /* errno is the last global error in the system */
+
+#define PORT "30214" /* the port client will be connecting to */
+
+this is in `network.tar`
+
+
+
+
+[Final Exam]
+All the questions are short answer
+
+Some are tracing through C code
+
+Questions that are much like the quizzes
+
+
+
+[Principles]
+Mcllroy's Observations PROBABLY ON Exam
+I) Make each program do one thing well
+II) Output of one program should be ingput of another
+III) Test early
+IV) Build temporary Programs
+
+Pike's rules
+I) Premature optimization is bad
+II) Measure to determine necessity of optimization
+III) Don't get fancy unneccesarily (usually only good for big N)
+IV) Fancy algorithms are buggier
+V) Data dominates (data structures are central)
+
+UNIX Big Ideas
+I) Modularity
+II) Clarity
+III) Composition
+IV) Separation
+V) Simplicity
+VI) Parsimony: write a big program only when nothing else will do
+VII) Transparency
+VIII) Robustness
+IX) Representation
+X) Least Surprise
+XI) Silence
+XII) Repair: fail nosily
+XIII) Economy: conserve programmer time in machine time
+XIV) Generation: write programs to write programs
+XV) Optimization: finish before optimization
+XVI) Diversity: no "one true way"
+XVII) Extensibility
+
+Languages:
+    C
+    Bash
+    Awk
+
+
+Grep / Find / Sort / Cut / Uniq <, >, >>, |, $( )
