@@ -9,47 +9,46 @@ typedef struct Node
 
 void reverse(Node **head);
 Node *recurse(Node *chain);
+void print(Node *walker);
 
 int main(void)
 {
-    Node three = {3, NULL};
+    Node four = {4, NULL};
+    Node three = {3, &four};
     Node two = {2, &three};
     Node one = {1, &two};
 
-    Node *walker = &one;
-    while (walker != NULL)
-    {
-        printf("%i\n", walker->value);
-        walker = walker->next;
-    }
-
     Node *head = &one;
+
+    print(head);
+
     reverse(&head);
 
-    walker = &three;
-    while (walker != NULL)
-    {
-        printf("%i\n", walker->value);
-        walker = walker->next;
-    }
+    print(head);
 }
 
 void reverse(Node **head)
 {
-    Node *start = *head;
-    Node *chain = recurse(*head);
-    while (chain != start)
-    {
-        chain = chain->next;
-    }
-    chain->next = NULL;
+    *head = recurse(*head);
 }
 
-Node *recurse(Node *chain)
+Node *recurse(Node *current)
 {
-    if (chain->next == NULL)
+    if (current->next == NULL)
     {
-        return chain;
+        return current;
     }
-    return recurse(chain->next)->next = chain;
+    Node *head = recurse(current->next);
+    current->next->next = current;
+    current->next = NULL;
+    return head;
+}
+
+void print(Node *walker)
+{
+    while (walker != NULL)
+    {
+        printf("%i\n", walker->value);
+        walker = walker->next;
+    }
 }

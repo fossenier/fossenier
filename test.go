@@ -1,5 +1,76 @@
 package main
 
+
+/ Base interface for all node types
+type Node interface {
+    Process() // Define common behavior for all nodes
+}
+
+// Head node type
+type Head struct {
+    Data string
+}
+
+// Tail node type
+type Tail struct {
+    Data string
+}
+
+// Middle node type
+type Middle struct {
+    Data string
+}
+
+// Implement Process method for Head
+func (h Head) Process() {
+    fmt.Println("Processing Head:", h.Data)
+}
+
+// Implement Process method for Tail
+func (t Tail) Process() {
+    fmt.Println("Processing Tail:", t.Data)
+}
+
+// Implement Process method for Middle
+func (m Middle) Process() {
+    fmt.Println("Processing Middle Node:", m.Data)
+}
+
+// Queue to hold nodes
+type Queue struct {
+    Nodes []Node
+}
+
+// Add node to queue
+func (q *Queue) AddNode(n Node) {
+    q.Nodes = append(q.Nodes, n)
+}
+
+// Process all nodes in the queue
+func (q *Queue) ProcessNodes() {
+    for _, node := range q.Nodes {
+        node.Process()
+    }
+}
+
+func main() {
+    // Create nodes
+    head := Head{Data: "Start"}
+    middle := Middle{Data: "Middle Point"}
+    tail := Tail{Data: "End"}
+    
+    // Create queue and add nodes
+    queue := Queue{}
+    queue.AddNode(head)
+    queue.AddNode(middle)
+    queue.AddNode(tail)
+    
+    // Process all nodes
+    queue.ProcessNodes()
+}
+
+
+
 type data int
 
 // constructor
