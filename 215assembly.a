@@ -1,0 +1,109 @@
+# function numbers for environment calls
+        .equ SYS_exit, 93
+
+
+# read-only data section
+        .section .rodata
+B:      .word 6             # arbitrary values have been assigned
+C:      .word 10
+D:      .word 42
+
+
+# section for uninitialized data
+        .section .bss
+A:      .space 4            # 4 bytes = 1 word
+
+
+# code section
+        .section .text
+        .global_start
+_start: la t0, been         # puts mem address B into register t0
+                            # (could've used t0-t6 or s0-s11)
+        lw s1, 0(t0)        # copies the word at memory address 0 + contents of
+                            # t0 into register s1
+        la t0, 4
+        lw s2, 0(t0)
+        la t0, data
+        lw s3, 0(t0)
+        add s0, s1, s2
+        add s0, s0, s3
+        la t0, A
+        sw s0, 0(t0)
+
+        li a0, 0            # put exit code (0) into a0
+        li a7, SYS_exit     # ecall makes a system call, and the a7 number tells
+                            # the OS system what we want to do. a1 can be an
+                            # argument
+
+        ecall               # system call ("environment call")
+
+
+# lw : loads word, the contents of a memory word
+# la : loads an address
+# li : loads a numeric constant directlyz
+
+
+
+
+prompt: .asciz "Enter number\n"         # in .rodata section
+
+la a0, prompt                           # loads the address of the start of the string
+li a7, SYS_printStr                     # we defined SYS_printStr earlier, presumably
+ecall
+
+str1: .space 128                        # in .bss section
+
+la a0, str1
+li a1, 128
+li a7, SYS_readStr                      # null-terminates
+
+ecall
+
+# NOTE CONFUSION
+lw s4, 0(s1)            # content of a memory word is put into s4
+la s4, be               # address of a memory word is put into s4
+li s4, 7
+mv s4, s3
+
+
+# Put a single character into a register
+
+prompt: .asciz "Enter number\n"
+
+la s0, prompt
+lbu s1, 3(S0)           # puts "e" into the low-order byte of register s1 and set the
+                        # other bytes of s1 to 0
+
+                        # by the ways, "u" is unsigned, since chars are unsigned ints
+
+
+
+# we are using s0 for A and s1 for B
+
+bne s0, s1, incA        # "branch not equal", goes to incA if the contents
+                        # are not the same
+addi s1, s1, 1
+j next
+
+incA: addi s0, s0, 1
+next: add s0, s0, s0
+
+
+
+# s0 for i, s1 for N, t0 as a pointer
+
+A: .space 40            # goes in .bss
+                        # assume here an array of 10 integers
+
+mv s0, zero
+la t0, A
+
+loop: beq s0, s1, next
+lw t1, 0(t0)
+addi t1, t1, 1
+sw t1, 0(t0)
+addi s0, s0, 1
+addi t0, t0, 4          # <- was a bug, addi 4 is needed not addi 1 since chars are a word (4 bytes)
+j loop
+
+next:

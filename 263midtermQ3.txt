@@ -3,15 +3,15 @@ Abstract and Algebraic Data and Specifications
 A stack is a list with a protocol: namely all additions to the list (called pushes) and all removals from
 the list (called pops) occur at the same end. We often want to know the depth of the stack. This protocol
 distinguishes a stack from a queue where the protocol stipulates that additions occur at one end, and
-removals are from the other end. We ofter want to know the length of a queue. These protocols make
+removals are from the other end. We often want to know the length of a queue. These protocols make
 a stack be a first-in = last-out container, and a queue be a first-in = first-out container.
 
 Given the abstract data specification for list of integers (below), write the abstract data specifications
-for stack of integens, using our HtDCP formalism using orthodox c in functional style
+for stack of integers, using our HtDCP formalism using orthodox c in functional style
 
 // list.HtDCP
 // list elements come in two variants
-enum { NUL, CONS } list_hape;
+enum { NUL, CONS } list_shape;
 
 // a NUL tag means no fields, and end of list
 // a CONS tag means data payload, and a pointer to the sublist
