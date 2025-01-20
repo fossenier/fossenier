@@ -2,28 +2,42 @@ type SSym = String;
 
 type SResult = Result<SVal, String>;
 
-type Prim0 = dyn Fn() -> SResult;
-type Prim1 = dyn Fn(SVal) -> SResult;
-type Prim2 = dyn Fn(Sval, SVal) -> SResult;
-type Print = dyn (SVal) -> ();
+#[derive (Clone)]
 
-// gap
+// SVal ::= String
+//       |  Number
+//       |  Bool
+// ,...
+
+// This was removed or moved???
+
+// type Prim0 = dyn Fn() -> SResult;
+// type Prim1 = dyn Fn(SVal) -> SResult;
+// type Prim2 = dyn Fn(Sval, SVal) -> SResult;
+// type Print = dyn (SVal) -> ();
 
 enum SVal {
     VStr ( String ),        // SVal::VStr
     Vnum ( i32 ),
     VBool ( bool),
 
-    VList ( SList ),
+    VNull,                  // dotted pairs
+    VPair ( Box<SVal>,
+           Box<SVal> ),
 
-    VFun ( LinkedList<SSym>,
-           SExp,
-           SEnv ),
+    VFun ( Vec<SSym>,
+           Box<SExp>,
+           Box<SEnv> ),
+
+    VPrim ( SSym )
         
-    VPrim0 ( Box<Prim0> ),
-    VPrim1 ( Box<Prim1> ),
-    VPrim2 ( Box<Prim2> ),
-    VPrim3 ( Box<Print> ),
+
+    // also removed
+
+    // VPrim0 ( Box<Prim0> ),
+    // VPrim1 ( Box<Prim1> ),
+    // VPrim2 ( Box<Prim2> ),
+    // VPrim3 ( Box<Print> ),
 }
 
 use SVal::*;
@@ -71,3 +85,39 @@ enum SBind {
     RBind ( SSym,
             SVal ),
 }
+
+// break
+
+fn eval(e : SExp, r : SEnv) -> SResult {
+    match e {
+        EStr(s) => Ok(Vstr(s)),
+        ENum(z) => Ok(Vnum(z)),
+        EBool(b) => Ok(VBool(b)),
+
+    EIf(t, c, a) => match evall(t, r) {
+        Ok(VBool(true)) => eval(*c, r),
+        Ok(VBool(false)) => eval(*a, r),
+        _               => Err("non-boolean test".to_string()),
+    },
+
+    EVar(y) => lookup(y, r),
+    ELet(ys, es, b) => match evals(es, r) {
+        Ok(vs) => match bind(ys, vs) {
+            Some(yvs) => eval(*b, RScope(yvs, Box::new(r))),
+            None => Err("arguments bad".to_string()),
+        },
+        Err(s) => Err(s),
+    },
+    ERec(ys, yses, b) => match bind(ys, yses) {
+        Some(yysess) => eval(*b, RRec(yysess, Box::new(r))),
+        None => Err("recursive arguments bad".to_string()),
+    },
+
+    ESeq(es) => match evals(es, r) {
+        Ok(vs) => match vs.last() {
+            Some(_v) => Ok(*_v),
+            //gap
+        }
+    }
+    //gap
+}})

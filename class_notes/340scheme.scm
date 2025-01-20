@@ -21,3 +21,7 @@
 
 // (lambda (x) (+ x 1)) builds a function
 // 4 passses it
+
+(if #t      // EIf( EBool(true),
+    4       //      ENum(4),
+    5)      //      ENum(5))

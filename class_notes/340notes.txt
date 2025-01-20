@@ -1,0 +1,45 @@
+Mon Jan 20 2025
+
+() parentheses
+[] *square* brackets
+{} *curly* braces
+
+(if ------
+    (begin
+        (display "hello")
+        3)
+    (begin
+        (display "goodbye")
+        4))
+
+`begin` starts a sequence of things, then the final expression to return
+
+{ exp
+    type: funcall
+    operator: variable
+        name: display
+    argument: [ exp
+                    type: if
+                    test:
+                        variable logging off?
+                    consequent: exp
+                        type: block
+                            ...
+               ]
+}
+
+// our adoption below
+
+(if ------
+    {begin
+        (display "hello")
+        3}
+    {begin
+        (display "goodbye")
+        4})
+
+
+
+
+Result< X, Y > ::= Ok<X>
+               |   Err<Y>
