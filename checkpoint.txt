@@ -1,3 +1,0 @@
-Ask the user to INPUT an integer value.
-Then ask the user to INPUT another integer value.
-Then PRINT the SUM of those values.
