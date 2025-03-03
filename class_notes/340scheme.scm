@@ -25,3 +25,14 @@
 (if #t      // EIf( EBool(true),
     4       //      ENum(4),
     5)      //      ENum(5))
+
+
+
+
+
+
+(let ([fact (lambda(n)
+                     (if (< n 2)
+                         1
+                         (* nzzzzzzzz (fact (- n 1)))))])
+      (fact 5))

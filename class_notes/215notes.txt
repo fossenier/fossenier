@@ -1,0 +1,3 @@
+Unsigned integers
+    - BCD "binary coded decimal
+    - 4 bits to do each decimal digit
