@@ -1,0 +1,1553 @@
+{
+  "types": [
+    "planet"
+  ],
+  "planet": {
+    "type": "planet",
+    "name": "fulgora",
+    "icon": "__space-age__/graphics/icons/fulgora.png",
+    "starmap_icon": "__space-age__/graphics/icons/starmap-planet-fulgora.png",
+    "starmap_icon_size": 512,
+    "gravity_pull": 10,
+    "distance": 25,
+    "orientation": 0.325,
+    "magnitude": 0.9,
+    "label_orientation": 0.35,
+    "order": "d[fulgora]",
+    "subgroup": "planets",
+    "map_gen_settings": {
+      "property_expression_names": {
+        "elevation": "fulgora_elevation",
+        "temperature": "temperature_basic",
+        "moisture": "moisture_basic",
+        "aux": "aux_basic",
+        "cliffiness": "fulgora_cliffiness",
+        "cliff_elevation": "cliff_elevation_from_elevation"
+      },
+      "cliff_settings": {
+        "name": "cliff-fulgora",
+        "control": "fulgora_cliff",
+        "cliff_elevation_0": 80,
+        "cliff_elevation_interval": 40,
+        "cliff_smoothing": 0,
+        "richness": 0.95
+      },
+      "autoplace_controls": {
+        "scrap": {},
+        "fulgora_islands": {},
+        "fulgora_cliff": {}
+      },
+      "autoplace_settings": {
+        "tile": {
+          "settings": {
+            "oil-ocean-shallow": {},
+            "oil-ocean-deep": {},
+            "fulgoran-rock": {},
+            "fulgoran-dust": {},
+            "fulgoran-sand": {},
+            "fulgoran-dunes": {},
+            "fulgoran-walls": {},
+            "fulgoran-paving": {},
+            "fulgoran-conduit": {},
+            "fulgoran-machinery": {}
+          }
+        },
+        "decorative": {
+          "settings": {
+            "fulgoran-ruin-tiny": {},
+            "fulgoran-gravewort": {},
+            "urchin-cactus": {},
+            "medium-fulgora-rock": {},
+            "small-fulgora-rock": {},
+            "tiny-fulgora-rock": {}
+          }
+        },
+        "entity": {
+          "settings": {
+            "scrap": {},
+            "fulgoran-ruin-vault": {},
+            "fulgoran-ruin-attractor": {},
+            "fulgoran-ruin-colossal": {},
+            "fulgoran-ruin-huge": {},
+            "fulgoran-ruin-big": {},
+            "fulgoran-ruin-stonehenge": {},
+            "fulgoran-ruin-medium": {},
+            "fulgoran-ruin-small": {},
+            "fulgurite": {},
+            "big-fulgora-rock": {}
+          }
+        }
+      }
+    },
+    "solar_power_in_space": 120,
+    "platform_procession_set": {
+      "arrival": [
+        "planet-to-platform-b"
+      ],
+      "departure": [
+        "platform-to-planet-a"
+      ]
+    },
+    "planet_procession_set": {
+      "arrival": [
+        "platform-to-planet-b"
+      ],
+      "departure": [
+        "planet-to-platform-a"
+      ]
+    },
+    "procession_graphic_catalogue": [
+      {
+        "index": 400,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/gleba-cloudscape.png",
+          "width": 960,
+          "height": 960,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 401,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape.png",
+          "width": 960,
+          "height": 960,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 402,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/gleba-cloudscape-layered-0.png",
+          "width": 2000,
+          "height": 1500,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 403,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-0.png",
+          "width": 2000,
+          "height": 1500,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 404,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/gleba-cloudscape-layered-1.png",
+          "width": 1600,
+          "height": 1200,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 405,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-1.png",
+          "width": 1600,
+          "height": 1200,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 406,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/gleba-cloudscape-layered-2.png",
+          "width": 1400,
+          "height": 1050,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 407,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-2.png",
+          "width": 1400,
+          "height": 1050,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 408,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/gleba-cloudscape-layered-3.png",
+          "width": 1200,
+          "height": 900,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 409,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-3.png",
+          "width": 1200,
+          "height": 900,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 301,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/space-rear-star.png",
+          "width": 1024,
+          "height": 1024,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 450,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/fulgora-sky-tint.png",
+          "width": 16,
+          "height": 16,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 509,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.210625,
+            0.109375
+          ],
+          "width": 196,
+          "height": 120,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/shared-cargo-bay-pod-emission.png"
+        }
+      },
+      {
+        "index": 500,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.75,
+            -0.359375
+          ],
+          "width": 302,
+          "height": 268,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 501,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -0.4375,
+            -0.703125
+          ],
+          "width": 276,
+          "height": 286,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 502,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            1.046875,
+            -1.125
+          ],
+          "width": 322,
+          "height": 308,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-C.png"
+        }
+      },
+      {
+        "index": 503,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.84375,
+            -0.375
+          ],
+          "width": 340,
+          "height": 310,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 504,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -1.234375,
+            -0.28125
+          ],
+          "width": 402,
+          "height": 318,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 505,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.078125,
+            -1.359375
+          ],
+          "width": 348,
+          "height": 318,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-C.png"
+        }
+      },
+      {
+        "index": 506,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.703125,
+            -0.3125
+          ],
+          "width": 356,
+          "height": 316,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 507,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -1.21875,
+            0.265625
+          ],
+          "width": 402,
+          "height": 388,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 508,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.015625,
+            -0.96875
+          ],
+          "width": 350,
+          "height": 358,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-C.png"
+        }
+      }
+    ],
+    "surface_properties": {
+      "day-night-cycle": 10800,
+      "magnetic-field": 99,
+      "solar-power": 20,
+      "pressure": 800,
+      "gravity": 8
+    },
+    "lightning_properties": {
+      "lightnings_per_chunk_per_tick": 0.0016666666666666666,
+      "search_radius": 10,
+      "lightning_types": [
+        "lightning"
+      ],
+      "priority_rules": [
+        {
+          "type": "id",
+          "string": "lightning-collector",
+          "priority_bonus": 10000
+        },
+        {
+          "type": "prototype",
+          "string": "lightning-attractor",
+          "priority_bonus": 1000
+        },
+        {
+          "type": "id",
+          "string": "fulgoran-ruin-vault",
+          "priority_bonus": 95
+        },
+        {
+          "type": "id",
+          "string": "fulgoran-ruin-colossal",
+          "priority_bonus": 94
+        },
+        {
+          "type": "id",
+          "string": "fulgoran-ruin-huge",
+          "priority_bonus": 93
+        },
+        {
+          "type": "id",
+          "string": "fulgoran-ruin-big",
+          "priority_bonus": 92
+        },
+        {
+          "type": "id",
+          "string": "fulgoran-ruin-medium",
+          "priority_bonus": 91
+        },
+        {
+          "type": "prototype",
+          "string": "pipe",
+          "priority_bonus": 1
+        },
+        {
+          "type": "prototype",
+          "string": "pump",
+          "priority_bonus": 1
+        },
+        {
+          "type": "prototype",
+          "string": "offshore-pump",
+          "priority_bonus": 1
+        },
+        {
+          "type": "prototype",
+          "string": "electric-pole",
+          "priority_bonus": 10
+        },
+        {
+          "type": "prototype",
+          "string": "power-switch",
+          "priority_bonus": 10
+        },
+        {
+          "type": "prototype",
+          "string": "logistic-robot",
+          "priority_bonus": 100
+        },
+        {
+          "type": "prototype",
+          "string": "construction-robot",
+          "priority_bonus": 100
+        },
+        {
+          "type": "impact-soundset",
+          "string": "metal",
+          "priority_bonus": 1
+        }
+      ],
+      "exemption_rules": [
+        {
+          "type": "prototype",
+          "string": "rail-support"
+        },
+        {
+          "type": "prototype",
+          "string": "legacy-straight-rail"
+        },
+        {
+          "type": "prototype",
+          "string": "legacy-curved-rail"
+        },
+        {
+          "type": "prototype",
+          "string": "straight-rail"
+        },
+        {
+          "type": "prototype",
+          "string": "curved-rail-a"
+        },
+        {
+          "type": "prototype",
+          "string": "curved-rail-b"
+        },
+        {
+          "type": "prototype",
+          "string": "half-diagonal-rail"
+        },
+        {
+          "type": "prototype",
+          "string": "rail-ramp"
+        },
+        {
+          "type": "prototype",
+          "string": "elevated-straight-rail"
+        },
+        {
+          "type": "prototype",
+          "string": "elevated-curved-rail-a"
+        },
+        {
+          "type": "prototype",
+          "string": "elevated-curved-rail-b"
+        },
+        {
+          "type": "prototype",
+          "string": "elevated-half-diagonal-rail"
+        },
+        {
+          "type": "prototype",
+          "string": "rail-signal"
+        },
+        {
+          "type": "prototype",
+          "string": "rail-chain-signal"
+        },
+        {
+          "type": "prototype",
+          "string": "locomotive"
+        },
+        {
+          "type": "prototype",
+          "string": "artillery-wagon"
+        },
+        {
+          "type": "prototype",
+          "string": "cargo-wagon"
+        },
+        {
+          "type": "prototype",
+          "string": "fluid-wagon"
+        },
+        {
+          "type": "prototype",
+          "string": "land-mine"
+        },
+        {
+          "type": "prototype",
+          "string": "wall"
+        },
+        {
+          "type": "prototype",
+          "string": "tree"
+        },
+        {
+          "type": "countAsRockForFilteredDeconstruction",
+          "string": "true"
+        }
+      ]
+    },
+    "surface_render_parameters": {
+      "clouds": {
+        "shape_noise_texture": {
+          "filename": "__core__/graphics/clouds-noise.png",
+          "size": 2048
+        },
+        "detail_noise_texture": {
+          "filename": "__core__/graphics/clouds-detail-noise.png",
+          "size": 2048
+        },
+        "warp_sample_1": {
+          "scale": 0.05
+        },
+        "warp_sample_2": {
+          "scale": 0.09375,
+          "wind_speed_factor": 0
+        },
+        "warped_shape_sample": {
+          "scale": 0.01125
+        },
+        "additional_density_sample": {
+          "scale": 0.0084375,
+          "wind_speed_factor": 1.77
+        },
+        "detail_sample_1": {
+          "scale": 0.05340625,
+          "wind_speed_factor": 0.11702750146284377
+        },
+        "detail_sample_2": {
+          "scale": 0.06809375,
+          "wind_speed_factor": 0.15144561725562186
+        },
+        "scale": 1,
+        "movement_speed_multiplier": 0.75,
+        "opacity": 0.25,
+        "opacity_at_night": 0.25,
+        "density_at_night": 1,
+        "detail_factor": 1.5,
+        "detail_factor_at_night": 2,
+        "shape_warp_strength": 0.06,
+        "shape_warp_weight": 0.4,
+        "detail_sample_morph_duration": 0
+      },
+      "day_night_cycle_color_lookup": [
+        [
+          0,
+          "__space-age__/graphics/lut/fulgora-1-noon.png"
+        ],
+        [
+          0.2,
+          "__space-age__/graphics/lut/fulgora-1-noon.png"
+        ],
+        [
+          0.3,
+          "__space-age__/graphics/lut/fulgora-2-afternoon.png"
+        ],
+        [
+          0.4,
+          "__space-age__/graphics/lut/fulgora-3-after-sunset.png"
+        ],
+        [
+          0.6,
+          "__space-age__/graphics/lut/fulgora-4-before-dawn.png"
+        ],
+        [
+          0.7,
+          "__space-age__/graphics/lut/fulgora-5-morning.png"
+        ]
+      ],
+      "terrain_tint_effect": {
+        "noise_texture": {
+          "filename": "__space-age__/graphics/terrain/vulcanus/tint-noise.png",
+          "size": 4096
+        },
+        "offset": [
+          0.2,
+          0,
+          0.4,
+          0.8
+        ],
+        "intensity": [
+          0.2,
+          0.4,
+          0.3,
+          0.25
+        ],
+        "scale_u": [
+          1.85,
+          1.85,
+          1.85,
+          1.85
+        ],
+        "scale_v": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "global_intensity": 0.3,
+        "global_scale": 0.25,
+        "zoom_factor": 3.8,
+        "zoom_intensity": 0.75
+      }
+    },
+    "asteroid_spawn_influence": 1,
+    "asteroid_spawn_definitions": [
+      {
+        "asteroid": "metallic-asteroid-chunk",
+        "probability": 0.0025,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "carbonic-asteroid-chunk",
+        "probability": 0.001875,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "oxide-asteroid-chunk",
+        "probability": 0.000625,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "medium-metallic-asteroid",
+        "probability": 0.0025,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 0.6
+      },
+      {
+        "asteroid": "medium-carbonic-asteroid",
+        "probability": 0.001875,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 0.6
+      },
+      {
+        "asteroid": "medium-oxide-asteroid",
+        "probability": 0.000625,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 0.6
+      }
+    ]
+  },
+  "merged": {
+    "type": "planet",
+    "name": "fulgora",
+    "icon": "__space-age__/graphics/icons/fulgora.png",
+    "starmap_icon": "__space-age__/graphics/icons/starmap-planet-fulgora.png",
+    "starmap_icon_size": 512,
+    "gravity_pull": 10,
+    "distance": 25,
+    "orientation": 0.325,
+    "magnitude": 0.9,
+    "label_orientation": 0.35,
+    "order": "d[fulgora]",
+    "subgroup": "planets",
+    "map_gen_settings": {
+      "property_expression_names": {
+        "elevation": "fulgora_elevation",
+        "temperature": "temperature_basic",
+        "moisture": "moisture_basic",
+        "aux": "aux_basic",
+        "cliffiness": "fulgora_cliffiness",
+        "cliff_elevation": "cliff_elevation_from_elevation"
+      },
+      "cliff_settings": {
+        "name": "cliff-fulgora",
+        "control": "fulgora_cliff",
+        "cliff_elevation_0": 80,
+        "cliff_elevation_interval": 40,
+        "cliff_smoothing": 0,
+        "richness": 0.95
+      },
+      "autoplace_controls": {
+        "scrap": {},
+        "fulgora_islands": {},
+        "fulgora_cliff": {}
+      },
+      "autoplace_settings": {
+        "tile": {
+          "settings": {
+            "oil-ocean-shallow": {},
+            "oil-ocean-deep": {},
+            "fulgoran-rock": {},
+            "fulgoran-dust": {},
+            "fulgoran-sand": {},
+            "fulgoran-dunes": {},
+            "fulgoran-walls": {},
+            "fulgoran-paving": {},
+            "fulgoran-conduit": {},
+            "fulgoran-machinery": {}
+          }
+        },
+        "decorative": {
+          "settings": {
+            "fulgoran-ruin-tiny": {},
+            "fulgoran-gravewort": {},
+            "urchin-cactus": {},
+            "medium-fulgora-rock": {},
+            "small-fulgora-rock": {},
+            "tiny-fulgora-rock": {}
+          }
+        },
+        "entity": {
+          "settings": {
+            "scrap": {},
+            "fulgoran-ruin-vault": {},
+            "fulgoran-ruin-attractor": {},
+            "fulgoran-ruin-colossal": {},
+            "fulgoran-ruin-huge": {},
+            "fulgoran-ruin-big": {},
+            "fulgoran-ruin-stonehenge": {},
+            "fulgoran-ruin-medium": {},
+            "fulgoran-ruin-small": {},
+            "fulgurite": {},
+            "big-fulgora-rock": {}
+          }
+        }
+      }
+    },
+    "solar_power_in_space": 120,
+    "platform_procession_set": {
+      "arrival": [
+        "planet-to-platform-b"
+      ],
+      "departure": [
+        "platform-to-planet-a"
+      ]
+    },
+    "planet_procession_set": {
+      "arrival": [
+        "platform-to-planet-b"
+      ],
+      "departure": [
+        "planet-to-platform-a"
+      ]
+    },
+    "procession_graphic_catalogue": [
+      {
+        "index": 400,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/gleba-cloudscape.png",
+          "width": 960,
+          "height": 960,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 401,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape.png",
+          "width": 960,
+          "height": 960,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 402,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/gleba-cloudscape-layered-0.png",
+          "width": 2000,
+          "height": 1500,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 403,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-0.png",
+          "width": 2000,
+          "height": 1500,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 404,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/gleba-cloudscape-layered-1.png",
+          "width": 1600,
+          "height": 1200,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 405,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-1.png",
+          "width": 1600,
+          "height": 1200,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 406,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/gleba-cloudscape-layered-2.png",
+          "width": 1400,
+          "height": 1050,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 407,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-2.png",
+          "width": 1400,
+          "height": 1050,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 408,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/gleba-cloudscape-layered-3.png",
+          "width": 1200,
+          "height": 900,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 409,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-3.png",
+          "width": 1200,
+          "height": 900,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 301,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/space-rear-star.png",
+          "width": 1024,
+          "height": 1024,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 450,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/fulgora-sky-tint.png",
+          "width": 16,
+          "height": 16,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 509,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.210625,
+            0.109375
+          ],
+          "width": 196,
+          "height": 120,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/shared-cargo-bay-pod-emission.png"
+        }
+      },
+      {
+        "index": 500,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.75,
+            -0.359375
+          ],
+          "width": 302,
+          "height": 268,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 501,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -0.4375,
+            -0.703125
+          ],
+          "width": 276,
+          "height": 286,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 502,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            1.046875,
+            -1.125
+          ],
+          "width": 322,
+          "height": 308,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-C.png"
+        }
+      },
+      {
+        "index": 503,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.84375,
+            -0.375
+          ],
+          "width": 340,
+          "height": 310,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 504,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -1.234375,
+            -0.28125
+          ],
+          "width": 402,
+          "height": 318,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 505,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.078125,
+            -1.359375
+          ],
+          "width": 348,
+          "height": 318,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-C.png"
+        }
+      },
+      {
+        "index": 506,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.703125,
+            -0.3125
+          ],
+          "width": 356,
+          "height": 316,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 507,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -1.21875,
+            0.265625
+          ],
+          "width": 402,
+          "height": 388,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 508,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.015625,
+            -0.96875
+          ],
+          "width": 350,
+          "height": 358,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-C.png"
+        }
+      }
+    ],
+    "surface_properties": {
+      "day-night-cycle": 10800,
+      "magnetic-field": 99,
+      "solar-power": 20,
+      "pressure": 800,
+      "gravity": 8
+    },
+    "lightning_properties": {
+      "lightnings_per_chunk_per_tick": 0.0016666666666666666,
+      "search_radius": 10,
+      "lightning_types": [
+        "lightning"
+      ],
+      "priority_rules": [
+        {
+          "type": "id",
+          "string": "lightning-collector",
+          "priority_bonus": 10000
+        },
+        {
+          "type": "prototype",
+          "string": "lightning-attractor",
+          "priority_bonus": 1000
+        },
+        {
+          "type": "id",
+          "string": "fulgoran-ruin-vault",
+          "priority_bonus": 95
+        },
+        {
+          "type": "id",
+          "string": "fulgoran-ruin-colossal",
+          "priority_bonus": 94
+        },
+        {
+          "type": "id",
+          "string": "fulgoran-ruin-huge",
+          "priority_bonus": 93
+        },
+        {
+          "type": "id",
+          "string": "fulgoran-ruin-big",
+          "priority_bonus": 92
+        },
+        {
+          "type": "id",
+          "string": "fulgoran-ruin-medium",
+          "priority_bonus": 91
+        },
+        {
+          "type": "prototype",
+          "string": "pipe",
+          "priority_bonus": 1
+        },
+        {
+          "type": "prototype",
+          "string": "pump",
+          "priority_bonus": 1
+        },
+        {
+          "type": "prototype",
+          "string": "offshore-pump",
+          "priority_bonus": 1
+        },
+        {
+          "type": "prototype",
+          "string": "electric-pole",
+          "priority_bonus": 10
+        },
+        {
+          "type": "prototype",
+          "string": "power-switch",
+          "priority_bonus": 10
+        },
+        {
+          "type": "prototype",
+          "string": "logistic-robot",
+          "priority_bonus": 100
+        },
+        {
+          "type": "prototype",
+          "string": "construction-robot",
+          "priority_bonus": 100
+        },
+        {
+          "type": "impact-soundset",
+          "string": "metal",
+          "priority_bonus": 1
+        }
+      ],
+      "exemption_rules": [
+        {
+          "type": "prototype",
+          "string": "rail-support"
+        },
+        {
+          "type": "prototype",
+          "string": "legacy-straight-rail"
+        },
+        {
+          "type": "prototype",
+          "string": "legacy-curved-rail"
+        },
+        {
+          "type": "prototype",
+          "string": "straight-rail"
+        },
+        {
+          "type": "prototype",
+          "string": "curved-rail-a"
+        },
+        {
+          "type": "prototype",
+          "string": "curved-rail-b"
+        },
+        {
+          "type": "prototype",
+          "string": "half-diagonal-rail"
+        },
+        {
+          "type": "prototype",
+          "string": "rail-ramp"
+        },
+        {
+          "type": "prototype",
+          "string": "elevated-straight-rail"
+        },
+        {
+          "type": "prototype",
+          "string": "elevated-curved-rail-a"
+        },
+        {
+          "type": "prototype",
+          "string": "elevated-curved-rail-b"
+        },
+        {
+          "type": "prototype",
+          "string": "elevated-half-diagonal-rail"
+        },
+        {
+          "type": "prototype",
+          "string": "rail-signal"
+        },
+        {
+          "type": "prototype",
+          "string": "rail-chain-signal"
+        },
+        {
+          "type": "prototype",
+          "string": "locomotive"
+        },
+        {
+          "type": "prototype",
+          "string": "artillery-wagon"
+        },
+        {
+          "type": "prototype",
+          "string": "cargo-wagon"
+        },
+        {
+          "type": "prototype",
+          "string": "fluid-wagon"
+        },
+        {
+          "type": "prototype",
+          "string": "land-mine"
+        },
+        {
+          "type": "prototype",
+          "string": "wall"
+        },
+        {
+          "type": "prototype",
+          "string": "tree"
+        },
+        {
+          "type": "countAsRockForFilteredDeconstruction",
+          "string": "true"
+        }
+      ]
+    },
+    "surface_render_parameters": {
+      "clouds": {
+        "shape_noise_texture": {
+          "filename": "__core__/graphics/clouds-noise.png",
+          "size": 2048
+        },
+        "detail_noise_texture": {
+          "filename": "__core__/graphics/clouds-detail-noise.png",
+          "size": 2048
+        },
+        "warp_sample_1": {
+          "scale": 0.05
+        },
+        "warp_sample_2": {
+          "scale": 0.09375,
+          "wind_speed_factor": 0
+        },
+        "warped_shape_sample": {
+          "scale": 0.01125
+        },
+        "additional_density_sample": {
+          "scale": 0.0084375,
+          "wind_speed_factor": 1.77
+        },
+        "detail_sample_1": {
+          "scale": 0.05340625,
+          "wind_speed_factor": 0.11702750146284377
+        },
+        "detail_sample_2": {
+          "scale": 0.06809375,
+          "wind_speed_factor": 0.15144561725562186
+        },
+        "scale": 1,
+        "movement_speed_multiplier": 0.75,
+        "opacity": 0.25,
+        "opacity_at_night": 0.25,
+        "density_at_night": 1,
+        "detail_factor": 1.5,
+        "detail_factor_at_night": 2,
+        "shape_warp_strength": 0.06,
+        "shape_warp_weight": 0.4,
+        "detail_sample_morph_duration": 0
+      },
+      "day_night_cycle_color_lookup": [
+        [
+          0,
+          "__space-age__/graphics/lut/fulgora-1-noon.png"
+        ],
+        [
+          0.2,
+          "__space-age__/graphics/lut/fulgora-1-noon.png"
+        ],
+        [
+          0.3,
+          "__space-age__/graphics/lut/fulgora-2-afternoon.png"
+        ],
+        [
+          0.4,
+          "__space-age__/graphics/lut/fulgora-3-after-sunset.png"
+        ],
+        [
+          0.6,
+          "__space-age__/graphics/lut/fulgora-4-before-dawn.png"
+        ],
+        [
+          0.7,
+          "__space-age__/graphics/lut/fulgora-5-morning.png"
+        ]
+      ],
+      "terrain_tint_effect": {
+        "noise_texture": {
+          "filename": "__space-age__/graphics/terrain/vulcanus/tint-noise.png",
+          "size": 4096
+        },
+        "offset": [
+          0.2,
+          0,
+          0.4,
+          0.8
+        ],
+        "intensity": [
+          0.2,
+          0.4,
+          0.3,
+          0.25
+        ],
+        "scale_u": [
+          1.85,
+          1.85,
+          1.85,
+          1.85
+        ],
+        "scale_v": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "global_intensity": 0.3,
+        "global_scale": 0.25,
+        "zoom_factor": 3.8,
+        "zoom_intensity": 0.75
+      }
+    },
+    "asteroid_spawn_influence": 1,
+    "asteroid_spawn_definitions": [
+      {
+        "asteroid": "metallic-asteroid-chunk",
+        "probability": 0.0025,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "carbonic-asteroid-chunk",
+        "probability": 0.001875,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "oxide-asteroid-chunk",
+        "probability": 0.000625,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "medium-metallic-asteroid",
+        "probability": 0.0025,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 0.6
+      },
+      {
+        "asteroid": "medium-carbonic-asteroid",
+        "probability": 0.001875,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 0.6
+      },
+      {
+        "asteroid": "medium-oxide-asteroid",
+        "probability": 0.000625,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 0.6
+      }
+    ]
+  }
+}

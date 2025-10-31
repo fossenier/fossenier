@@ -1,0 +1,1161 @@
+{
+  "types": [
+    "planet"
+  ],
+  "planet": {
+    "type": "planet",
+    "name": "nauvis",
+    "icon": "__base__/graphics/icons/nauvis.png",
+    "starmap_icon": "__base__/graphics/icons/starmap-planet-nauvis.png",
+    "starmap_icon_size": 512,
+    "gravity_pull": 10,
+    "distance": 15,
+    "orientation": 0.275,
+    "magnitude": 1,
+    "order": "a[nauvis]",
+    "map_seed_offset": 0,
+    "map_gen_settings": {
+      "aux_climate_control": true,
+      "moisture_climate_control": true,
+      "property_expression_names": {},
+      "cliff_settings": {
+        "name": "cliff",
+        "control": "nauvis_cliff",
+        "cliff_smoothing": 0
+      },
+      "autoplace_controls": {
+        "iron-ore": {},
+        "copper-ore": {},
+        "stone": {},
+        "coal": {},
+        "uranium-ore": {},
+        "crude-oil": {},
+        "water": {},
+        "trees": {},
+        "enemy-base": {},
+        "rocks": {},
+        "starting_area_moisture": {},
+        "nauvis_cliff": {}
+      },
+      "autoplace_settings": {
+        "tile": {
+          "settings": {
+            "grass-1": {},
+            "grass-2": {},
+            "grass-3": {},
+            "grass-4": {},
+            "dry-dirt": {},
+            "dirt-1": {},
+            "dirt-2": {},
+            "dirt-3": {},
+            "dirt-4": {},
+            "dirt-5": {},
+            "dirt-6": {},
+            "dirt-7": {},
+            "sand-1": {},
+            "sand-2": {},
+            "sand-3": {},
+            "red-desert-0": {},
+            "red-desert-1": {},
+            "red-desert-2": {},
+            "red-desert-3": {},
+            "water": {},
+            "deepwater": {}
+          }
+        },
+        "decorative": {
+          "settings": {
+            "brown-hairy-grass": {},
+            "green-hairy-grass": {},
+            "brown-carpet-grass": {},
+            "green-carpet-grass": {},
+            "green-small-grass": {},
+            "green-asterisk": {},
+            "brown-asterisk-mini": {},
+            "green-asterisk-mini": {},
+            "brown-asterisk": {},
+            "red-asterisk": {},
+            "dark-mud-decal": {},
+            "light-mud-decal": {},
+            "cracked-mud-decal": {},
+            "red-desert-decal": {},
+            "sand-decal": {},
+            "sand-dune-decal": {},
+            "green-pita": {},
+            "red-pita": {},
+            "green-croton": {},
+            "red-croton": {},
+            "green-pita-mini": {},
+            "brown-fluff": {},
+            "brown-fluff-dry": {},
+            "green-desert-bush": {},
+            "red-desert-bush": {},
+            "white-desert-bush": {},
+            "garballo-mini-dry": {},
+            "garballo": {},
+            "green-bush-mini": {},
+            "medium-rock": {},
+            "small-rock": {},
+            "tiny-rock": {},
+            "medium-sand-rock": {},
+            "small-sand-rock": {}
+          }
+        },
+        "entity": {
+          "settings": {
+            "iron-ore": {},
+            "copper-ore": {},
+            "stone": {},
+            "coal": {},
+            "crude-oil": {},
+            "uranium-ore": {},
+            "fish": {},
+            "big-sand-rock": {},
+            "huge-rock": {},
+            "big-rock": {}
+          }
+        }
+      }
+    },
+    "pollutant_type": "pollution",
+    "solar_power_in_space": 300,
+    "planet_procession_set": {
+      "arrival": [
+        "platform-to-planet-b"
+      ],
+      "departure": [
+        "planet-to-platform-a"
+      ]
+    },
+    "surface_properties": {
+      "day-night-cycle": 25200
+    },
+    "surface_render_parameters": {
+      "clouds": {
+        "shape_noise_texture": {
+          "filename": "__core__/graphics/clouds-noise.png",
+          "size": 2048
+        },
+        "detail_noise_texture": {
+          "filename": "__core__/graphics/clouds-detail-noise.png",
+          "size": 2048
+        },
+        "warp_sample_1": {
+          "scale": 0.05
+        },
+        "warp_sample_2": {
+          "scale": 0.09375,
+          "wind_speed_factor": 0
+        },
+        "warped_shape_sample": {
+          "scale": 0.01125
+        },
+        "additional_density_sample": {
+          "scale": 0.0084375,
+          "wind_speed_factor": 1.77
+        },
+        "detail_sample_1": {
+          "scale": 0.05340625,
+          "wind_speed_factor": 0.11702750146284377
+        },
+        "detail_sample_2": {
+          "scale": 0.06809375,
+          "wind_speed_factor": 0.09178522257916477
+        },
+        "scale": 1,
+        "movement_speed_multiplier": 0.75,
+        "opacity": 0.25,
+        "shape_warp_strength": 0.06,
+        "shape_warp_weight": 0.4,
+        "detail_sample_morph_duration": 256
+      }
+    },
+    "procession_graphic_catalogue": [
+      {
+        "index": 400,
+        "sprite": {
+          "priority": "no-atlas",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.703125,
+            -0.3125
+          ],
+          "width": 960,
+          "height": 960,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/procession/clouds/nauvis-cloudscape.png",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        },
+        "type": "sprite"
+      },
+      {
+        "index": 401,
+        "sprite": {
+          "priority": "no-atlas",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -1.21875,
+            0.265625
+          ],
+          "width": 960,
+          "height": 960,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape.png",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        },
+        "type": "sprite"
+      },
+      {
+        "index": 402,
+        "sprite": {
+          "priority": "no-atlas",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.015625,
+            -0.96875
+          ],
+          "width": 2000,
+          "height": 1500,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/procession/clouds/nauvis-cloudscape-layered-0.png",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        },
+        "type": "sprite"
+      },
+      {
+        "index": 403,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-0.png",
+          "width": 2000,
+          "height": 1500,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 404,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/nauvis-cloudscape-layered-1.png",
+          "width": 1600,
+          "height": 1200,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 405,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-1.png",
+          "width": 1600,
+          "height": 1200,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 406,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/nauvis-cloudscape-layered-2.png",
+          "width": 1400,
+          "height": 1050,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 407,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-2.png",
+          "width": 1400,
+          "height": 1050,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 408,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/nauvis-cloudscape-layered-3.png",
+          "width": 1200,
+          "height": 900,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 409,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-3.png",
+          "width": 1200,
+          "height": 900,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 301,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/space-rear-star.png",
+          "width": 1024,
+          "height": 1024,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 450,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/nauvis-sky-tint.png",
+          "width": 16,
+          "height": 16,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 509,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.210625,
+            0.109375
+          ],
+          "width": 196,
+          "height": 120,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/shared-cargo-bay-pod-emission.png"
+        }
+      },
+      {
+        "index": 500,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.75,
+            -0.359375
+          ],
+          "width": 302,
+          "height": 268,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 501,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -0.4375,
+            -0.703125
+          ],
+          "width": 276,
+          "height": 286,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 502,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            1.046875,
+            -1.125
+          ],
+          "width": 322,
+          "height": 308,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-C.png"
+        }
+      },
+      {
+        "index": 503,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.84375,
+            -0.375
+          ],
+          "width": 340,
+          "height": 310,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 504,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -1.234375,
+            -0.28125
+          ],
+          "width": 402,
+          "height": 318,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 505,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.078125,
+            -1.359375
+          ],
+          "width": 348,
+          "height": 318,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-C.png"
+        }
+      },
+      {
+        "index": 506,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.703125,
+            -0.3125
+          ],
+          "width": 356,
+          "height": 316,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 507,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -1.21875,
+            0.265625
+          ],
+          "width": 402,
+          "height": 388,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 508,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.015625,
+            -0.96875
+          ],
+          "width": 350,
+          "height": 358,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-C.png"
+        }
+      }
+    ],
+    "platform_procession_set": {
+      "arrival": [
+        "planet-to-platform-b"
+      ],
+      "departure": [
+        "platform-to-planet-a"
+      ]
+    },
+    "subgroup": "planets",
+    "asteroid_spawn_influence": 1,
+    "asteroid_spawn_definitions": [
+      {
+        "asteroid": "metallic-asteroid-chunk",
+        "probability": 0.0125,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "carbonic-asteroid-chunk",
+        "probability": 0.008333333333333331,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "oxide-asteroid-chunk",
+        "probability": 0.004166666666666666,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      }
+    ]
+  },
+  "merged": {
+    "type": "planet",
+    "name": "nauvis",
+    "icon": "__base__/graphics/icons/nauvis.png",
+    "starmap_icon": "__base__/graphics/icons/starmap-planet-nauvis.png",
+    "starmap_icon_size": 512,
+    "gravity_pull": 10,
+    "distance": 15,
+    "orientation": 0.275,
+    "magnitude": 1,
+    "order": "a[nauvis]",
+    "map_seed_offset": 0,
+    "map_gen_settings": {
+      "aux_climate_control": true,
+      "moisture_climate_control": true,
+      "property_expression_names": {},
+      "cliff_settings": {
+        "name": "cliff",
+        "control": "nauvis_cliff",
+        "cliff_smoothing": 0
+      },
+      "autoplace_controls": {
+        "iron-ore": {},
+        "copper-ore": {},
+        "stone": {},
+        "coal": {},
+        "uranium-ore": {},
+        "crude-oil": {},
+        "water": {},
+        "trees": {},
+        "enemy-base": {},
+        "rocks": {},
+        "starting_area_moisture": {},
+        "nauvis_cliff": {}
+      },
+      "autoplace_settings": {
+        "tile": {
+          "settings": {
+            "grass-1": {},
+            "grass-2": {},
+            "grass-3": {},
+            "grass-4": {},
+            "dry-dirt": {},
+            "dirt-1": {},
+            "dirt-2": {},
+            "dirt-3": {},
+            "dirt-4": {},
+            "dirt-5": {},
+            "dirt-6": {},
+            "dirt-7": {},
+            "sand-1": {},
+            "sand-2": {},
+            "sand-3": {},
+            "red-desert-0": {},
+            "red-desert-1": {},
+            "red-desert-2": {},
+            "red-desert-3": {},
+            "water": {},
+            "deepwater": {}
+          }
+        },
+        "decorative": {
+          "settings": {
+            "brown-hairy-grass": {},
+            "green-hairy-grass": {},
+            "brown-carpet-grass": {},
+            "green-carpet-grass": {},
+            "green-small-grass": {},
+            "green-asterisk": {},
+            "brown-asterisk-mini": {},
+            "green-asterisk-mini": {},
+            "brown-asterisk": {},
+            "red-asterisk": {},
+            "dark-mud-decal": {},
+            "light-mud-decal": {},
+            "cracked-mud-decal": {},
+            "red-desert-decal": {},
+            "sand-decal": {},
+            "sand-dune-decal": {},
+            "green-pita": {},
+            "red-pita": {},
+            "green-croton": {},
+            "red-croton": {},
+            "green-pita-mini": {},
+            "brown-fluff": {},
+            "brown-fluff-dry": {},
+            "green-desert-bush": {},
+            "red-desert-bush": {},
+            "white-desert-bush": {},
+            "garballo-mini-dry": {},
+            "garballo": {},
+            "green-bush-mini": {},
+            "medium-rock": {},
+            "small-rock": {},
+            "tiny-rock": {},
+            "medium-sand-rock": {},
+            "small-sand-rock": {}
+          }
+        },
+        "entity": {
+          "settings": {
+            "iron-ore": {},
+            "copper-ore": {},
+            "stone": {},
+            "coal": {},
+            "crude-oil": {},
+            "uranium-ore": {},
+            "fish": {},
+            "big-sand-rock": {},
+            "huge-rock": {},
+            "big-rock": {}
+          }
+        }
+      }
+    },
+    "pollutant_type": "pollution",
+    "solar_power_in_space": 300,
+    "planet_procession_set": {
+      "arrival": [
+        "platform-to-planet-b"
+      ],
+      "departure": [
+        "planet-to-platform-a"
+      ]
+    },
+    "surface_properties": {
+      "day-night-cycle": 25200
+    },
+    "surface_render_parameters": {
+      "clouds": {
+        "shape_noise_texture": {
+          "filename": "__core__/graphics/clouds-noise.png",
+          "size": 2048
+        },
+        "detail_noise_texture": {
+          "filename": "__core__/graphics/clouds-detail-noise.png",
+          "size": 2048
+        },
+        "warp_sample_1": {
+          "scale": 0.05
+        },
+        "warp_sample_2": {
+          "scale": 0.09375,
+          "wind_speed_factor": 0
+        },
+        "warped_shape_sample": {
+          "scale": 0.01125
+        },
+        "additional_density_sample": {
+          "scale": 0.0084375,
+          "wind_speed_factor": 1.77
+        },
+        "detail_sample_1": {
+          "scale": 0.05340625,
+          "wind_speed_factor": 0.11702750146284377
+        },
+        "detail_sample_2": {
+          "scale": 0.06809375,
+          "wind_speed_factor": 0.09178522257916477
+        },
+        "scale": 1,
+        "movement_speed_multiplier": 0.75,
+        "opacity": 0.25,
+        "shape_warp_strength": 0.06,
+        "shape_warp_weight": 0.4,
+        "detail_sample_morph_duration": 256
+      }
+    },
+    "procession_graphic_catalogue": [
+      {
+        "index": 400,
+        "sprite": {
+          "priority": "no-atlas",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.703125,
+            -0.3125
+          ],
+          "width": 960,
+          "height": 960,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/procession/clouds/nauvis-cloudscape.png",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        },
+        "type": "sprite"
+      },
+      {
+        "index": 401,
+        "sprite": {
+          "priority": "no-atlas",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -1.21875,
+            0.265625
+          ],
+          "width": 960,
+          "height": 960,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape.png",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        },
+        "type": "sprite"
+      },
+      {
+        "index": 402,
+        "sprite": {
+          "priority": "no-atlas",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.015625,
+            -0.96875
+          ],
+          "width": 2000,
+          "height": 1500,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/procession/clouds/nauvis-cloudscape-layered-0.png",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        },
+        "type": "sprite"
+      },
+      {
+        "index": 403,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-0.png",
+          "width": 2000,
+          "height": 1500,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 404,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/nauvis-cloudscape-layered-1.png",
+          "width": 1600,
+          "height": 1200,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 405,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-1.png",
+          "width": 1600,
+          "height": 1200,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 406,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/nauvis-cloudscape-layered-2.png",
+          "width": 1400,
+          "height": 1050,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 407,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-2.png",
+          "width": 1400,
+          "height": 1050,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 408,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/nauvis-cloudscape-layered-3.png",
+          "width": 1200,
+          "height": 900,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 409,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-3.png",
+          "width": 1200,
+          "height": 900,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 301,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/space-rear-star.png",
+          "width": 1024,
+          "height": 1024,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 450,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/nauvis-sky-tint.png",
+          "width": 16,
+          "height": 16,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 509,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.210625,
+            0.109375
+          ],
+          "width": 196,
+          "height": 120,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/shared-cargo-bay-pod-emission.png"
+        }
+      },
+      {
+        "index": 500,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.75,
+            -0.359375
+          ],
+          "width": 302,
+          "height": 268,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 501,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -0.4375,
+            -0.703125
+          ],
+          "width": 276,
+          "height": 286,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 502,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            1.046875,
+            -1.125
+          ],
+          "width": 322,
+          "height": 308,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-C.png"
+        }
+      },
+      {
+        "index": 503,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.84375,
+            -0.375
+          ],
+          "width": 340,
+          "height": 310,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 504,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -1.234375,
+            -0.28125
+          ],
+          "width": 402,
+          "height": 318,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 505,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.078125,
+            -1.359375
+          ],
+          "width": 348,
+          "height": 318,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-C.png"
+        }
+      },
+      {
+        "index": 506,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.703125,
+            -0.3125
+          ],
+          "width": 356,
+          "height": 316,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 507,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -1.21875,
+            0.265625
+          ],
+          "width": 402,
+          "height": 388,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 508,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.015625,
+            -0.96875
+          ],
+          "width": 350,
+          "height": 358,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-C.png"
+        }
+      }
+    ],
+    "platform_procession_set": {
+      "arrival": [
+        "planet-to-platform-b"
+      ],
+      "departure": [
+        "platform-to-planet-a"
+      ]
+    },
+    "subgroup": "planets",
+    "asteroid_spawn_influence": 1,
+    "asteroid_spawn_definitions": [
+      {
+        "asteroid": "metallic-asteroid-chunk",
+        "probability": 0.0125,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "carbonic-asteroid-chunk",
+        "probability": 0.008333333333333331,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "oxide-asteroid-chunk",
+        "probability": 0.004166666666666666,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      }
+    ]
+  }
+}

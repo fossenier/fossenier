@@ -1,0 +1,188 @@
+Perfect — that’s a great idea to prepare ahead.
+Here’s a **concise, text-based C++ I/O reference** specifically tailored for **competitive programming**.
+It shows common **reading and printing patterns** with clear examples.
+
+---
+
+## 🧭 General Setup
+
+Always start with fast I/O:
+
+```cpp
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    // your code
+}
+```
+
+That makes `cin`/`cout` competitive-speed ready.
+
+---
+
+## 📥 Reading Input
+
+### 1️⃣ Read `n` lines, each with two space-separated numbers
+
+```cpp
+int n;
+cin >> n;
+for (int i = 0; i < n; ++i) {
+    int a, b;
+    cin >> a >> b;
+    // process a, b
+}
+```
+
+### 2️⃣ Same as above, but store in an array of pairs (tuples of size 2)
+
+```cpp
+int n;
+cin >> n;
+vector<pair<int, int>> arr(n);
+for (int i = 0; i < n; ++i) {
+    cin >> arr[i].first >> arr[i].second;
+}
+```
+
+### 3️⃣ Reading into a vector of tuples (for more than 2 values)
+
+```cpp
+int n;
+cin >> n;
+vector<tuple<int, int, int>> arr(n);
+for (int i = 0; i < n; ++i) {
+    int a, b, c;
+    cin >> a >> b >> c;
+    arr[i] = {a, b, c};
+}
+```
+
+### 4️⃣ Read an entire line of integers
+
+```cpp
+string line;
+getline(cin, line);        // may need an extra getline after cin >> n to flush newline
+stringstream ss(line);
+vector<int> nums;
+int x;
+while (ss >> x) nums.push_back(x);
+```
+
+### 5️⃣ Read a whole vector of `n` integers
+
+```cpp
+int n;
+cin >> n;
+vector<int> arr(n);
+for (int i = 0; i < n; ++i) cin >> arr[i];
+```
+
+### 6️⃣ Read a matrix (n × m)
+
+```cpp
+int n, m;
+cin >> n >> m;
+vector<vector<int>> mat(n, vector<int>(m));
+for (int i = 0; i < n; ++i)
+    for (int j = 0; j < m; ++j)
+        cin >> mat[i][j];
+```
+
+---
+
+## 📤 Printing Output
+
+### 1️⃣ Print array, each element on a new line
+
+```cpp
+for (int x : arr)
+    cout << x << '\n';
+```
+
+### 2️⃣ Print array, space-separated on one line
+
+```cpp
+for (int i = 0; i < arr.size(); ++i) {
+    if (i) cout << ' ';
+    cout << arr[i];
+}
+cout << '\n';
+```
+
+### 3️⃣ Print array of pairs (each on its own line)
+
+```cpp
+for (auto [a, b] : arr)
+    cout << a << ' ' << b << '\n';
+```
+
+### 4️⃣ Print array of tuples (using `get<>`)
+
+```cpp
+for (auto &[a, b, c] : arr)
+    cout << a << ' ' << b << ' ' << c << '\n';
+```
+
+### 5️⃣ Print matrix
+
+```cpp
+for (auto &row : mat) {
+    for (int j = 0; j < row.size(); ++j) {
+        if (j) cout << ' ';
+        cout << row[j];
+    }
+    cout << '\n';
+}
+```
+
+---
+
+## ⚙️ Other Handy Patterns
+
+### Read until EOF
+
+```cpp
+int a, b;
+while (cin >> a >> b) {
+    // process
+}
+```
+
+### Read strings / characters
+
+```cpp
+string s;
+cin >> s;  // reads one word
+getline(cin, s); // reads a full line (can include spaces)
+```
+
+### Print with formatting
+
+```cpp
+cout << fixed << setprecision(6) << 3.1415926535 << '\n';
+```
+
+---
+
+## 🧩 Mini Reference Table
+
+| Task                   | Example                                             |
+| ---------------------- | --------------------------------------------------- |
+| Read one integer       | `int n; cin >> n;`                                  |
+| Read multiple          | `cin >> a >> b >> c;`                               |
+| Read vector            | `for (auto &x : v) cin >> x;`                       |
+| Print vector (newline) | `for (auto x : v) cout << x << '\n';`               |
+| Print vector (space)   | `for (int i=0;i<n;i++){if(i)cout<<' ';cout<<v[i];}` |
+| Read pairs             | `for(auto &p: v) cin >> p.first >> p.second;`       |
+| Print pairs            | `for(auto [a,b]: v) cout << a << ' ' << b << '\n';` |
+| Until EOF              | `while(cin >> a >> b){...}`                         |
+| Matrix                 | `for(i)for(j)cin>>mat[i][j];`                       |
+
+---
+
+Would you like me to add **string parsing**, **maps/sets input-output**, or **custom struct reading/printing** examples too? Those sometimes show up in contests.

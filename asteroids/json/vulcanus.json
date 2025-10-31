@@ -1,0 +1,1253 @@
+{
+  "types": [
+    "planet"
+  ],
+  "planet": {
+    "type": "planet",
+    "name": "vulcanus",
+    "icon": "__space-age__/graphics/icons/vulcanus.png",
+    "starmap_icon": "__space-age__/graphics/icons/starmap-planet-vulcanus.png",
+    "starmap_icon_size": 512,
+    "gravity_pull": 10,
+    "distance": 10,
+    "orientation": 0.1,
+    "magnitude": 1.5,
+    "order": "b[vulcanus]",
+    "subgroup": "planets",
+    "map_gen_settings": {
+      "property_expression_names": {
+        "elevation": "vulcanus_elevation",
+        "temperature": "vulcanus_temperature",
+        "moisture": "vulcanus_moisture",
+        "aux": "vulcanus_aux",
+        "cliffiness": "cliffiness_basic",
+        "cliff_elevation": "cliff_elevation_from_elevation",
+        "entity:tungsten-ore:probability": "vulcanus_tungsten_ore_probability",
+        "entity:tungsten-ore:richness": "vulcanus_tungsten_ore_richness",
+        "entity:coal:probability": "vulcanus_coal_probability",
+        "entity:coal:richness": "vulcanus_coal_richness",
+        "entity:calcite:probability": "vulcanus_calcite_probability",
+        "entity:calcite:richness": "vulcanus_calcite_richness",
+        "entity:sulfuric-acid-geyser:probability": "vulcanus_sulfuric_acid_geyser_probability",
+        "entity:sulfuric-acid-geyser:richness": "vulcanus_sulfuric_acid_geyser_richness"
+      },
+      "cliff_settings": {
+        "name": "cliff-vulcanus",
+        "cliff_elevation_interval": 120,
+        "cliff_elevation_0": 70
+      },
+      "territory_settings": {
+        "units": [
+          "small-demolisher",
+          "medium-demolisher",
+          "big-demolisher"
+        ],
+        "territory_index_expression": "demolisher_territory_expression",
+        "territory_variation_expression": "demolisher_variation_expression",
+        "minimum_territory_size": 10
+      },
+      "autoplace_controls": {
+        "vulcanus_coal": {},
+        "sulfuric_acid_geyser": {},
+        "tungsten_ore": {},
+        "calcite": {},
+        "vulcanus_volcanism": {}
+      },
+      "autoplace_settings": {
+        "tile": {
+          "settings": {
+            "volcanic-soil-dark": {},
+            "volcanic-soil-light": {},
+            "volcanic-ash-soil": {},
+            "volcanic-ash-flats": {},
+            "volcanic-ash-light": {},
+            "volcanic-ash-dark": {},
+            "volcanic-cracks": {},
+            "volcanic-cracks-warm": {},
+            "volcanic-folds": {},
+            "volcanic-folds-flat": {},
+            "lava": {},
+            "lava-hot": {},
+            "volcanic-folds-warm": {},
+            "volcanic-pumice-stones": {},
+            "volcanic-cracks-hot": {},
+            "volcanic-jagged-ground": {},
+            "volcanic-smooth-stone": {},
+            "volcanic-smooth-stone-warm": {},
+            "volcanic-ash-cracks": {}
+          }
+        },
+        "decorative": {
+          "settings": {
+            "v-brown-carpet-grass": {},
+            "v-green-hairy-grass": {},
+            "v-brown-hairy-grass": {},
+            "v-red-pita": {},
+            "vulcanus-rock-decal-large": {},
+            "vulcanus-crack-decal-large": {},
+            "vulcanus-crack-decal-huge-warm": {},
+            "vulcanus-dune-decal": {},
+            "vulcanus-sand-decal": {},
+            "vulcanus-lava-fire": {},
+            "calcite-stain": {},
+            "calcite-stain-small": {},
+            "sulfur-stain": {},
+            "sulfur-stain-small": {},
+            "sulfuric-acid-puddle": {},
+            "sulfuric-acid-puddle-small": {},
+            "crater-small": {},
+            "crater-large": {},
+            "pumice-relief-decal": {},
+            "small-volcanic-rock": {},
+            "medium-volcanic-rock": {},
+            "tiny-volcanic-rock": {},
+            "tiny-rock-cluster": {},
+            "small-sulfur-rock": {},
+            "tiny-sulfur-rock": {},
+            "sulfur-rock-cluster": {},
+            "waves-decal": {}
+          }
+        },
+        "entity": {
+          "settings": {
+            "coal": {},
+            "calcite": {},
+            "sulfuric-acid-geyser": {},
+            "tungsten-ore": {},
+            "huge-volcanic-rock": {},
+            "big-volcanic-rock": {},
+            "crater-cliff": {},
+            "vulcanus-chimney": {},
+            "vulcanus-chimney-faded": {},
+            "vulcanus-chimney-cold": {},
+            "vulcanus-chimney-short": {},
+            "vulcanus-chimney-truncated": {},
+            "ashland-lichen-tree": {},
+            "ashland-lichen-tree-flaming": {}
+          }
+        }
+      }
+    },
+    "solar_power_in_space": 600,
+    "platform_procession_set": {
+      "arrival": [
+        "planet-to-platform-b"
+      ],
+      "departure": [
+        "platform-to-planet-a"
+      ]
+    },
+    "planet_procession_set": {
+      "arrival": [
+        "platform-to-planet-b"
+      ],
+      "departure": [
+        "planet-to-platform-a"
+      ]
+    },
+    "procession_graphic_catalogue": [
+      {
+        "index": 400,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/vulcanus-cloudscape.png",
+          "width": 960,
+          "height": 960,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 401,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape.png",
+          "width": 960,
+          "height": 960,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 402,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/vulcanus-cloudscape-layered-0.png",
+          "width": 2000,
+          "height": 1500,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 403,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-0.png",
+          "width": 2000,
+          "height": 1500,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 404,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/vulcanus-cloudscape-layered-1.png",
+          "width": 1600,
+          "height": 1200,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 405,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-1.png",
+          "width": 1600,
+          "height": 1200,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 406,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/vulcanus-cloudscape-layered-2.png",
+          "width": 1400,
+          "height": 1050,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 407,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-2.png",
+          "width": 1400,
+          "height": 1050,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 408,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/vulcanus-cloudscape-layered-3.png",
+          "width": 1200,
+          "height": 900,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 409,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-3.png",
+          "width": 1200,
+          "height": 900,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 301,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/space-rear-star.png",
+          "width": 1024,
+          "height": 1024,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 450,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/vulcanus-sky-tint.png",
+          "width": 16,
+          "height": 16,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 509,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.210625,
+            0.109375
+          ],
+          "width": 196,
+          "height": 120,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/shared-cargo-bay-pod-emission.png"
+        }
+      },
+      {
+        "index": 500,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.75,
+            -0.359375
+          ],
+          "width": 302,
+          "height": 268,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 501,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -0.4375,
+            -0.703125
+          ],
+          "width": 276,
+          "height": 286,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 502,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            1.046875,
+            -1.125
+          ],
+          "width": 322,
+          "height": 308,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-C.png"
+        }
+      },
+      {
+        "index": 503,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.84375,
+            -0.375
+          ],
+          "width": 340,
+          "height": 310,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 504,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -1.234375,
+            -0.28125
+          ],
+          "width": 402,
+          "height": 318,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 505,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.078125,
+            -1.359375
+          ],
+          "width": 348,
+          "height": 318,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-C.png"
+        }
+      },
+      {
+        "index": 506,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.703125,
+            -0.3125
+          ],
+          "width": 356,
+          "height": 316,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 507,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -1.21875,
+            0.265625
+          ],
+          "width": 402,
+          "height": 388,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 508,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.015625,
+            -0.96875
+          ],
+          "width": 350,
+          "height": 358,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-C.png"
+        }
+      }
+    ],
+    "surface_properties": {
+      "day-night-cycle": 5400,
+      "magnetic-field": 25,
+      "solar-power": 400,
+      "pressure": 4000,
+      "gravity": 40
+    },
+    "asteroid_spawn_influence": 1,
+    "asteroid_spawn_definitions": [
+      {
+        "asteroid": "metallic-asteroid-chunk",
+        "probability": 0.002,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "carbonic-asteroid-chunk",
+        "probability": 0.0008,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "oxide-asteroid-chunk",
+        "probability": 0.0004,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "medium-metallic-asteroid",
+        "probability": 0.0025,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 0.6
+      },
+      {
+        "asteroid": "medium-carbonic-asteroid",
+        "probability": 0.001,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 0.6
+      },
+      {
+        "asteroid": "medium-oxide-asteroid",
+        "probability": 0.0005,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 0.6
+      }
+    ],
+    "surface_render_parameters": {
+      "fog": {
+        "shape_noise_texture": {
+          "filename": "__core__/graphics/clouds-noise.png",
+          "size": 2048
+        },
+        "detail_noise_texture": {
+          "filename": "__core__/graphics/clouds-detail-noise.png",
+          "size": 2048
+        },
+        "color1": [
+          1,
+          0.8705999999999999,
+          0.302
+        ],
+        "color2": [
+          1,
+          0.8705999999999999,
+          0.2902
+        ],
+        "tick_factor": 0.000005
+      },
+      "day_night_cycle_color_lookup": [
+        [
+          0,
+          "__space-age__/graphics/lut/vulcanus-1-day.png"
+        ],
+        [
+          0.2,
+          "__space-age__/graphics/lut/vulcanus-1-day.png"
+        ],
+        [
+          0.45,
+          "__space-age__/graphics/lut/vulcanus-2-night.png"
+        ],
+        [
+          0.55,
+          "__space-age__/graphics/lut/vulcanus-2-night.png"
+        ],
+        [
+          0.8,
+          "__space-age__/graphics/lut/vulcanus-1-day.png"
+        ]
+      ],
+      "terrain_tint_effect": {
+        "noise_texture": {
+          "filename": "__space-age__/graphics/terrain/vulcanus/tint-noise.png",
+          "size": 4096
+        },
+        "offset": [
+          0.2,
+          0,
+          0.4,
+          0.8
+        ],
+        "intensity": [
+          0.5,
+          0.2,
+          0.3,
+          1
+        ],
+        "scale_u": [
+          3,
+          1,
+          1,
+          1
+        ],
+        "scale_v": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "global_intensity": 0.3,
+        "global_scale": 0.1,
+        "zoom_factor": 3,
+        "zoom_intensity": 0.6
+      }
+    }
+  },
+  "merged": {
+    "type": "planet",
+    "name": "vulcanus",
+    "icon": "__space-age__/graphics/icons/vulcanus.png",
+    "starmap_icon": "__space-age__/graphics/icons/starmap-planet-vulcanus.png",
+    "starmap_icon_size": 512,
+    "gravity_pull": 10,
+    "distance": 10,
+    "orientation": 0.1,
+    "magnitude": 1.5,
+    "order": "b[vulcanus]",
+    "subgroup": "planets",
+    "map_gen_settings": {
+      "property_expression_names": {
+        "elevation": "vulcanus_elevation",
+        "temperature": "vulcanus_temperature",
+        "moisture": "vulcanus_moisture",
+        "aux": "vulcanus_aux",
+        "cliffiness": "cliffiness_basic",
+        "cliff_elevation": "cliff_elevation_from_elevation",
+        "entity:tungsten-ore:probability": "vulcanus_tungsten_ore_probability",
+        "entity:tungsten-ore:richness": "vulcanus_tungsten_ore_richness",
+        "entity:coal:probability": "vulcanus_coal_probability",
+        "entity:coal:richness": "vulcanus_coal_richness",
+        "entity:calcite:probability": "vulcanus_calcite_probability",
+        "entity:calcite:richness": "vulcanus_calcite_richness",
+        "entity:sulfuric-acid-geyser:probability": "vulcanus_sulfuric_acid_geyser_probability",
+        "entity:sulfuric-acid-geyser:richness": "vulcanus_sulfuric_acid_geyser_richness"
+      },
+      "cliff_settings": {
+        "name": "cliff-vulcanus",
+        "cliff_elevation_interval": 120,
+        "cliff_elevation_0": 70
+      },
+      "territory_settings": {
+        "units": [
+          "small-demolisher",
+          "medium-demolisher",
+          "big-demolisher"
+        ],
+        "territory_index_expression": "demolisher_territory_expression",
+        "territory_variation_expression": "demolisher_variation_expression",
+        "minimum_territory_size": 10
+      },
+      "autoplace_controls": {
+        "vulcanus_coal": {},
+        "sulfuric_acid_geyser": {},
+        "tungsten_ore": {},
+        "calcite": {},
+        "vulcanus_volcanism": {}
+      },
+      "autoplace_settings": {
+        "tile": {
+          "settings": {
+            "volcanic-soil-dark": {},
+            "volcanic-soil-light": {},
+            "volcanic-ash-soil": {},
+            "volcanic-ash-flats": {},
+            "volcanic-ash-light": {},
+            "volcanic-ash-dark": {},
+            "volcanic-cracks": {},
+            "volcanic-cracks-warm": {},
+            "volcanic-folds": {},
+            "volcanic-folds-flat": {},
+            "lava": {},
+            "lava-hot": {},
+            "volcanic-folds-warm": {},
+            "volcanic-pumice-stones": {},
+            "volcanic-cracks-hot": {},
+            "volcanic-jagged-ground": {},
+            "volcanic-smooth-stone": {},
+            "volcanic-smooth-stone-warm": {},
+            "volcanic-ash-cracks": {}
+          }
+        },
+        "decorative": {
+          "settings": {
+            "v-brown-carpet-grass": {},
+            "v-green-hairy-grass": {},
+            "v-brown-hairy-grass": {},
+            "v-red-pita": {},
+            "vulcanus-rock-decal-large": {},
+            "vulcanus-crack-decal-large": {},
+            "vulcanus-crack-decal-huge-warm": {},
+            "vulcanus-dune-decal": {},
+            "vulcanus-sand-decal": {},
+            "vulcanus-lava-fire": {},
+            "calcite-stain": {},
+            "calcite-stain-small": {},
+            "sulfur-stain": {},
+            "sulfur-stain-small": {},
+            "sulfuric-acid-puddle": {},
+            "sulfuric-acid-puddle-small": {},
+            "crater-small": {},
+            "crater-large": {},
+            "pumice-relief-decal": {},
+            "small-volcanic-rock": {},
+            "medium-volcanic-rock": {},
+            "tiny-volcanic-rock": {},
+            "tiny-rock-cluster": {},
+            "small-sulfur-rock": {},
+            "tiny-sulfur-rock": {},
+            "sulfur-rock-cluster": {},
+            "waves-decal": {}
+          }
+        },
+        "entity": {
+          "settings": {
+            "coal": {},
+            "calcite": {},
+            "sulfuric-acid-geyser": {},
+            "tungsten-ore": {},
+            "huge-volcanic-rock": {},
+            "big-volcanic-rock": {},
+            "crater-cliff": {},
+            "vulcanus-chimney": {},
+            "vulcanus-chimney-faded": {},
+            "vulcanus-chimney-cold": {},
+            "vulcanus-chimney-short": {},
+            "vulcanus-chimney-truncated": {},
+            "ashland-lichen-tree": {},
+            "ashland-lichen-tree-flaming": {}
+          }
+        }
+      }
+    },
+    "solar_power_in_space": 600,
+    "platform_procession_set": {
+      "arrival": [
+        "planet-to-platform-b"
+      ],
+      "departure": [
+        "platform-to-planet-a"
+      ]
+    },
+    "planet_procession_set": {
+      "arrival": [
+        "platform-to-planet-b"
+      ],
+      "departure": [
+        "planet-to-platform-a"
+      ]
+    },
+    "procession_graphic_catalogue": [
+      {
+        "index": 400,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/vulcanus-cloudscape.png",
+          "width": 960,
+          "height": 960,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 401,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape.png",
+          "width": 960,
+          "height": 960,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 402,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/vulcanus-cloudscape-layered-0.png",
+          "width": 2000,
+          "height": 1500,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 403,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-0.png",
+          "width": 2000,
+          "height": 1500,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 404,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/vulcanus-cloudscape-layered-1.png",
+          "width": 1600,
+          "height": 1200,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 405,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-1.png",
+          "width": 1600,
+          "height": 1200,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 406,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/vulcanus-cloudscape-layered-2.png",
+          "width": 1400,
+          "height": 1050,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 407,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-2.png",
+          "width": 1400,
+          "height": 1050,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 408,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/vulcanus-cloudscape-layered-3.png",
+          "width": 1200,
+          "height": 900,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 409,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/mask-cloudscape-layered-3.png",
+          "width": 1200,
+          "height": 900,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 301,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/space-rear-star.png",
+          "width": 1024,
+          "height": 1024,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 450,
+        "type": "sprite",
+        "sprite": {
+          "filename": "__space-age__/graphics/procession/clouds/vulcanus-sky-tint.png",
+          "width": 16,
+          "height": 16,
+          "priority": "no-atlas",
+          "flags": [
+            "group=effect-texture",
+            "linear-minification",
+            "linear-magnification"
+          ]
+        }
+      },
+      {
+        "index": 509,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.210625,
+            0.109375
+          ],
+          "width": 196,
+          "height": 120,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/shared-cargo-bay-pod-emission.png"
+        }
+      },
+      {
+        "index": 500,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.75,
+            -0.359375
+          ],
+          "width": 302,
+          "height": 268,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 501,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -0.4375,
+            -0.703125
+          ],
+          "width": 276,
+          "height": 286,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 502,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            1.046875,
+            -1.125
+          ],
+          "width": 322,
+          "height": 308,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-lower-hatch-pod-emission-C.png"
+        }
+      },
+      {
+        "index": 503,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.84375,
+            -0.375
+          ],
+          "width": 340,
+          "height": 310,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 504,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -1.234375,
+            -0.28125
+          ],
+          "width": 402,
+          "height": 318,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 505,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.078125,
+            -1.359375
+          ],
+          "width": 348,
+          "height": 318,
+          "line_length": 1,
+          "filename": "__space-age__/graphics/entity/cargo-hubs/hatches/platform-upper-hatch-pod-emission-C.png"
+        }
+      },
+      {
+        "index": 506,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.703125,
+            -0.3125
+          ],
+          "width": 356,
+          "height": 316,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-A.png"
+        }
+      },
+      {
+        "index": 507,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            -1.21875,
+            0.265625
+          ],
+          "width": 402,
+          "height": 388,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-B.png"
+        }
+      },
+      {
+        "index": 508,
+        "sprite": {
+          "priority": "medium",
+          "draw_as_glow": true,
+          "blend_mode": "additive",
+          "scale": 0.5,
+          "shift": [
+            0.015625,
+            -0.96875
+          ],
+          "width": 350,
+          "height": 358,
+          "line_length": 1,
+          "filename": "__base__/graphics/entity/cargo-hubs/hatches/planet-lower-hatch-pod-emission-C.png"
+        }
+      }
+    ],
+    "surface_properties": {
+      "day-night-cycle": 5400,
+      "magnetic-field": 25,
+      "solar-power": 400,
+      "pressure": 4000,
+      "gravity": 40
+    },
+    "asteroid_spawn_influence": 1,
+    "asteroid_spawn_definitions": [
+      {
+        "asteroid": "metallic-asteroid-chunk",
+        "probability": 0.002,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "carbonic-asteroid-chunk",
+        "probability": 0.0008,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "oxide-asteroid-chunk",
+        "probability": 0.0004,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 1,
+        "type": "asteroid-chunk"
+      },
+      {
+        "asteroid": "medium-metallic-asteroid",
+        "probability": 0.0025,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 0.6
+      },
+      {
+        "asteroid": "medium-carbonic-asteroid",
+        "probability": 0.001,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 0.6
+      },
+      {
+        "asteroid": "medium-oxide-asteroid",
+        "probability": 0.0005,
+        "speed": 0.016666666666666666,
+        "angle_when_stopped": 0.6
+      }
+    ],
+    "surface_render_parameters": {
+      "fog": {
+        "shape_noise_texture": {
+          "filename": "__core__/graphics/clouds-noise.png",
+          "size": 2048
+        },
+        "detail_noise_texture": {
+          "filename": "__core__/graphics/clouds-detail-noise.png",
+          "size": 2048
+        },
+        "color1": [
+          1,
+          0.8705999999999999,
+          0.302
+        ],
+        "color2": [
+          1,
+          0.8705999999999999,
+          0.2902
+        ],
+        "tick_factor": 0.000005
+      },
+      "day_night_cycle_color_lookup": [
+        [
+          0,
+          "__space-age__/graphics/lut/vulcanus-1-day.png"
+        ],
+        [
+          0.2,
+          "__space-age__/graphics/lut/vulcanus-1-day.png"
+        ],
+        [
+          0.45,
+          "__space-age__/graphics/lut/vulcanus-2-night.png"
+        ],
+        [
+          0.55,
+          "__space-age__/graphics/lut/vulcanus-2-night.png"
+        ],
+        [
+          0.8,
+          "__space-age__/graphics/lut/vulcanus-1-day.png"
+        ]
+      ],
+      "terrain_tint_effect": {
+        "noise_texture": {
+          "filename": "__space-age__/graphics/terrain/vulcanus/tint-noise.png",
+          "size": 4096
+        },
+        "offset": [
+          0.2,
+          0,
+          0.4,
+          0.8
+        ],
+        "intensity": [
+          0.5,
+          0.2,
+          0.3,
+          1
+        ],
+        "scale_u": [
+          3,
+          1,
+          1,
+          1
+        ],
+        "scale_v": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "global_intensity": 0.3,
+        "global_scale": 0.1,
+        "zoom_factor": 3,
+        "zoom_intensity": 0.6
+      }
+    }
+  }
+}

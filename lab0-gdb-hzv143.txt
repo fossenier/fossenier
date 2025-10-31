@@ -1,0 +1,159 @@
+Logan Fossenier
+hzv143
+11343891
+
+- Print the address of at least one local variable
+(gdb) p&nlines
+$9 = (int *) 0x7fffffffd82c
+
+- Print the address of at least one function
+(gdb) p myGetline
+$10 = {int (char *, int)} 0x400761 <myGetline>
+
+- Print the address of the double array from the caller of myQsort before
+Sorting
+(gdb) print&lineptr
+$21 = (char *(*)[100]) 0x403080 <lineptr>
+
+- Print the contents of an unsorted array
+(gdb) print lineptr
+$20 = {0x4062b0 "ape", 0x4062d0 "dog", 0x4062f0 "zebra", 0x406310 "cat", 
+  0x406330 "alligator", 0x406350 "", 0x406370 "", 0x406390 "", 0x4063b0 "", 
+  0x4063d0 "", 0x4063f0 "", 0x406410 "", 0x406430 "", 0x406450 "", 
+  0x406470 "", 0x406490 "", 0x4064b0 "", 0x4064d0 "", 0x4064f0 "", 
+  0x406510 "", 0x406530 "", 0x406550 "", 0x406570 "", 0x406590 "", 
+  0x4065b0 "", 0x4065d0 "", 0x4065f0 "", 0x406610 "", 0x406630 "", 
+  0x406650 "", 0x406670 "", 0x406690 "", 0x4066b0 "", 0x4066d0 "", 
+  0x4066f0 "", 0x406710 "", 0x406730 "", 0x406750 "", 0x406770 "", 
+  0x406790 "", 0x4067b0 "", 0x4067d0 "", 0x4067f0 "", 0x406810 "", 
+  0x406830 "", 0x406850 "", 0x406870 "", 0x406890 "", 0x4068b0 "", 
+  0x4068d0 "", 0x4068f0 "", 0x406910 "", 0x406930 "", 0x406950 "", 
+  0x406970 "", 0x406990 "", 0x4069b0 "", 0x4069d0 "", 0x4069f0 "", 
+  0x406a10 "", 0x406a30 "", 0x406a50 "", 0x406a70 "", 0x406a90 "", 
+  0x406ab0 "", 0x406ad0 "", 0x406af0 "", 0x406b10 "", 0x406b30 "", 
+  0x406b50 "", 0x406b70 "", 0x406b90 "", 0x406bb0 "", 0x406bd0 "", 
+  0x406bf0 "", 0x406c10 "", 0x406c30 "", 0x406c50 "", 0x406c70 "", 
+  0x406c90 "", 0x406cb0 "", 0x406cd0 "", 0x406cf0 "", 0x406d10 "", 
+  0x406d30 "", 0x406d50 "", 0x406d70 "", 0x406d90 "", 0x406db0 "", 
+  0x406dd0 "", 0x406df0 "", 0x406e10 "", 0x406e30 "", 0x406e50 "", 
+  0x406e70 "", 0x406e90 "", 0x406eb0 "", 0x406ed0 "", 0x406ef0 "", 0x406f10 ""}
+
+- Print the contents of that same array after sorting
+(gdb) print lineptr
+$22 = {0x4062b0 "ape", 0x4062d0 "dog", 0x4062f0 "zebra", 0x406310 "cat", 
+  0x406330 "alligator", 0x406350 "", 0x406370 "", 0x406390 "", 0x4063b0 "", 
+  0x4063d0 "", 0x4063f0 "", 0x406410 "", 0x406430 "", 0x406450 "", 
+  0x406470 "", 0x406490 "", 0x4064b0 "", 0x4064d0 "", 0x4064f0 "", 
+  0x406510 "", 0x406530 "", 0x406550 "", 0x406570 "", 0x406590 "", 
+  0x4065b0 "", 0x4065d0 "", 0x4065f0 "", 0x406610 "", 0x406630 "", 
+  0x406650 "", 0x406670 "", 0x406690 "", 0x4066b0 "", 0x4066d0 "", 
+  0x4066f0 "", 0x406710 "", 0x406730 "", 0x406750 "", 0x406770 "", 
+  0x406790 "", 0x4067b0 "", 0x4067d0 "", 0x4067f0 "", 0x406810 "", 
+  0x406830 "", 0x406850 "", 0x406870 "", 0x406890 "", 0x4068b0 "", 
+  0x4068d0 "", 0x4068f0 "", 0x406910 "", 0x406930 "", 0x406950 "", 
+  0x406970 "", 0x406990 "", 0x4069b0 "", 0x4069d0 "", 0x4069f0 "", 
+  0x406a10 "", 0x406a30 "", 0x406a50 "", 0x406a70 "", 0x406a90 "", 
+  0x406ab0 "", 0x406ad0 "", 0x406af0 "", 0x406b10 "", 0x406b30 "", 
+  0x406b50 "", 0x406b70 "", 0x406b90 "", 0x406bb0 "", 0x406bd0 "", 
+  0x406bf0 "", 0x406c10 "", 0x406c30 "", 0x406c50 "", 0x406c70 "", 
+  0x406c90 "", 0x406cb0 "", 0x406cd0 "", 0x406cf0 "", 0x406d10 "", 
+  0x406d30 "", 0x406d50 "", 0x406d70 "", 0x406d90 "", 0x406db0 "", 
+  0x406dd0 "", 0x406df0 "", 0x406e10 "", 0x406e30 "", 0x406e50 "", 
+  0x406e70 "", 0x406e90 "", 0x406eb0 "", 0x406ed0 "", 0x406ef0 "", 0x406f10 ""}
+
+- Print the assembly language for myQsort
+│   0x400658 <myQsort>      push   %rbp
+│   0x400659 <myQsort+1>    mov    %rsp,%rbp
+│   0x40065c <myQsort+4>    sub    $0x30,%rsp
+│   0x400660 <myQsort+8>    mov    %rdi,-0x18(%rbp)
+│   0x400664 <myQsort+12>   mov    %esi,-0x1c(%rbp)
+│   0x400667 <myQsort+15>   mov    %edx,-0x20(%rbp)
+│   0x40066a <myQsort+18>   mov    %rcx,-0x28(%rbp)
+│   0x40066e <myQsort+22>   mov    -0x1c(%rbp),%eax
+│   0x400671 <myQsort+25>   cmp    -0x20(%rbp),%eax
+│   0x400674 <myQsort+28>   jge    0x40075e <myQsort+262>
+│   0x40067a <myQsort+34>   mov    -0x1c(%rbp),%edx
+│   0x40067d <myQsort+37>   mov    -0x20(%rbp),%eax
+│   0x400680 <myQsort+40>   add    %edx,%eax
+│   0x400682 <myQsort+42>   mov    %eax,%edx
+│   0x400684 <myQsort+44>   shr    $0x1f,%edx
+│   0x400687 <myQsort+47>   add    %edx,%eax
+│   0x400689 <myQsort+49>   sar    $1,%eax
+│   0x40068b <myQsort+51>   mov    %eax,%edx
+│   0x40068d <myQsort+53>   mov    -0x1c(%rbp),%ecx
+│   0x400690 <myQsort+56>   mov    -0x18(%rbp),%rax
+│   0x400694 <myQsort+60>   mov    %ecx,%esi
+│   0x400696 <myQsort+62>   mov    %rax,%rdi
+│   0x400699 <myQsort+65>   call   0x4005e2 <swap>
+│   0x40069e <myQsort+70>   mov    -0x1c(%rbp),%eax
+│   0x4006a1 <myQsort+73>   mov    %eax,-0x8(%rbp)
+│   0x4006a4 <myQsort+76>   mov    -0x1c(%rbp),%eax
+│   0x4006a7 <myQsort+79>   add    $0x1,%eax
+│   0x4006aa <myQsort+82>   mov    %eax,-0x4(%rbp)
+│   0x4006ad <myQsort+85>   jmp    0x400709 <myQsort+177>
+│   0x4006af <myQsort+87>   mov    -0x1c(%rbp),%eax
+│   0x4006b2 <myQsort+90>   cltq
+│   0x4006b4 <myQsort+92>   lea    0x0(,%rax,8),%rdx
+│   0x4006bc <myQsort+100>  mov    -0x18(%rbp),%rax
+│   0x4006c0 <myQsort+104>  add    %rdx,%rax
+│   0x4006c3 <myQsort+107>  mov    (%rax),%rdx
+│   0x4006c6 <myQsort+110>  mov    -0x4(%rbp),%eax
+│   0x4006c9 <myQsort+113>  cltq
+│   0x4006cb <myQsort+115>  lea    0x0(,%rax,8),%rcx
+│   0x4006d3 <myQsort+123>  mov    -0x18(%rbp),%rax
+│   0x4006d7 <myQsort+127>  add    %rcx,%rax
+│   0x4006da <myQsort+130>  mov    (%rax),%rax
+│   0x4006dd <myQsort+133>  mov    -0x28(%rbp),%rcx
+│   0x4006e1 <myQsort+137>  mov    %rdx,%rsi
+│   0x4006e4 <myQsort+140>  mov    %rax,%rdi
+│   0x4006e7 <myQsort+143>  call   *%rcx
+│   0x4006e9 <myQsort+145>  test   %eax,%eax
+│   0x4006eb <myQsort+147>  jns    0x400705 <myQsort+173>
+│   0x4006ed <myQsort+149>  addl   $0x1,-0x8(%rbp)
+│   0x4006f1 <myQsort+153>  mov    -0x4(%rbp),%edx
+│   0x4006f4 <myQsort+156>  mov    -0x8(%rbp),%ecx
+│   0x4006f7 <myQsort+159>  mov    -0x18(%rbp),%rax
+│   0x4006fb <myQsort+163>  mov    %ecx,%esi
+│   0x4006fd <myQsort+165>  mov    %rax,%rdi
+│   0x400700 <myQsort+168>  call   0x4005e2 <swap>
+│   0x400705 <myQsort+173>  addl   $0x1,-0x4(%rbp)
+│   0x400709 <myQsort+177>  mov    -0x4(%rbp),%eax
+│   0x40070c <myQsort+180>  cmp    -0x20(%rbp),%eax
+│   0x40070f <myQsort+183>  jl     0x4006af <myQsort+87>
+│   0x400711 <myQsort+185>  mov    -0x8(%rbp),%edx
+│   0x400714 <myQsort+188>  mov    -0x1c(%rbp),%ecx
+│   0x400717 <myQsort+191>  mov    -0x18(%rbp),%rax
+│   0x40071b <myQsort+195>  mov    %ecx,%esi
+│   0x40071d <myQsort+197>  mov    %rax,%rdi
+│   0x400720 <myQsort+200>  call   0x4005e2 <swap>
+│   0x400725 <myQsort+205>  mov    -0x8(%rbp),%eax
+│   0x400728 <myQsort+208>  lea    -0x1(%rax),%edi
+│   0x40072b <myQsort+211>  mov    -0x28(%rbp),%rdx
+│   0x40072f <myQsort+215>  mov    -0x1c(%rbp),%esi
+│   0x400732 <myQsort+218>  mov    -0x18(%rbp),%rax
+│   0x400736 <myQsort+222>  mov    %rdx,%rcx
+│   0x400739 <myQsort+225>  mov    %edi,%edx
+│   0x40073b <myQsort+227>  mov    %rax,%rdi
+│   0x40073e <myQsort+230>  call   0x400658 <myQsort>
+│   0x400743 <myQsort+235>  mov    -0x8(%rbp),%eax
+│   0x400746 <myQsort+238>  lea    0x1(%rax),%esi
+│   0x400749 <myQsort+241>  mov    -0x28(%rbp),%rcx
+│   0x40074d <myQsort+245>  mov    -0x20(%rbp),%edx
+│   0x400750 <myQsort+248>  mov    -0x18(%rbp),%rax
+│   0x400754 <myQsort+252>  mov    %rax,%rdi
+│   0x400757 <myQsort+255>  call   0x400658 <myQsort>
+│   0x40075c <myQsort+260>  jmp    0x40075f <myQsort+263>
+│   0x40075e <myQsort+262>  nop
+│  >0x40075f <myQsort+263>  leave
+│   0x400760 <myQsort+264>  ret
+
+
+- Note and print the number of add instructions in myQsort
+
+- Print a backtrace from inside doubleComp
+
+- Print the value of a complex number
+
+- After a segfault, print the values of the top 64 bytes of the stack
+
+
