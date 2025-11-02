@@ -1,33 +1,72 @@
 import json
 import os
 
-json_files = os.listdir("./json")
+from typing import List
 
-planet_files = [f for f in json_files if "_" not in f]
-route_files = [f for f in json_files if "_" in f]
+# Speed calculator of platform
+# https://www.desmos.com/calculator/eykhbatbn6
+# https://www.desmos.com/calculator/a9ruvrbkvt
 
-# Print all files in ./json
-json_files = os.listdir('./json')
-print("All files in ./json:")
-print(json_files)
+def main():
+    # load in all json data
+    planet_files: List[str] = []
+    route_files: List[str] = []
+    
+    for file in os.listdir("./json"):
+        if "_" in file:
+            route_files.append(file)
+        else:
+            planet_files.append(file)
+    
+    for route_file in route_files:
+        src_planet = route_file[0:route_file.find("_")]
+        dest_planet = route_file[route_file.find("_") + 1:-5]
+        
+        with open("./json/" + src_planet + ".json", "r") as f:
+            planet_data = json.load(f)
+        
+    
+    gleba = [p for p in planet_files if "gleba" in p][0]
+    
+    with open("./json/" + gleba, 'r') as f:
+        planet_data = json.load(f)
 
-# Print files in ./json that do not have "_" in the name
-files_without_underscore = [f for f in json_files if '_' not in f]
-print("Files in ./json without '_' in name:")
-print(files_without_underscore)
+    origin_planet_rate_min = {}
 
-# Load the JSON file
-with open('./json/gleba.json', 'r') as f:
-    planet_data = json.load(f)
+    # Access the asteroid spawn definitions
+    asteroid_spawn_definitions = planet_data["planet"]["asteroid_spawn_definitions"]
+    print(asteroid_spawn_definitions[0])
+    for asd in asteroid_spawn_definitions:
+        origin_planet_rate_min[asd["asteroid"]] = asd["probability"] * 3600 # seconds in a minute
+    
+    print(origin_planet_rate_min)
 
-# Access the asteroid spawn definitions
-asteroid_spawn_definitions = planet_data["planet"]["asteroid_spawn_definitions"]
 
-print(asteroid_spawn_definitions)
+# look at each route
+# calculate base spawn rate (in each waypoint including linear planet effect)
+# calculate total expected resources (asteroid chunks)
+# see how much fuel could be used (max speed) on the least fuel rich route
+# calculate how much damage at that speed
+# calucalte all expected resources at that speed
+# see what surplus is
+# see how much science could be made
+# find optimal platform size
 
-with open('./json/gleba_fulgora.json', 'r') as f:
-    planet_data = json.load(f)
+# # Load the JSON file
+# with open('./json/gleba.json', 'r') as f:
+#     planet_data = json.load(f)
 
-asteroid_spawn_definitions = planet_data["space-connection"]["asteroid_spawn_definitions"]
+# # Access the asteroid spawn definitions
+# asteroid_spawn_definitions = planet_data["planet"]["asteroid_spawn_definitions"]
 
-print(asteroid_spawn_definitions)
+# print(asteroid_spawn_definitions)
+
+# with open('./json/gleba_fulgora.json', 'r') as f:
+#     planet_data = json.load(f)
+
+# asteroid_spawn_definitions = planet_data["space-connection"]["asteroid_spawn_definitions"]
+
+# print(asteroid_spawn_definitions)
+
+if __name__ == "__main__":
+    main()
