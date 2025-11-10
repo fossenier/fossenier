@@ -1,0 +1,64 @@
+Order of difficulty (expected)
+
+1. A
+- pos + neg and bigger 180? 360 -
+- 0 and 180 special case
+
+2. Video games 
+- maps of name to game
+
+3. Conveyor belt sushi
+- rotate the conveyor belt array clockwise
+- simulate belt moving every second
+
+4. What time is it Mr. Fox
+- too slow to move each sheep for each call
+- instead keep track of how many times each hour was called between "lunch time" calls
+- when lunch time, distance moved by sheep i can be computed in O(h) time where h = 11 is the number of different possible calls apart from "lunch time"
+- Running time O(n * h * c) (c is lunch time calls)
+
+idea: accumulate between lunch times and process all at once
+
+5. Genie
+- Exactly W "real wishes"
+- There is a dynamic programming
+
+6. Hexadecimal confusion
+- To find max replace all 0 by D and all 8 by B, add them
+- To find min replace all B by 8 and all D by 0
+
+7. spies vs. spies
+- for each row and column that has a point maintain the points in that line in sorted order
+- maintain pointers/indices into the sorted list that indicate the prefix / suffixes that have been eliminated
+- be careful a point might have been eliminated from a vertical look so skip over them when processing a prefix / suffix of its row
+- O(q + nlogn)
+
+8. poetic tournament
+- intended solution is O(nlogk)
+- maintain solted list, insert binary search
+- keep list MAX size of k, don't need the lowers
+- C++ nthelement call (used interactor as comparator operator)
+
+9. corporate retreat
+- graph G with k <= 7 nodes S such that each v elementof V - S is a neighbour of some node in S, determining if G has a 3-colouring
+
+- brute force al 3^7 possible ways to 3-colour S. For each v elementof V - S, there are at most two possible colours for w since it has a neighbour in search
+- Use 2-SAT. For each v, associate true with one remaining colour and false with the other. Add clauses ensuring no edge receives the same colour at both endpoints
+- Running time: O(3^k * (n + m))
+
+10. energy usage
+- dynamic programming. Let f(n,b) to mean the minimum cost to operate the factory to the end of the n-th hour, and have b energy remaining in the battery.
+- We also add a (0,0) plan to every hour, and consider this the 0-th plan. This is equivalent to no plan.
+- Base casess f(0, 0) = 0, f(0, B) = infinity if b > 0
+- Recursion let Erequired (n,deltaB,m) be the extra energy required to gain delta b battery level while utilizing the m-th plan
+- O(N * M * B^2 )
+
+11. draft lottery
+- 
+
+12. buying jerseys
+- given a bipartite graph, find a color c: (natural numbers) -> {0, 1, 2} such that if uv (element of) E either c(u) != c(v) or c(u) = c(v) = 2. Among all such colorings, minimize (sum)(v element V) c(v).
+
+13. team practice
+- compute the number of ways students can switch teams during practice while meeting some constraints
+- state can eb A(sA, cA)

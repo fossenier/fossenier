@@ -1,4 +1,4 @@
-#include <fstream>
+chat$#include <fstream>
 #include <iostream>
 
 void compactMemory(std::vector<int> &memory);

@@ -7,6 +7,36 @@ from typing import List
 # https://www.desmos.com/calculator/eykhbatbn6
 # https://www.desmos.com/calculator/a9ruvrbkvt
 
+asteroid_size_health = {
+    "medium": 745
+}
+asteroid_data = {
+    "metallic-asteroid-chunk"
+    "oxide-asteroid-chunk"
+    "carbonic-asteroid-chunk"
+    "medium-metallic-asteroid"
+    "medium-oxide-asteroid"
+    "medium-carbonic-asteroid"
+}
+
+class Asteroid:
+    name: str
+
+class Waypoint:
+    distance: int
+    asteroids: List[Asteroid]
+
+class Route:
+    path: str # file path to json data
+    source: str # name of planet
+    dest: str # name of planet
+    
+    def __init__(self) -> None:
+        pass
+
+def parse_route_file():
+    
+
 def main():
     # load in all json data
     planet_files: List[str] = []

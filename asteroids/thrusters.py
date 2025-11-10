@@ -29,7 +29,7 @@ while True:
     speeds.append(speed)
 
     # stop when acceleration is nearly zero (terminal velocity reached)
-    if abs(a) < 1e-2:
+    if abs(a) < 1e-3:
         break
 
 # convert time to minutes if long
