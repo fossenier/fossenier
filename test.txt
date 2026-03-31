@@ -1,0 +1,21 @@
+clients
+4 20 80
+
+sendRate
+400 200 400
+
+keyRange
+a 20 5 1
+b 0 0 1
+c 4 1 0
+d 20 5 0
+aa 40 10 0
+bb 40 10 0
+cc 40 10 0
+dd 40 10 0
+
+commandFrequency
+add 10 20 1
+getvalue 10 20 1
+getall 1 1 0
+remove 10 1 0

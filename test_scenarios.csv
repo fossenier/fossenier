@@ -1,0 +1,37 @@
+ID,Test Scenario,Test Steps,Test Data,Expected Results,Actual Results,Pass/Fail
+TC01,Connect to MySQL database,"1. Load environment variables
+2. Attempt DB connection
+3. Catch connection errors","Host=localhost; User=$MYSQL_USER; Password=$PASSWORD","Connection succeeds with no exception","As Expected",Pass
+TC02,Fetch all students,"1. Execute SELECT * FROM Student
+2. Fetch results
+3. Print rows","SQL: SELECT * FROM Student","Rows print if present; empty list otherwise","As Expected",Pass
+TC03,Auto-create students when empty,"1. Detect empty Student table
+2. Call createStudents()
+3. Insert teacher
+4. Insert class
+5. Insert 30 students
+6. Insert StudentClass rows","Name lists; random genders","User table has John; Class created; 30 students; relations created","As Expected",Pass
+TC04,Fetch assignments,"1. Execute SELECT * FROM Assignment
+2. Fetch results
+3. Print rows","SQL: SELECT * FROM Assignment","Rows print if present; empty list otherwise","As Expected",Pass
+TC05,Auto-create assignments when empty,"1. Detect empty Assignment table
+2. Get class_id
+3. Get student_ids
+4. Loop assignment templates
+5. Insert assignment rows","Math Quiz 1 / English Essay / Science Project; denominators 20/100/50","3 × student_count assignment rows created","As Expected",Pass
+TC06,Compute class overall averages,"1. SELECT classes
+2. GROUP BY subject
+3. Compute subject avg
+4. Compute class avg","Assignment table data","Per-class averages print with subject breakdown","As Expected",Pass
+TC07,Compute student subject averages,"1. JOIN Student + Assignment
+2. WHERE subject='Math'
+3. GROUP BY student","Subject=Math","Students listed with descending Math average","As Expected",Pass
+TC08,Compute overall averages for all students,"1. Compute subject averages
+2. Compute overall average per student
+3. Sort descending","Student + Assignment tables","Each student prints overall % average","As Expected",Pass
+TC09,Show grades for specific assignment,"1. JOIN Student + Assignment
+2. Filter by title
+3. Order by grade","Assignment title='Math Quiz 1'","All students show grade, numerator/denominator, subject","As Expected",Pass
+TC10,Identify top performers by subject,"1. JOIN Student + Assignment
+2. GROUP BY subject
+3. Sort within subject","Assignment table","Top performer (and top 3 if ties) prints per subject","As Expected",Pass
